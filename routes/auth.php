@@ -23,7 +23,6 @@ Route::middleware('guest')->group(function () {
     Route::post('register/revert', [RegisteredUserController::class, 'revert'])
         ->name('register.revert');
 
-
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
