@@ -25,6 +25,7 @@ class PasswordController extends Controller
         ]);
 
         flash()->option('timeout', 2000)->success('Password have been changed');
+
         return back();
     }
 }

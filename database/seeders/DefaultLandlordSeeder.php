@@ -6,7 +6,6 @@ use App\Models\Landlord;
 use App\Models\User;
 use Carbon\Carbon;
 use Hash;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DefaultLandlordSeeder extends Seeder
@@ -34,5 +33,4 @@ class DefaultLandlordSeeder extends Seeder
             ]
         );
     }
-
 }

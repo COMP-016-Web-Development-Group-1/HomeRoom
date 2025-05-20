@@ -32,7 +32,7 @@ class ProfileUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'profile_picture.max' => 'The profile picture must not be larger than 2MB.'
+            'profile_picture.max' => 'The profile picture must not be larger than 2MB.',
         ];
     }
 }

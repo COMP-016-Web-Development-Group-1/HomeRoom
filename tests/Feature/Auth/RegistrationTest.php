@@ -2,7 +2,6 @@
 
 use Illuminate\Http\UploadedFile;
 
-
 beforeEach(function () {
     Storage::fake('public');
 });

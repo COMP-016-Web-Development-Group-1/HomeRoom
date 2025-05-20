@@ -53,7 +53,7 @@ class DeleteTempUploadFiles extends Command
                         //     $this->line("🟡 Skipped [{$directory}] - Only {$hoursOld} hours old.");
                         // }
                     } catch (\Exception $e) {
-                        $this->error("❌ Failed to check/delete '{$directory}': " . $e->getMessage());
+                        $this->error("❌ Failed to check/delete '{$directory}': ".$e->getMessage());
                     }
                 } else {
                     $this->line("🔹 Ignored non-temp directory: {$directory}");

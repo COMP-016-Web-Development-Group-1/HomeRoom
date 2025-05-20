@@ -21,6 +21,7 @@ class Property extends Model
     {
         $part1 = strtoupper(Str::random(3));
         $part2 = strtoupper(Str::random(3));
+
         return "{$part1}-{$part2}";
     }
 }

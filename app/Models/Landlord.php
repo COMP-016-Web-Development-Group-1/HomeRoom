@@ -8,7 +8,7 @@ class Landlord extends Model
 {
     protected $fillable = [
         'gcash_qr',
-        'maya_qr'
+        'maya_qr',
     ];
 
     public function user()

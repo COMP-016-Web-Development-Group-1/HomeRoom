@@ -11,7 +11,7 @@ class LandlordProfileController extends Controller
     {
         $landlord = auth()->user()->landlord;
 
-        if (!$landlord) {
+        if (! $landlord) {
             abort(403, 'Only landlords can access this endpoint.');
         }
 
@@ -38,7 +38,6 @@ class LandlordProfileController extends Controller
                 Storage::disk('public')->delete($landlord->maya_qr);
             }
         }
-
 
         $landlord->fill($data)->save();
 

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\TemporaryFile;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -12,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use Storage;
 
 class RegisteredUserController extends Controller
 {
@@ -33,19 +31,18 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email:strict,dns', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email:strict,dns', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'profile_picture' => ['required', 'image', 'mimes:jpeg,png', 'max:2048'],
-            'code' => ['required', 'regex:/^[A-Z0-9]{3}-[A-Z0-9]{3}$/']
+            'code' => ['required', 'regex:/^[A-Z0-9]{3}-[A-Z0-9]{3}$/'],
         ], [
             'profile_picture.max' => 'The profile picture must not be larger than 2MB.',
-            'code'
+            'code',
         ], [
-            'code' => 'property code'
+            'code' => 'property code',
         ]);
 
-        dd("end");
-
+        dd('end');
 
         if ($request->hasFile('profile_picture')) {
             $profilePath = $request->file('profile_picture')->store('profile_pictures', 'public');
@@ -64,6 +61,4 @@ class RegisteredUserController extends Controller
 
         return redirect(route('dashboard', absolute: false));
     }
-
-
 }
