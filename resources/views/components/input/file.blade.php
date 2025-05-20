@@ -1,4 +1,13 @@
-@props(['id', 'name', 'help' => null, 'disabled' => false, 'multiple' => false, 'accept' => null])
+@props([
+    'id',
+    'name',
+    'help' => null,
+    'disabled' => false,
+    'multiple' => false,
+    'accept' => null,
+    'preview' => null,
+    'circle' => false,
+])
 
 @php
     $helpId = $id . '_help';
@@ -8,13 +17,10 @@
     files: [],
     multiple: {{ $multiple ? 'true' : 'false' }},
     addFiles(newFiles) {
-        if (this.multiple) return; // skip preview/drag-drop for multiple
+        if (this.multiple) return;
         if (!newFiles || newFiles.length === 0) return;
 
         const file = newFiles[0];
-        if (!file) return;
-
-        // Handle preview for images
         const isImage = file.type.startsWith('image/');
 
         if (isImage) {
@@ -29,7 +35,6 @@
             };
             reader.readAsDataURL(file);
         } else {
-            // For non-image files, just store the file info without preview
             this.files = [{
                 file: file,
                 name: file.name,
@@ -48,8 +53,8 @@
         <div x-show="files.length === 0">
             <label for="{{ $id }}"
                 class="relative flex flex-col items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer
-                   hover:border-indigo-500 hover:bg-gray-50
-                   focus-within:border-indigo-500 focus-within:bg-gray-50
+                   hover:border-indigo-500 bg-gray-50 hover:bg-gray-100
+                   focus-within:border-indigo-500 focus-within:bg-gray-100
                    transition-all duration-200"
                 @dragover.prevent="$el.classList.add('border-indigo-500', 'bg-gray-50')"
                 @dragleave.prevent="$el.classList.remove('border-indigo-500', 'bg-gray-50')"
@@ -61,15 +66,11 @@
                 </div>
 
                 <input x-ref="fileInput" type="file" name="{{ $name }}" id="{{ $id }}"
-                    {{ $accept ? 'accept=' . $accept : '' }}
+                    @if ($accept) accept="{{ $accept }}" @endif
                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     @change="addFiles($event.target.files)" @disabled($disabled)
                     aria-describedby="{{ $helpId }}" />
             </label>
-
-            <input x-ref="fileInput" type="file" name="{{ $name }}" id="{{ $id }}"
-                {{ $accept ? 'accept=' . $accept : '' }} class="hidden" @change="addFiles($event.target.files)"
-                @disabled($disabled) aria-describedby="{{ $helpId }}" />
         </div>
 
         @if ($help)
@@ -78,47 +79,63 @@
 
         <!-- Preview for single file uploads -->
         <template x-if="files.length > 0">
-            <div x-cloak class="relative mt-4 max-w-lg mx-auto">
-                <!-- Image preview -->
-                <template x-if="files[0].isImage">
+            @if ($circle)
+                <div x-cloak class="relative max-w-sm mt-4 mx-auto">
+                @else
+                    <div x-cloak class="relative w-full mt-4 mx-auto">
+            @endif
+            <!-- Image preview -->
+
+            <template x-if="files[0].isImage">
+                @if ($circle)
                     <img :src="files[0].preview" :alt="files[0].name"
-                        class="w-full rounded-lg border border-gray-200 shadow-sm object-contain max-h-60" />
-                </template>
-
-                <!-- Non-image file preview -->
-                <template x-if="!files[0].isImage">
-                    <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
-                        <div class="flex-shrink-0 mr-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 truncate" x-text="files[0].name"></p>
-                        </div>
+                        class="border border-gray-200 shadow-sm aspect-square w-full object-cover rounded-full" />
+                @else
+                    <div
+                        class="w-full rounded-lg border border-gray-200 shadow-sm object-cover flex justify-center items-center">
+                        <img :src="files[0].preview" :alt="files[0].name" class="rounded-lg" />
                     </div>
-                </template>
+                @endif
+            </template>
 
-                <!-- File info and remove button -->
-                <div class="absolute top-2 right-2 flex space-x-1">
-                    <span class="bg-black bg-opacity-50 text-white text-xs rounded-md px-2 py-1"
-                        x-text="files[0].name"></span>
-                    <button type="button" @click="removeFile()"
-                        class="bg-white rounded-full p-1 shadow-md hover:bg-gray-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none"
+
+
+
+            <!-- Non-image file preview -->
+            <template x-if="!files[0].isImage">
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
+                    <div class="flex-shrink-0 mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                    </button>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate" x-text="files[0].name"></p>
+                    </div>
                 </div>
+            </template>
+
+            <!-- File info and remove button -->
+            <div class="absolute top-2 right-2 flex space-x-1">
+                {{-- @if (!$circle) --}}
+                <span class="sm:block hidden bg-black bg-opacity-50 text-white text-xs rounded-md px-2 py-1"
+                    x-text="files[0].name"></span>
+                {{-- @endif --}}
+                <button type="button" @click="removeFile()"
+                    class="bg-white rounded-full p-1 shadow-lg hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
         </template>
     @else
         <input type="file" name="{{ $name }}" id="{{ $id }}" multiple
-            {{ $accept ? 'accept=' . $accept : '' }}
+            @if ($accept) accept="{{ $accept }}" @endif
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
             focus:ring-blue-500 focus:border-blue-500 block w-full focus:outline-none
             file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:rounded file:font-lexend file:text-xs file:mr-3

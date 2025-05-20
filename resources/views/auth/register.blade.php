@@ -14,21 +14,13 @@
             <x-input.error for="email" />
         </div>
 
-        <!-- Single file upload with help text -->
-        <div class="mt-4">
-            <x-input.file id="single_document" name="single_document" :help="'Upload PDF, Word, or Excel files (max 5MB)'" />
-        </div>
 
-        <!-- Image upload with help text -->
         <div class="mt-4">
-            <x-input.file id="profile_image" name="profile_image" accept="image/*" :help="'Please upload a square image for best results'" />
+            <x-input.label for="profile">Profile Picture</x-input.label>
+            <x-input.file id="profile_picture" name="profile_picture" accept="image/png,image/jpeg" :circle="true"
+                help="PNG or JPG (Max 2MB)" />
+            <x-input.error for="profile_picture" />
         </div>
-
-        <!-- Multiple file upload with help text -->
-        <div class="mt-4">
-            <x-input.file id="project_files" name="project_files[]" multiple :help="'You can select up to 5 files (10MB total)'" />
-        </div>
-
 
         <div class="mt-4">
             <x-input.label for="password">Password</x-input.label>
@@ -41,6 +33,13 @@
             <x-input.text id="password_confirmation" type="password" name="password_confirmation" />
             <x-input.error for="password_confirmation" />
         </div>
+
+        <div class="mt-4">
+            <x-input.label for="code">Property Code</x-input.label>
+            <x-input.text id="code" type="text" name="code" :value="old('code')" />
+            <x-input.error for="code" />
+        </div>
+
 
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

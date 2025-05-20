@@ -2,6 +2,10 @@
 
 use App\Models\User;
 
+beforeEach(function () {
+    Storage::fake('public');
+});
+
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
 

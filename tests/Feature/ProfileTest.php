@@ -1,12 +1,28 @@
 <?php
 
+use App\Models\Landlord;
 use App\Models\User;
 
-test('profile page is displayed', function () {
-    $user = User::factory()->create();
+beforeEach(function () {
+    Storage::fake('public');
+});
+
+test('profile page is displayed for tenant', function () {
+    $user = User::factory()->create()->tenant();
+    echo $user;
 
     $response = $this
         ->actingAs($user)
+        ->get('/profile');
+
+    $response->assertOk();
+});
+
+test('profile page is displayed for landlord', function () {
+    $landlord = User::factory()->create()->landlord();
+
+    $response = $this
+        ->actingAs($landlord)
         ->get('/profile');
 
     $response->assertOk();

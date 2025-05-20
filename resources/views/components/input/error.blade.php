@@ -1,7 +1,8 @@
-@props(['for', 'all' => false])
+@props(['for', 'all' => false, 'bag' => 'default'])
 
 @php
-    $messages = $errors->get($for);
+    $errorBag = $errors->getBag($bag);
+    $messages = $errorBag->get($for);
 @endphp
 
 @if ($messages)

@@ -31,21 +31,24 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-
-        dd($request->all());
-
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email:strict,dns', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'profile' => ['required', 'image', 'mimes:jpeg,png', 'max:2048'],
+            'profile_picture' => ['required', 'image', 'mimes:jpeg,png', 'max:2048'],
+            'code' => ['required', 'regex:/^[A-Z0-9]{3}-[A-Z0-9]{3}$/']
         ], [
-            'profile.max' => 'The profile image must not be larger than 2MB.',
+            'profile_picture.max' => 'The profile picture must not be larger than 2MB.',
+            'code'
+        ], [
+            'code' => 'property code'
         ]);
 
+        dd("end");
 
-        if ($request->hasFile('profile')) {
-            $profilePath = $request->file('profile')->store('profiles', 'public');
+
+        if ($request->hasFile('profile_picture')) {
+            $profilePath = $request->file('profile_picture')->store('profile_pictures', 'public');
         }
 
         $user = User::create([
