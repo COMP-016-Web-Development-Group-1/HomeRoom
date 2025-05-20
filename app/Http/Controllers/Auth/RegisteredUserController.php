@@ -31,30 +31,28 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
+        dd($request->all());
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email:strict,dns', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'profile_img' => ['required', 'string']
+            'profile' => ['required', 'image', 'mimes:jpeg,png', 'max:2048'],
+        ], [
+            'profile.max' => 'The profile image must not be larger than 2MB.',
         ]);
 
-        $tmp_file = TemporaryFile::where('folder', $request->profile_img)->first();
 
-        if ($tmp_file) {
-            $fromPath = 'profile_img/tmp/' . $tmp_file->folder . '/' . $tmp_file->file;
-            $toPath = 'profile_img/' . $tmp_file->file;
-
-            Storage::disk('public')->copy($fromPath, $toPath);
-            Storage::disk('public')->deleteDirectory('profile_img/tmp/' . $tmp_file->folder);
-            $tmp_file->delete();
-            $profileImage = $toPath;
+        if ($request->hasFile('profile')) {
+            $profilePath = $request->file('profile')->store('profiles', 'public');
         }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'profile_img' => $profileImage,
+            'profile' => $profilePath,
         ]);
 
         event(new Registered($user));
@@ -64,23 +62,5 @@ class RegisteredUserController extends Controller
         return redirect(route('dashboard', absolute: false));
     }
 
-    public function process(Request $request)
-    {
 
-
-        if ($request->hasFile('profile_img')) {
-            $profile_img = request()->file('profile_img');
-            $filename = $profile_img->hashName();
-            $folder = uniqid('profile_img', true);
-            $profile_img->storeAs('profile_img/tmp/' . $folder, $filename, 'public');
-            TemporaryFile::create([
-                'folder' => $folder,
-                'file' => $filename
-            ]);
-
-            return $folder;
-        }
-
-        return '';
-    }
 }
