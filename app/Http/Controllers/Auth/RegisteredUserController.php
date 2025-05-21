@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Property;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -31,18 +33,16 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email:strict,dns', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email:strict,dns', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'profile_picture' => ['required', 'image', 'mimes:jpeg,png', 'max:2048'],
-            'code' => ['required', 'regex:/^[A-Z0-9]{3}-[A-Z0-9]{3}$/'],
+            'code' => ['required', 'regex:/^[A-Z0-9]{3}-[A-Z0-9]{3}$/', 'exists:properties,code'],
         ], [
             'profile_picture.max' => 'The profile picture must not be larger than 2MB.',
             'code',
         ], [
             'code' => 'property code',
         ]);
-
-        dd('end');
 
         if ($request->hasFile('profile_picture')) {
             $profilePath = $request->file('profile_picture')->store('profile_pictures', 'public');
@@ -52,11 +52,18 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'profile' => $profilePath,
+            'profile_picture' => $profilePath,
+        ]);
+
+        $property = Property::where('code', $request->code)->first();
+
+        Tenant::create([
+            'user_id' => $user->id,
+            'property_id' => $property->id,
+            'move_in_date' => now()
         ]);
 
         event(new Registered($user));
-
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));

@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Property;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,10 @@ class TenantFactory extends Factory
     public function definition(): array
     {
         return [
-
+            'user_id' => User::factory()->tenant(),
+            'property_id' => Property::factory(),
+            'move_in_date' => $this->faker->optional()->date(),
+            'move_out_date' => $this->faker->optional()->date(),
         ];
     }
 }

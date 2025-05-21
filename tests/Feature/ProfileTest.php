@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Landlord;
+use App\Models\Tenant;
 use App\Models\User;
 
 beforeEach(function () {
@@ -7,8 +9,8 @@ beforeEach(function () {
 });
 
 test('profile page is displayed for tenant', function () {
-    $user = User::factory()->create()->tenant();
-    echo $user;
+    $tenant = Tenant::factory()->create();
+    $user = $tenant->user;
 
     $response = $this
         ->actingAs($user)
@@ -18,10 +20,11 @@ test('profile page is displayed for tenant', function () {
 });
 
 test('profile page is displayed for landlord', function () {
-    $landlord = User::factory()->create()->landlord();
+    $landlord = Landlord::factory()->create();
+    $user = $landlord->user;
 
     $response = $this
-        ->actingAs($landlord)
+        ->actingAs($user)
         ->get('/profile');
 
     $response->assertOk();

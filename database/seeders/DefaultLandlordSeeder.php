@@ -3,10 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\Landlord;
+use App\Models\Property;
 use App\Models\User;
 use Carbon\Carbon;
 use Hash;
 use Illuminate\Database\Seeder;
+use Str;
 
 class DefaultLandlordSeeder extends Seeder
 {
@@ -25,12 +27,26 @@ class DefaultLandlordSeeder extends Seeder
             ]
         );
 
-        Landlord::firstOrCreate(
+        $landlord = Landlord::firstOrCreate(
             ['user_id' => $user->id],
             [
                 'gcash_qr' => null,
                 'maya_qr' => null,
             ]
         );
+
+        $code = generate_code();
+
+        Property::firstOrCreate([
+            'code' => $code
+        ], [
+            'landlord_id' => $landlord->id,
+            'title' => 'Sample Property',
+            'description' => 'A default seeded property',
+            'address' => '123 Example St. Sample City',
+            'rent_amount' => 5000.00,
+            'max_occupancy' => 3,
+            'current_occupancy' => 0
+        ]);
     }
 }
