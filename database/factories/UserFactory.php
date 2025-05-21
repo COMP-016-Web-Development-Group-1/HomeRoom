@@ -27,21 +27,21 @@ class UserFactory extends Factory
         $domain = fake()->randomElement(['gmail.com', 'yahoo.com', 'outlook.com']);
 
         $seedDir = resource_path('seeds/profile_pictures');
-        $files = glob($seedDir.'/*.*');
+        $files = glob($seedDir . '/*.*');
         $originalFile = fake()->randomElement($files);
 
         $extension = pathinfo($originalFile, PATHINFO_EXTENSION);
-        $filename = Str::uuid().'.'.$extension;
+        $filename = Str::uuid() . '.' . $extension;
 
         // Read the file content
         $contents = file_get_contents($originalFile);
 
-        Storage::disk('public')->put('profile_pictures/'.$filename, $contents);
+        Storage::disk('public')->put('profile_pictures/' . $filename, $contents);
 
         return [
             'name' => fake()->name(),
-            'email' => fake()->unique()->userName().'@'.$domain,
-            'profile_picture' => 'profile_pictures/'.$filename,
+            'email' => fake()->unique()->userName() . '@' . $domain,
+            'profile_picture' => 'profile_pictures/' . $filename,
             'email_verified_at' => now(),
             'role' => 'tenant',
             'password' => static::$password ??= Hash::make('password'),
@@ -54,21 +54,21 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
 
     public function landlord(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'role' => 'landlord',
         ]);
     }
 
     public function tenant(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'role' => 'tenant',
         ]);
     }
