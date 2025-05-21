@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email:strict,dns', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email:strict,dns', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'profile_picture' => ['required', 'image', 'mimes:jpeg,png', 'max:2048'],
             'code' => ['required', 'regex:/^[A-Z0-9]{3}-[A-Z0-9]{3}$/', 'exists:properties,code'],
@@ -60,7 +60,7 @@ class RegisteredUserController extends Controller
         Tenant::create([
             'user_id' => $user->id,
             'property_id' => $property->id,
-            'move_in_date' => now()
+            'move_in_date' => now(),
         ]);
 
         event(new Registered($user));

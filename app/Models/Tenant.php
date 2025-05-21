@@ -14,7 +14,7 @@ class Tenant extends Model
         'user_id',
         'property_id',
         'move_in_date',
-        'move_out_date'
+        'move_out_date',
     ];
 
     public function user()

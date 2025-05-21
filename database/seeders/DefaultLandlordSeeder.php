@@ -8,7 +8,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Hash;
 use Illuminate\Database\Seeder;
-use Str;
 
 class DefaultLandlordSeeder extends Seeder
 {
@@ -38,7 +37,7 @@ class DefaultLandlordSeeder extends Seeder
         $code = generate_code();
 
         Property::firstOrCreate([
-            'code' => $code
+            'code' => $code,
         ], [
             'landlord_id' => $landlord->id,
             'title' => 'Sample Property',
@@ -46,7 +45,7 @@ class DefaultLandlordSeeder extends Seeder
             'address' => '123 Example St. Sample City',
             'rent_amount' => 5000.00,
             'max_occupancy' => 3,
-            'current_occupancy' => 0
+            'current_occupancy' => 0,
         ]);
     }
 }

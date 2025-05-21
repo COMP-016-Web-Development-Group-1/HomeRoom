@@ -1,6 +1,6 @@
 <?php
 
-if (!function_exists('generate_code')) {
+if (! function_exists('generate_code')) {
     function generate_code(): string
     {
         $part1 = strtoupper(Str::random(3));

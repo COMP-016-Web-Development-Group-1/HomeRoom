@@ -10,7 +10,6 @@ class Property extends Model
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 
-
     protected $fillable = [
         'landlord_id',
         'code',

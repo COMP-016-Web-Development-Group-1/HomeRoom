@@ -22,7 +22,7 @@ test('new tenants can register', function () {
         'profile_picture' => UploadedFile::fake()->image('my-profile.jpg'),
         'password' => 'password',
         'password_confirmation' => 'password',
-        'code' => $property->code
+        'code' => $property->code,
     ]);
 
     $this->assertAuthenticated();
