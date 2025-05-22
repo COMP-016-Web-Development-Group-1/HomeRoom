@@ -12,7 +12,7 @@ class Tenant extends Model
 
     protected $fillable = [
         'user_id',
-        'property_id',
+        'room_id',
         'move_in_date',
         'move_out_date',
     ];
@@ -22,8 +22,8 @@ class Tenant extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function property()
+    public function room()
     {
-        return $this->belongsTo(Property::class);
+        return $this->belongsTo(Room::class);
     }
 }
