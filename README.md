@@ -246,3 +246,14 @@ vendor/bin/pint
 7. **Notify the team**
 
     Let the team know in the Messenger group chat once your PR is ready or if you need help.
+
+## 📚 Resources & Documentation
+
+Helpful references for understanding and contributing to the project:
+
+- [Laravel Documentation](https://laravel.com/docs) _(Look for the Basics section)_
+- [Laravel Blade Templates](https://laravel.com/docs/12.x/blade)
+- [Tailwind v3 Documentation](https://v3.tailwindcss.com/docs/display)
+
+- [Everything You Need to Know About Laravel in 30 Minutes](https://www.youtube.com/watch?v=e7z6KJkGhmg)
+- [From Blank to Blog With Laravel in 10 Minutes](https://www.youtube.com/watch?v=Miea-1jTYl0)
