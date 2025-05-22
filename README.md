@@ -239,6 +239,9 @@ vendor/bin/pint
     - Go to: [GitHub Pull Requests](https://github.com/COMP-016-Web-Development-Group-1/HomeRoom/pulls)
     - Base: `main`, Compare: your branch
     - Add a clear title and description
+    - ✅ **Make sure your PR passes all checks**  
+      (Code style via `lint.yml`, tests via `pest.yml`)
+    - If any checks don’t pass, just push your fixes. GitHub will re-run them automatically.
 
 7. **Notify the team**
 
