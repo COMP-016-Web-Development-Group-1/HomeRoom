@@ -41,7 +41,10 @@ class LandlordProfileController extends Controller
 
         $landlord->fill($data)->save();
 
-        flash()->option('timeout', 2000)->success('Landlord profile has been updated');
+        session()->flash('toast.success', [
+            'title' => 'QR Codes Updated',
+            'content' => 'Your payment QR codes have been successfully saved.',
+        ]);
 
         return redirect()->route('profile.edit');
     }

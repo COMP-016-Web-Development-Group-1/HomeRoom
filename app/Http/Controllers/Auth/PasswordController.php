@@ -24,7 +24,10 @@ class PasswordController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        flash()->option('timeout', 2000)->success('Password have been changed');
+        session()->flash('toast.success', [
+            'title' => 'Password Updated',
+            'content' => 'Your password has been successfully changed.',
+        ]);
 
         return back();
     }

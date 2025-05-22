@@ -53,7 +53,10 @@ class ProfileController extends Controller
             $user->sendEmailVerificationNotification();
         }
 
-        flash()->option('timeout', 2000)->success('Profile has been updated');
+        session()->flash('toast.success', [
+            'title' => 'Profile Updated',
+            'content' => 'Your profile information has been successfully updated.',
+        ]);
 
         return Redirect::route('profile.edit');
     }
