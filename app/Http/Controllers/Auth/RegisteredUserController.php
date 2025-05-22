@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Property;
+use App\Models\Room;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -36,12 +36,12 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email:strict,dns', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'profile_picture' => ['required', 'image', 'mimes:jpeg,png', 'max:2048'],
-            'code' => ['required', 'regex:/^[A-Z0-9]{3}-[A-Z0-9]{3}$/', 'exists:properties,code'],
+            'code' => ['required', 'regex:/^[A-Z0-9]{3}-[A-Z0-9]{3}$/', 'exists:rooms,code'],
         ], [
             'profile_picture.max' => 'The profile picture must not be larger than 2MB.',
             'code',
         ], [
-            'code' => 'property code',
+            'code' => 'room code',
         ]);
 
         if ($request->hasFile('profile_picture')) {
@@ -55,11 +55,11 @@ class RegisteredUserController extends Controller
             'profile_picture' => $profilePath,
         ]);
 
-        $property = Property::where('code', $request->code)->first();
+        $room = Room::where('code', $request->code)->firstOrFail();
 
         Tenant::create([
             'user_id' => $user->id,
-            'property_id' => $property->id,
+            'room_id' => $room->id,
             'move_in_date' => now(),
         ]);
 
