@@ -48,7 +48,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>Save</x-primary-button>
+            <x-button variant="primary">Save</x-button>
         </div>
     </form>
 </section>

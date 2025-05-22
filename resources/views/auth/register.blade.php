@@ -2,9 +2,9 @@
     <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
         @csrf
 
-        <div class="mt-4">
+        <div>
             <x-input.label for="name">Name</x-input.label>
-            <x-input.text id="name" type="text" name="name" :value="old('name')" />
+            <x-input.text id="name" type="text" name="name" :value="old('name')" autofocus />
             <x-input.error for="name" />
         </div>
 
@@ -41,24 +41,9 @@
         </div>
 
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                href="{{ route('login') }}">
-                Already Registered?
-            </a>
-
-            <x-primary-button class="ms-4">
-                Register
-            </x-primary-button>
+        <div class="flex items-center justify-end mt-4 gap-x-4">
+            <x-a href="{{ route('login') }}">Already Registered?</x-a>
+            <x-button variant="primary">Register</x-button>
         </div>
     </form>
-
-    @pushOnce('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const inputElement = document.getElementById('profile_img');
-
-            });
-        </script>
-    @endPushOnce
 </x-guest-layout>
