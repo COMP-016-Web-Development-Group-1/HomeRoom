@@ -35,7 +35,7 @@
         </div>
 
         <div class="mt-4">
-            <x-input.label for="code">Property Code</x-input.label>
+            <x-input.label for="code">Room Code</x-input.label>
             <x-input.text id="code" type="text" name="code" :value="old('code')" />
             <x-input.error for="code" />
         </div>

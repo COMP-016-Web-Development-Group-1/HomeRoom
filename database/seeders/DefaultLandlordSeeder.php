@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Landlord;
 use App\Models\Property;
+use App\Models\Room;
 use App\Models\User;
+use App\PropertyType;
 use Carbon\Carbon;
 use Hash;
 use Illuminate\Database\Seeder;
@@ -34,18 +36,25 @@ class DefaultLandlordSeeder extends Seeder
             ]
         );
 
-        $code = generate_code();
-
-        Property::firstOrCreate([
-            'code' => $code,
-        ], [
+        $property = Property::firstOrCreate([
             'landlord_id' => $landlord->id,
+            'type' => PropertyType::DORM->value,
             'title' => 'Sample Property',
             'description' => 'A default seeded property',
             'address' => '123 Example St. Sample City',
+        ]);
+
+        $roomCode = generate_code();
+
+        Room::firstOrCreate([
+            'code' => $roomCode,
+        ], [
+            'property_id' => $property->id,
+            'name' => 'Room A',
             'rent_amount' => 5000.00,
             'max_occupancy' => 3,
-            'current_occupancy' => 0,
         ]);
+
+        $this->command->info("  Default room created with code: $roomCode\n");
     }
 }

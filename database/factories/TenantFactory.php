@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Property;
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +20,7 @@ class TenantFactory extends Factory
     {
         return [
             'user_id' => User::factory()->tenant(),
-            'property_id' => Property::factory(),
+            'room_id' => Room::factory(),
             'move_in_date' => $this->faker->optional()->date(),
             'move_out_date' => $this->faker->optional()->date(),
         ];

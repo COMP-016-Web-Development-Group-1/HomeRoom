@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Landlord;
+use App\PropertyType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,13 +16,10 @@ return new class extends Migration
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Landlord::class)->constrained()->onDelete('cascade');
-            $table->string('code')->unique();
+            $table->enum('type', array_column(PropertyType::cases(), 'value'));
             $table->string('title');
             $table->string('description')->nullable();
             $table->string('address');
-            $table->decimal('rent_amount', 11, 2)->unsigned();
-            $table->unsignedInteger('max_occupancy')->default(1);
-            $table->unsignedInteger('current_occupancy')->default(0);
             $table->timestamps();
         });
     }

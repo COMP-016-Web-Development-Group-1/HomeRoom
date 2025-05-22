@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\Room;
-use App\Models\User;
+use App\Models\Property;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tenants', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Room::class)->constrained()->onDelete('cascade');
-            $table->date('move_in_date')->nullable();
-            $table->date('move_out_date')->nullable();
+            $table->foreignIdFor(Property::class)->constrained()->onDelete('cascade');
+            $table->string('code')->unique();
+            $table->string('name');
+            $table->decimal('rent_amount', 11, 2);
+            $table->unsignedInteger('max_occupancy')->default(1);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tenants');
+        Schema::dropIfExists('rooms');
     }
 };

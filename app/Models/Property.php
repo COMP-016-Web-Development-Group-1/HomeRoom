@@ -12,13 +12,10 @@ class Property extends Model
 
     protected $fillable = [
         'landlord_id',
-        'code',
+        'type',
         'title',
         'description',
         'address',
-        'rent_amount',
-        'max_occupancy',
-        'current_occupancy',
     ];
 
     public function landlord()
@@ -26,8 +23,8 @@ class Property extends Model
         return $this->belongsTo(Landlord::class);
     }
 
-    public function tenants()
+    public function rooms()
     {
-        return $this->hasMany(Tenant::class);
+        return $this->hasMany(Room::class);
     }
 }
