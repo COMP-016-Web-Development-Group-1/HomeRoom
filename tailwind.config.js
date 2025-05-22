@@ -16,6 +16,15 @@ export default {
                 flatpen: ["Flatpen", ...defaultTheme.fontFamily.sans],
                 lexend: ["Lexend", ...defaultTheme.fontFamily.sans],
             },
+            keyframes: {
+                shrink: {
+                    "0%": { width: "100%" },
+                    "100%": { width: "0%" },
+                },
+            },
+            animation: {
+                shrink: "shrink 3.2s linear forwards",
+            },
         },
     },
 
