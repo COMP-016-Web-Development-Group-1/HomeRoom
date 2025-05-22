@@ -60,7 +60,13 @@ DEFAULT_LANDLORD_EMAIL=
 DEFAULT_LANDLORD_PASSWORD=
 ```
 
----
+If you're using Laravel Herd, make sure to set:
+
+```env
+APP_URL=http://homeroom.test
+```
+
+Otherwise, keep the default:
 
 ### 4. Create the SQLite Database
 
