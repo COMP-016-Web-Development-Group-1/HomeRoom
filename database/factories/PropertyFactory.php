@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Landlord;
+use App\PropertyType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,13 +20,10 @@ class PropertyFactory extends Factory
     {
         return [
             'landlord_id' => Landlord::factory(),
-            'code' => generate_code(),
+            'type' => fake()->randomElement(PropertyType::cases())->value,
             'title' => fake()->words(3, true),
             'description' => fake()->paragraph(),
             'address' => fake()->address(),
-            'rent_amount' => fake()->randomFloat(2, 1000, 10000),
-            'max_occupancy' => fake()->numberBetween(1, 5),
-            'current_occupancy' => 0,
         ];
     }
 }
