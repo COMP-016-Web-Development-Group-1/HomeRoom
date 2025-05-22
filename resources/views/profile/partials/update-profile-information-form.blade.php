@@ -52,8 +52,8 @@
             <x-input.label for="profile_picture">Profile Picture</x-input.label>
             @if ($user->profile_picture)
                 <div class="max-w-xs mb-4 mx-auto">
-                    <img src="{{ $user->profile_picture }}" alt="Profile Picture"
-                        class="border border-gray-200 shadow-sm aspect-square w-full object-cover rounded-full" />
+                    <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile Picture"
+                        class="border border-gray-200 shadow-sm aspect-square w-full max-w-sm object-cover rounded-full" />
                 </div>
                 <x-input.classic-file id="profile_picture" name="profile_picture" accept="image/png,image/jpeg"
                     help="PNG or JPG (Max 2MB)" />
