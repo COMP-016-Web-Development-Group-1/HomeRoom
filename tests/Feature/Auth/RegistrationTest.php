@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Property;
+use App\Models\Room;
 use Illuminate\Http\UploadedFile;
 
 beforeEach(function () {
@@ -14,7 +14,7 @@ test('registration screen can be rendered', function () {
 });
 
 test('new tenants can register', function () {
-    $property = Property::factory()->create();
+    $room = Room::factory()->create();
 
     $response = $this->post('/register', [
         'name' => 'Test User',
@@ -22,7 +22,7 @@ test('new tenants can register', function () {
         'profile_picture' => UploadedFile::fake()->image('my-profile.jpg'),
         'password' => 'password',
         'password_confirmation' => 'password',
-        'code' => $property->code,
+        'code' => $room->code,
     ]);
 
     $this->assertAuthenticated();
