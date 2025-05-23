@@ -1,5 +1,6 @@
 import "./bootstrap";
 import Alpine from "alpinejs";
+import collapse from "@alpinejs/collapse";
 
 import "@phosphor-icons/web/bold";
 import "@phosphor-icons/web/fill";
@@ -10,4 +11,5 @@ import "@phosphor-icons/web/regular";
 
 window.Alpine = Alpine;
 
+Alpine.plugin(collapse);
 Alpine.start();
