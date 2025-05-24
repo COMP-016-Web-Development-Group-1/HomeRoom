@@ -39,7 +39,8 @@ cd HomeRoom
 
 ```bash
 composer install
-npm install && npm run build
+npm install
+npm run build
 ```
 
 ---
