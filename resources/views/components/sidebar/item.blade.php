@@ -9,7 +9,7 @@
 @endphp
 
 <a {{ $attributes->merge(['class' => $classes]) }}>
-    <i class="ph{{ $active ? '-bold' : '-duotone' }} ph-{{ $icon }} text-lg"></i>
+    <i class="ph{{ $active ? '-fill' : '-bold' }} ph-{{ $icon }} text-lg"></i>
     <span>{{ $title }}</span>
 
     @if ($badge)

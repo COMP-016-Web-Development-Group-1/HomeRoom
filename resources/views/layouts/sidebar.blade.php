@@ -39,9 +39,10 @@
                 <x-sidebar.item href="#" title="Transactions" icon="money" badge="12" />
 
 
-                <x-sidebar.collapsible icon="package" title="Products">
-                    <x-sidebar.item icon="gear" title="Settings" href="#" badge="pro" />
-                    <x-sidebar.item icon="gear" title="Settings" href="#" badge="pro" />
+                <x-sidebar.collapsible icon="package" title="Test" badge="3">
+                    <x-sidebar.item href="#" title="Transactions" icon="money" badge="12" />
+                    <x-sidebar.item href="#" title="Transactions" icon="money" badge="12" />
+
                 </x-sidebar.collapsible>
             </nav>
         </div>
