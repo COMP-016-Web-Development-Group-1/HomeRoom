@@ -11,3 +11,8 @@ if (! function_exists('generate_code')) {
         return "{$part1}-{$part2}";
     }
 }
+
+function page_title($title = '')
+{
+    return $title ? "$title | ".config('app.name') : config('app.name');
+}
