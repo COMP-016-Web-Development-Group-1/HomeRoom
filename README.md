@@ -82,14 +82,12 @@ touch database/database.sqlite
 #### PowerShell:
 
 ```powershell
-New-Item -ItemType Directory -Path "database"
 New-Item -ItemType File -Path "database/database.sqlite"
 ```
 
 #### CMD:
 
 ```cmd
-mkdir database
 type NUL > database\database.sqlite
 ```
 
