@@ -53,10 +53,10 @@
                     <button
                         class="inline-flex items-center gap-x-2 justify-between px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 transition ease-in-out duration-150">
                         <div class="flex items-center gap-x-2">
-                            @if (auth()->user()->profile_picture)
-                                <img src="{{ auth()->user()->profile_picture }}"
-                                    class="aspect-square w-10 border rounded-full" alt="Profile" />
-                            @endif
+                            {{-- @if (auth()->user()->profile_picture) --}}
+                            <img src="{{ auth()->user()->profile_picture ?? Vite::asset('resources/assets/images/default_profile.png') }}"
+                                class="aspect-square w-10 border rounded-full" alt="Profile" />
+                            {{-- @endif --}}
                             <div class="text-left">
                                 <p class="font-bold text-gray-900">{{ auth()->user()->name }}</p>
                                 <p class="text-sm">{{ auth()->user()->email }}</p>
