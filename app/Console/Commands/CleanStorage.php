@@ -24,8 +24,9 @@ class CleanStorage extends Command
     public function handle(): int
     {
         $disk = $this->argument('disk');
+        $excludedFiles = ['.gitignore'];
 
-        if (! in_array($disk, ['public', 'private'])) {
+        if (!in_array($disk, ['public', 'private'])) {
             $this->error('Invalid disk argument. Allowed values: public, private');
 
             return self::FAILURE;
@@ -36,7 +37,7 @@ class CleanStorage extends Command
         $this->info("You are about to delete ALL files and directories from the '{$disk}' storage disk.");
         $this->info('This action cannot be undone.');
 
-        if (! $this->confirm('Do you wish to continue? Type "yes" to confirm.', false)) {
+        if (!$this->confirm('Do you wish to continue? Type "yes" to confirm.', false)) {
             $this->info('Operation cancelled.');
 
             return self::SUCCESS;
@@ -48,9 +49,11 @@ class CleanStorage extends Command
         $directories = $storageDisk->allDirectories();
 
         foreach ($files as $file) {
+            if (in_array(basename($file), $excludedFiles)) {
+                continue;
+            }
             $storageDisk->delete($file);
         }
-
         foreach ($directories as $dir) {
             $storageDisk->deleteDirectory($dir);
         }

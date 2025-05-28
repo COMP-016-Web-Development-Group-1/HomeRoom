@@ -33,6 +33,7 @@ class CleanTempStorage extends Command
         $storage = strtolower($this->argument('storage'));
         $hours = $this->option('hours');
         $force = $this->option('force');
+        $excludedFiles = ['.gitignore'];
 
         if (!in_array($storage, ['public', 'private'])) {
             $this->error('Invalid storage disk. Allowed values: public, private.');
@@ -79,7 +80,7 @@ class CleanTempStorage extends Command
         $deletedCount = 0;
         $totalSize = 0;
 
-        $deletedCount = $this->cleanupDirectory('temp', $cutoffTime, $totalSize, $diskName);
+        $deletedCount = $this->cleanupDirectory('temp', $cutoffTime, $totalSize, $diskName, $excludedFiles);
 
         $this->info('Cleanup completed!');
         $this->info("Files deleted: {$deletedCount}");
@@ -88,7 +89,7 @@ class CleanTempStorage extends Command
         return self::SUCCESS;
     }
 
-    private function cleanupDirectory(string $directory, ?int $cutoffTime, int &$totalSize, string $diskName): int
+    private function cleanupDirectory(string $directory, ?int $cutoffTime, int &$totalSize, string $diskName, $excludedFiles): int
     {
         $disk = Storage::disk($diskName);
 
@@ -102,6 +103,9 @@ class CleanTempStorage extends Command
         $deletedCount = 0;
 
         foreach ($files as $file) {
+            if (in_array(basename($file), $excludedFiles)) {
+                continue;
+            }
             $lastModified = $disk->lastModified($file);
 
             if ($cutoffTime === null || $lastModified < $cutoffTime) {
