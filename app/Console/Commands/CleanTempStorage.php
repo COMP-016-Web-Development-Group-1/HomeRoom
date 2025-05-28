@@ -35,13 +35,13 @@ class CleanTempStorage extends Command
         $force = $this->option('force');
         $excludedFiles = ['.gitignore'];
 
-        if (!in_array($storage, ['public', 'private'])) {
+        if (! in_array($storage, ['public', 'private'])) {
             $this->error('Invalid storage disk. Allowed values: public, private.');
 
             return self::FAILURE;
         }
 
-        if ($hours !== null && (!is_numeric($hours) || (int) $hours <= 0)) {
+        if ($hours !== null && (! is_numeric($hours) || (int) $hours <= 0)) {
             $this->error('Invalid value for --hours. It must be a positive number.');
 
             return self::FAILURE;
@@ -62,8 +62,8 @@ class CleanTempStorage extends Command
 
         $this->info('This action cannot be undone.');
 
-        if (!$force) {
-            if (!$this->confirm('Do you wish to continue? Type "yes" to confirm.', false)) {
+        if (! $force) {
+            if (! $this->confirm('Do you wish to continue? Type "yes" to confirm.', false)) {
                 $this->info('Operation cancelled.');
 
                 return self::SUCCESS;
@@ -84,7 +84,7 @@ class CleanTempStorage extends Command
 
         $this->info('Cleanup completed!');
         $this->info("Files deleted: {$deletedCount}");
-        $this->info('Space freed: ' . $this->formatBytes($totalSize));
+        $this->info('Space freed: '.$this->formatBytes($totalSize));
 
         return self::SUCCESS;
     }
@@ -93,7 +93,7 @@ class CleanTempStorage extends Command
     {
         $disk = Storage::disk($diskName);
 
-        if (!$disk->exists($directory)) {
+        if (! $disk->exists($directory)) {
             $this->warn("Directory '{$directory}' does not exist on the {$diskName} disk, skipping...");
 
             return 0;
@@ -129,6 +129,6 @@ class CleanTempStorage extends Command
         $pow = min($pow, count($units) - 1);
         $bytes /= pow(1024, $pow);
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 }
