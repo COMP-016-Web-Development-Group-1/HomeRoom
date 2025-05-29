@@ -27,4 +27,9 @@ class Room extends Model
     {
         return $this->belongsTo(Property::class);
     }
+
+    public function maintenanceRequests()
+    {
+        return $this->hasMany(MaintenanceRequest::class);
+    }
 }
