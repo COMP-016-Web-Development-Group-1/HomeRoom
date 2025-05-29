@@ -4,7 +4,7 @@ HomeRoom is a digital platform designed to streamline the financial and organiza
 
 For landlords, HomeRoom provides an efficient way to manage households, monitor payment statuses, and oversee tenant activity. For tenants, it offers an accessible tool to track monthly dues, view rental history, and stay updated with household announcements.
 
-By bridging the gap between landlords and tenants through a user-friendly and structured interface, HomeRoom aims to enhance transparency, reduce manual overhead, and foster better housing experiences for all users involved.
+Through an intuitive and well-organized interface, HomeRoom fosters seamless interaction between landlords and tenants. It promotes clear communication, reduces the complexity of managing rentals, and ultimately contributes to a more transparent and efficient housing experience for everyone involved.
 
 ## 🚀 Getting Started
 
