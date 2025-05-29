@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Property;
+use App\Models\Room;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,5 +25,20 @@ class RoomFactory extends Factory
             'rent_amount' => $this->faker->randomFloat(2, 1000, 10000),
             'max_occupancy' => $this->faker->numberBetween(1, 6),
         ];
+    }
+
+    public function global(): static
+    {
+        return $this->state([
+            'room_id' => null,
+        ]);
+    }
+
+    public function forRoom(Room $room): static
+    {
+        return $this->state([
+            'property_id' => $room->property_id,
+            'room_id' => $room->id,
+        ]);
     }
 }

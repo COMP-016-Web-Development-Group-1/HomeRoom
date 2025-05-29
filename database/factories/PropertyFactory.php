@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\PropertyType;
 use App\Models\Landlord;
-use App\PropertyType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
