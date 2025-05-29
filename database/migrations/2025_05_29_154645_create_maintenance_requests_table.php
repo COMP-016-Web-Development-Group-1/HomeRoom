@@ -1,7 +1,6 @@
 <?php
 
 use App\Enums\MaintenanceRequestStatus;
-use App\Models\Property;
 use App\Models\Room;
 use App\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
