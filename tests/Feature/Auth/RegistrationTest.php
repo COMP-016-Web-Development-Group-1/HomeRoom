@@ -3,10 +3,6 @@
 use App\Models\Room;
 use Illuminate\Http\UploadedFile;
 
-beforeEach(function () {
-    Storage::fake('public');
-});
-
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
 

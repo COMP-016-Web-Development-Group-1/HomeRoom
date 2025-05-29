@@ -2,10 +2,6 @@
 
 use App\Models\User;
 
-beforeEach(function () {
-    Storage::fake('public');
-});
-
 test('confirm password screen can be rendered', function () {
     $user = User::factory()->create();
 

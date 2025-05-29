@@ -3,10 +3,6 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-beforeEach(function () {
-    Storage::fake('public');
-});
-
 test('password can be updated', function () {
     $user = User::factory()->create();
 

@@ -4,10 +4,6 @@ use App\Models\Landlord;
 use App\Models\Tenant;
 use App\Models\User;
 
-beforeEach(function () {
-    Storage::fake('public');
-});
-
 test('profile page is displayed for tenant', function () {
     $tenant = Tenant::factory()->create();
     $user = $tenant->user;
