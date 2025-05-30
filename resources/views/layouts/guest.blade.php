@@ -15,8 +15,8 @@
 </head>
 
 <body class="font-lexend text-gray-900 antialiased">
-    <div class="min-h-screen bg-gray-100">
-        <div class="w-full sm:max-w-md px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+    <div class="min-h-screen bg-gray-100 flex items-center justify-center py-6">
+        <div class="w-full sm:max-w-md px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg mb-8">
             {{ $slot }}
         </div>
     </div>
