@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PropertyType;
 use App\Models\Landlord;
 use App\Models\Property;
 use App\Models\Room;
 use App\Models\User;
-use App\PropertyType;
 use Carbon\Carbon;
 use Hash;
 use Illuminate\Database\Seeder;
