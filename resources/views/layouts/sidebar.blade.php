@@ -59,9 +59,13 @@
                     <button
                         class="inline-flex items-center gap-x-2 justify-between w-full px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 transition ease-in-out duration-150">
                         <div class="flex items-center gap-x-2">
-                            {{-- @if (auth()->user()->profile_picture) --}}
-                            <img src="{{ Storage::url(auth()->user()->profile_picture) ?? Vite::asset('resources/assets/images/default_profile.png') }}"
-                                class="aspect-square w-10 border rounded-full" alt="Profile" />
+                            @php
+                                $profilePicture = auth()->user()->profile_picture
+                                    ? Storage::url(auth()->user()->profile_picture)
+                                    : Vite::asset('resources/assets/images/default_profile.png');
+                            @endphp
+                            <img src="{{ $profilePicture }}" class="aspect-square w-10 border rounded-full"
+                                alt="Profile" />
                             {{-- @endif --}}
                             <div class="text-left">
                                 <p class="font-bold text-gray-900">{{ auth()->user()->name }}</p>
