@@ -1,4 +1,12 @@
 <x-guest-layout title="Register - Step {{ $step }} of 3">
+    <div class="text-center">
+        <p>Logo Here</p>
+        <h2 class="font-medium text-xl">Let's Get Started!</h2>
+        <p class="text-sm text-gray-900">Create an account to join your property and get connected with your landlord</p>
+    </div>
+
+    <hr class="border-gray-200 my-4" />
+
     <!-- Progress Indicator -->
     <x-progress-tracker :step="$step" :labels="['Personal Information', 'Password', 'Room Code']" />
 
@@ -60,16 +68,6 @@
                     Enter the room code provided by your landlord or property manager.
                 </p>
             </div>
-
-            <!-- Summary of previous steps -->
-            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-                <h3 class="text-sm font-medium text-gray-900 mb-2">Registration Summary</h3>
-                <div class="text-sm text-gray-600 space-y-1">
-                    <p><strong>Name:</strong> {{ $data['name'] ?? 'N/A' }}</p>
-                    <p><strong>Email:</strong> {{ $data['email'] ?? 'N/A' }}</p>
-                    <p><strong>Profile Picture:</strong> Uploaded</p>
-                </div>
-            </div>
         @endif
 
         <!-- Navigation Buttons -->
@@ -78,7 +76,7 @@
                 @if ($step > 1)
                     <x-button type="button" variant="dark"
                         onclick="window.location.href='{{ route('register.back', ['step' => $step]) }}'">
-                        Back
+                        <i class="ph-bold ph-arrow-left"></i>Back
                     </x-button>
                 @else
                     <x-a href="{{ route('login') }}">Already Registered?</x-a>
@@ -89,7 +87,7 @@
                 @if ($step == 3)
                     Submit
                 @else
-                    Next
+                    Next<i class="ph-bold ph-arrow-right"></i>
                 @endif
             </x-button>
         </div>

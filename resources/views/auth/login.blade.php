@@ -1,10 +1,15 @@
 <x-guest-layout title="Login">
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="text-center">
+        <p>Logo Here</p>
+        <h2 class="font-medium text-xl">Welcome back!</h2>
+        <p class="text-sm text-gray-900">Please enter your details to log in</p>
+    </div>
+
+    <hr class="border-gray-200 my-4" />
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
-
+        <x-auth-session-status class="mb-4" :status="session('status')" />
         <div>
             <x-input.label for="email">Email</x-input.label>
             <x-input.text id="email" type="email" name="email" :value="old('email')" autofocus />
@@ -18,19 +23,21 @@
         </div>
 
 
-        <div class="mt-4">
+        <div class="mt-4 flex items-center justify-between">
             <x-input.label for="remember_me">
                 <x-input.checkbox id="remember_me" name="remember" />
                 <span class="ms-1 text-sm text-gray-600">Remember Me</span>
             </x-input.label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4 gap-x-3">
             @if (Route::has('password.request'))
                 <x-a href="{{ route('password.request') }}">Forgot your password?</x-a>
             @endif
-
-            <x-button>Log In</x-button>
         </div>
+
+        <div class="flex items-center mt-4">
+            <x-button class="w-full">Log In</x-button>
+        </div>
+
+        <p class="text-center mt-4 text-sm text-gray-900">Don't have an account yet? <x-a
+                href="{{ route('register') }}">Sign Up</x-a></p>
     </form>
 </x-guest-layout>
