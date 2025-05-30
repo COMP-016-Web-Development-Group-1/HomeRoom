@@ -21,19 +21,15 @@ class DefaultLandlordSeeder extends Seeder
         $user = User::firstOrCreate(
             ['email' => env('DEFAULT_LANDLORD_EMAIL', 'landlord@gmail.com')],
             [
-                'name' => env('DEFAULT_LANDLORD_NAME', 'Default Landlord'),
+                'name' => 'Default Landlord',
                 'email_verified_at' => Carbon::now(),
-                'password' => Hash::make(env('DEFAULT_LANDLORD_PASSWORD', 'password')),
+                'password' => Hash::make('password'),
                 'role' => 'landlord',
             ]
         );
 
         $landlord = Landlord::firstOrCreate(
-            ['user_id' => $user->id],
-            [
-                'gcash_qr' => null,
-                'maya_qr' => null,
-            ]
+            ['user_id' => $user->id]
         );
 
         $property = Property::firstOrCreate([
