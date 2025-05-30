@@ -62,9 +62,8 @@ cp .env.example .env
 Then open `.env` and fill in the following fields:
 
 ```env
-DEFAULT_LANDLORD_NAME=
+# Our custom environment variables
 DEFAULT_LANDLORD_EMAIL=
-DEFAULT_LANDLORD_PASSWORD=
 ```
 
 If you're using Laravel Herd, make sure to set:
@@ -144,6 +143,7 @@ Then visit the URL provided in the terminal, e.g.:
 ```
 http://127.0.0.1:8000
 ```
+> Note: the default password for the landlord is `password`
 
 ---
 
@@ -186,6 +186,18 @@ php artisan test
 ```bash
 vendor/bin/pint
 ```
+
+### Clean Up Temporary Files in Storage
+```bash
+php artisan app:clean-temp-storage [public/private]
+```
+
+### Clean Up  Files in Storage
+```bash
+php artisan app:clean-storage [public/private]
+```
+
+> Note: `[]` indicates a choice
 
 ---
 
