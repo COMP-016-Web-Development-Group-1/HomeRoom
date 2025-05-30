@@ -20,7 +20,7 @@
     $positionClasses = $position === 'top' ? 'bottom-full mb-2' : 'mt-2';
 @endphp
 
-<div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
+<div class="relative w-full" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
     <div @click="open = ! open">
         {{ $trigger }}
     </div>

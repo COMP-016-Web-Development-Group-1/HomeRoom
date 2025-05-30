@@ -35,15 +35,20 @@
             {{-- Navigation Links --}}
             <nav class="space-y-2 font-medium mt-6">
                 <x-sidebar.item :href="route('dashboard')" :active="request()->routeIs('dashboard')" title="Dashboard" icon="squares-four" />
-                <x-sidebar.item href="#" title="Properties" icon="house-line" badge="7" />
-                <x-sidebar.item href="#" title="Transactions" icon="money" badge="12" />
+                @if (auth()->user()->role === 'landlord')
+                    <x-sidebar.item href="#" title="Properties" icon="house-line" />
+                @elseif (auth()->user()->role === 'tenant')
+                @endif
+                <x-sidebar.item href="#" title="Transactions" icon="money" />
+                <x-sidebar.item href="#" title="Announcements" icon="megaphone" />
+                <x-sidebar.item href="#" title="Maintenance Request" icon="wrench" />
 
 
-                <x-sidebar.collapsible icon="package" title="Test" badge="3">
+                {{-- <x-sidebar.collapsible icon="package" title="Test" badge="3">
                     <x-sidebar.item href="#" title="Transactions" icon="money" badge="12" />
                     <x-sidebar.item href="#" title="Transactions" icon="money" badge="12" />
 
-                </x-sidebar.collapsible>
+                </x-sidebar.collapsible> --}}
             </nav>
         </div>
 
@@ -52,7 +57,7 @@
             <x-dropdown position="top" align="right" width="48">
                 <x-slot name="trigger">
                     <button
-                        class="inline-flex items-center gap-x-2 justify-between px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 transition ease-in-out duration-150">
+                        class="inline-flex items-center gap-x-2 justify-between w-full px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 transition ease-in-out duration-150">
                         <div class="flex items-center gap-x-2">
                             {{-- @if (auth()->user()->profile_picture) --}}
                             <img src="{{ auth()->user()->profile_picture ?? Vite::asset('resources/assets/images/default_profile.png') }}"
@@ -60,7 +65,7 @@
                             {{-- @endif --}}
                             <div class="text-left">
                                 <p class="font-bold text-gray-900">{{ auth()->user()->name }}</p>
-                                <p class="text-sm">{{ auth()->user()->email }}</p>
+                                <p class="text-sm">{{ Str::upper(auth()->user()->role) }}</p>
                             </div>
 
                         </div>
