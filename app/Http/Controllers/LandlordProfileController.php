@@ -16,8 +16,8 @@ class LandlordProfileController extends Controller
         }
 
         $data = $request->validate([
-            'gcash_qr' => ['nullable', 'image', 'mimes:jpeg,png', 'max:2048'],
-            'maya_qr' => ['nullable', 'image', 'mimes:jpeg,png', 'max:2048'],
+            'gcash_qr' => ['image', 'mimes:jpeg,png', 'max:2048'],
+            'maya_qr' => ['image', 'mimes:jpeg,png', 'max:2048'],
         ], [
             'gcash_qr.max' => 'The GCash QR image must not be larger than 2MB.',
             'maya_qr.max' => 'The Maya QR image must not be larger than 2MB.',
