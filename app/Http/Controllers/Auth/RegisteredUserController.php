@@ -170,6 +170,7 @@ class RegisteredUserController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'profile_picture' => $profilePath,
+            'profile_completed' => true,
         ]);
 
         // Create tenant relationship
