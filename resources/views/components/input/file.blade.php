@@ -42,6 +42,12 @@
                 preview: null
             }];
         }
+
+        if (this.$refs.fileInput) {
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            this.$refs.fileInput.files = dt.files;
+        }
     },
     removeFile() {
         this.files = [];

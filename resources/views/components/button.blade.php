@@ -11,9 +11,12 @@
         'dark' =>
             'bg-gray-800 border-transparent text-white hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:ring-blue-500',
         'danger' => 'bg-red-600 border-transparent text-white hover:bg-red-500 active:bg-red-700 focus:ring-red-500',
+        'text' =>
+            'text-sm text-blue-500 hover:underline hover:text-blue-600 focus:underline focus:text-blue-600 bg-transparent focus:outline-none ',
     ];
 
-    $buttonClass = $baseClass . ' ' . ($variants[$variant] ?? $variants['primary']);
+    $isPlainText = $variant === 'text';
+    $buttonClass = $isPlainText ? $variants['text'] : $baseClass . ' ' . ($variants[$variant] ?? $variants['primary']);
 @endphp
 
 
