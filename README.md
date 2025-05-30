@@ -271,6 +271,7 @@ Helpful references for understanding and contributing to the project:
 - [Laravel Documentation](https://laravel.com/docs) _(Look for the Basics section)_
 - [Laravel Blade Templates](https://laravel.com/docs/12.x/blade)
 - [Tailwind v3 Documentation](https://v3.tailwindcss.com/docs/display)
+- [Phosphor Icons](https://phosphoricons.com/)
 
-- [Everything You Need to Know About Laravel in 30 Minutes](https://www.youtube.com/watch?v=e7z6KJkGhmg)
+- [Everything You Need to Know About Laravel in 30 Minutes](https://www.youtube.com/watch?v=e7z6KJkGhmg) _(Must Watch)_
 - [From Blank to Blog With Laravel in 10 Minutes](https://www.youtube.com/watch?v=Miea-1jTYl0)
