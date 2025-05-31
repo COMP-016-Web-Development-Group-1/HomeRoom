@@ -66,6 +66,37 @@ Then open `.env` and fill in the following fields:
 DEFAULT_LANDLORD_EMAIL=
 ```
 
+> Note:
+> By default, we’re using log-only email for local development. This means emails won’t actually be sent. They’ll just be written to the log file located at: `storage/logs/laravel.log`
+
+If we ever need to showcase real email sending (e.g. for demo or production), then:
+
+1. **Comment out** the log mailer block:
+
+    ```env
+    # MAIL_MAILER=log
+    # MAIL_SCHEME=null
+    # MAIL_HOST=127.0.0.1
+    # MAIL_PORT=2525
+    # MAIL_USERNAME=null
+    # MAIL_PASSWORD=null
+    # MAIL_FROM_ADDRESS="hello@example.com"
+    # MAIL_FROM_NAME="${APP_NAME}"
+    ```
+
+2. **Uncomment** the Gmail SMTP block:
+    ```env
+    MAIL_MAILER=smtp
+    MAIL_HOST=smtp.gmail.com
+    MAIL_PORT=465
+    MAIL_USERNAME=
+    MAIL_PASSWORD=
+    MAIL_ENCRYPTION=tls
+    MAIL_FROM_ADDRESS=
+    MAIL_FROM_NAME="${APP_NAME}"
+    ```
+    We’ll provide the Gmail credentials privately, so you don’ need to create a Gmail account.
+
 If you're using Laravel Herd, make sure to set:
 
 ```env
@@ -143,6 +174,7 @@ Then visit the URL provided in the terminal, e.g.:
 ```
 http://127.0.0.1:8000
 ```
+
 > Note: the default password for the landlord is `password`
 
 ---
@@ -188,11 +220,13 @@ vendor/bin/pint
 ```
 
 ### Clean Up Temporary Files in Storage
+
 ```bash
 php artisan app:clean-temp-storage [public/private]
 ```
 
-### Clean Up  Files in Storage
+### Clean Up Files in Storage
+
 ```bash
 php artisan app:clean-storage [public/private]
 ```
@@ -268,10 +302,21 @@ php artisan app:clean-storage [public/private]
 
 Helpful references for understanding and contributing to the project:
 
-- [Laravel Documentation](https://laravel.com/docs) _(Look for the Basics section)_
-- [Laravel Blade Templates](https://laravel.com/docs/12.x/blade)
-- [Tailwind v3 Documentation](https://v3.tailwindcss.com/docs/display)
-- [Phosphor Icons](https://phosphoricons.com/)
+### General
 
-- [Everything You Need to Know About Laravel in 30 Minutes](https://www.youtube.com/watch?v=e7z6KJkGhmg) _(Must Watch)_
-- [From Blank to Blog With Laravel in 10 Minutes](https://www.youtube.com/watch?v=Miea-1jTYl0)
+-   [Laravel Documentation](https://laravel.com/docs) _(Look for the Basics section)_
+-   [Everything You Need to Know About Laravel in 30 Minutes](https://www.youtube.com/watch?v=e7z6KJkGhmg)
+-   [From Blank to Blog With Laravel in 10 Minutes](https://www.youtube.com/watch?v=Miea-1jTYl0)
+
+### Frontend
+
+-   [Creating Laravel Blade Component: Step-By-STep](https://www.youtube.com/watch?v=kfvLppwhmgQ)
+-   [Laravel Blade Directives](https://kritimyantra.com/blogs/laravel-12-blade-directives-from-beginner-to-advanced)
+-   [Tailwind v3 Documentation](https://v3.tailwindcss.com/docs/display)
+-   [Phosphor Icons](https://phosphoricons.com/)
+
+### Backend
+
+-   [Laravel Controllers](https://laravel.com/docs/12.x/controllers)
+-   [Laravel Authorization](https://laravel.com/docs/12.x/authorization)
+-   [Laravel Routing](https://laravel.com/docs/12.x/routing)
