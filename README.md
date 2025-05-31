@@ -310,7 +310,7 @@ Helpful references for understanding and contributing to the project:
 
 ### Frontend
 
--   [Creating Laravel Blade Component: Step-By-STep](https://www.youtube.com/watch?v=kfvLppwhmgQ)
+-   [Creating Laravel Blade Component: Step-By-Step](https://www.youtube.com/watch?v=kfvLppwhmgQ)
 -   [Laravel Blade Directives](https://kritimyantra.com/blogs/laravel-12-blade-directives-from-beginner-to-advanced)
 -   [Tailwind v3 Documentation](https://v3.tailwindcss.com/docs/display)
 -   [Phosphor Icons](https://phosphoricons.com/)
