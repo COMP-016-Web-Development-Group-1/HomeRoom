@@ -15,7 +15,7 @@ class LandlordSetupController extends Controller
             return redirect()->route('landlord.setup.edit', ['step' => 1]);
         }
 
-        if ($step > 1 && !$this->isPreviousStepCompleted($step - 1)) {
+        if ($step > 1 && ! $this->isPreviousStepCompleted($step - 1)) {
             return redirect()->route('landlord.setup.edit', ['step' => $step - 1]);
         }
 
@@ -132,7 +132,7 @@ class LandlordSetupController extends Controller
         // Move profile picture
         if (isset($data['profile_picture_path'])) {
             $filename = basename($data['profile_picture_path']);
-            $finalPath = 'profile_pictures/' . $filename;
+            $finalPath = 'profile_pictures/'.$filename;
             Storage::disk('public')->move($data['profile_picture_path'], $finalPath);
             $user->profile_picture = $finalPath;
         }
@@ -147,14 +147,14 @@ class LandlordSetupController extends Controller
 
         if (isset($data['gcash_qr_path'])) {
             $filename = basename($data['gcash_qr_path']);
-            $finalPath = 'qr_codes/' . $filename;
+            $finalPath = 'qr_codes/'.$filename;
             Storage::disk('public')->move($data['gcash_qr_path'], $finalPath);
             $landlord->gcash_qr = $finalPath;
         }
 
         if (isset($data['maya_qr_path'])) {
             $filename = basename($data['maya_qr_path']);
-            $finalPath = 'qr_codes/' . $filename;
+            $finalPath = 'qr_codes/'.$filename;
             Storage::disk('public')->move($data['maya_qr_path'], $finalPath);
             $landlord->maya_qr = $finalPath;
         }
