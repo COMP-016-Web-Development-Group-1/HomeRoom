@@ -8,6 +8,11 @@
     <hr class="border-gray-200 my-4" />
 
     <form method="POST" action="{{ route('login') }}">
+        {{-- <div class="mb-4">
+            <x-input.date maxDate="{{ iso_to_us(now()->toDateString()) }}" :withButtons="true" name="birth_date"
+                :value="old('birth_date')" placeholder="Select Date" />
+        </div> --}}
+
         @csrf
         <x-auth-session-status class="mb-4" :status="session('status')" />
         <div>
