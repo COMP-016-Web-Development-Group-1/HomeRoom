@@ -12,3 +12,42 @@
 [x-cloak] {
     display: none !important;
 }
+
+@view-transition {
+    navigation: auto;
+}
+
+@media screen and (min-width: 640px) {
+    @media not (prefers-reduced-motion: reduce) {
+        #side-content {
+            view-transition-name: side-content;
+        }
+    }
+}
+
+::view-transition-old(side-content) {
+    animation: slideOutLeft 0.5s ease forwards;
+}
+
+::view-transition-new(side-content) {
+    animation: slideInRight 0.5s ease forwards;
+}
+
+/* Keyframes */
+@keyframes slideOutLeft {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(100vw);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100vw);
+    }
+    to {
+        transform: translateX(0);
+    }
+}

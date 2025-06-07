@@ -102,7 +102,7 @@
 </aside>
 
 <!-- Main Content Area -->
-<div class="p-4 sm:ml-64">
+<div class="p-4 sm:ml-64" id="side-content">
     <main class="p-4 border-2 border-dashed rounded-lg">
         {{ $slot }}
     </main>
