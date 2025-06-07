@@ -25,13 +25,13 @@
         @if ($step == 1)
             <!-- Step 1: Personal Information -->
             <div>
-                <x-input.label for="name">Name</x-input.label>
+                <x-input.label for="name" :required="true">Name</x-input.label>
                 <x-input.text id="name" type="text" name="name" :value="old('name', $data['name'] ?? '')" autofocus />
                 <x-input.error for="name" />
             </div>
 
             <div class="mt-4">
-                <x-input.label for="profile_picture">Profile Picture</x-input.label>
+                <x-input.label for="profile_picture" :required="true">Profile Picture</x-input.label>
                 @if (isset($data['profile_picture_path']) && $data['profile_picture_path'])
                     <div class="max-w-xs mb-4 mx-auto">
                         <img id="profile_frame" src="{{ Storage::url($data['profile_picture_path']) }}"
@@ -49,13 +49,13 @@
         @elseif($step == 2)
             <!-- Step 2: Password -->
             <div>
-                <x-input.label for="password">Password</x-input.label>
+                <x-input.label for="password" :required="true">Password</x-input.label>
                 <x-input.text id="password" type="password" name="password" autofocus />
                 <x-input.error for="password" />
             </div>
 
             <div class="mt-4">
-                <x-input.label for="password_confirmation">Confirm Password</x-input.label>
+                <x-input.label for="password_confirmation" :required="true">Confirm Password</x-input.label>
                 <x-input.text id="password_confirmation" type="password" name="password_confirmation" />
                 <x-input.error for="password_confirmation" />
             </div>

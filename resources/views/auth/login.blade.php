@@ -11,13 +11,13 @@
         @csrf
         <x-auth-session-status class="mb-4" :status="session('status')" />
         <div>
-            <x-input.label for="email">Email</x-input.label>
+            <x-input.label for="email" :required="true">Email</x-input.label>
             <x-input.text id="email" type="email" name="email" :value="old('email')" autofocus />
             <x-input.error for="email" />
         </div>
 
         <div class="mt-4">
-            <x-input.label for="password">Password</x-input.label>
+            <x-input.label for="password" :required="true">Password</x-input.label>
             <x-input.text id="password" type="password" name="password" />
             <x-input.error for="password" />
         </div>

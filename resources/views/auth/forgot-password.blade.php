@@ -11,7 +11,7 @@
         @csrf
 
         <div>
-            <x-input.label for="email">Email</x-input.label>
+            <x-input.label for="email" :required="true">Email</x-input.label>
             <x-input.text id="email" type="email" name="email" :value="old('email')" autofocus />
             <x-input.error for="email" />
         </div>
