@@ -1,4 +1,4 @@
-@props(['required' => 'false'])
+@props(['required' => false])
 
 @php
     $baseClass = 'block font-medium text-sm text-gray-700 mb-1';
