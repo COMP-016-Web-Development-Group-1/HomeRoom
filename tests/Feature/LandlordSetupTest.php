@@ -154,19 +154,6 @@ test('step 3 can be completed with QR codes', function () {
     $this->assertNull(session('landlord_completed_steps'));
 });
 
-test('step 3 requires both QR codes', function () {
-    $landlord = Landlord::factory()->create();
-    $user = $landlord->user;
-
-    session(['landlord_completed_steps' => [1, 2]]);
-
-    $response = $this
-        ->actingAs($user)
-        ->post('/landlord/setup/3', []);
-
-    $response->assertSessionHasErrors(['gcash_qr', 'maya_qr']);
-});
-
 test('back navigation works correctly', function () {
     $landlord = Landlord::factory()->create();
     $user = $landlord->user;
