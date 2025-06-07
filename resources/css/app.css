@@ -6,8 +6,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@plugin "flowbite/plugin";
-@source "../../node_modules/flowbite";
+/* @plugin "flowbite/plugin"; */
+/* @source "../../node_modules/flowbite"; */
+/* @source "../../node_modules/flowbite-datepicker"; */
 
 [x-cloak] {
     display: none !important;
