@@ -40,6 +40,7 @@
                 @elseif (auth()->user()->role === 'tenant')
                 @endif
                 <x-sidebar.item href="#" title="Transactions" icon="money" />
+                <hr />
                 <x-sidebar.item href="#" title="Announcements" icon="megaphone" />
                 <x-sidebar.item href="#" title="Maintenance Request" icon="wrench" />
 

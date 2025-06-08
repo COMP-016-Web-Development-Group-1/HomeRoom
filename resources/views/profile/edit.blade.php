@@ -60,7 +60,7 @@
                 </div>
 
                 <!-- Landlord Tab -->
-                @if ($user->role === 'landlord')
+                @if ($user->landlord)
                     <div id="content-landlord" class="tab-content hidden">
                         <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                             <div class="max-w-xl">
