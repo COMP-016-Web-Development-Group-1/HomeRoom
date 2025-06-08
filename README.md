@@ -63,7 +63,7 @@ Then open `.env` and fill in the following fields:
 
 ```env
 # Our custom environment variables
-DEFAULT_LANDLORD_EMAIL=
+DEFAULT_LANDLORD_EMAIL=landlord@gmail.com
 ```
 
 > Note:
