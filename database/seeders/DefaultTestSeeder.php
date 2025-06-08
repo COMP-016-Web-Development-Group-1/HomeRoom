@@ -38,7 +38,7 @@ class DefaultTestSeeder extends Seeder
         $property = Property::firstOrCreate([
             'landlord_id' => $landlord->id,
             'type' => PropertyType::DORM->value,
-            'title' => 'Sample Property',
+            'name' => 'Sample Property',
             'description' => 'A default seeded property',
             'address' => '123 Example St. Sample City',
         ]);

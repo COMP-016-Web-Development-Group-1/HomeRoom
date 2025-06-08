@@ -21,7 +21,7 @@ class PropertyFactory extends Factory
         return [
             'landlord_id' => Landlord::factory(),
             'type' => fake()->randomElement(PropertyType::cases())->value,
-            'title' => fake()->words(3, true),
+            'name' => fake()->words(3, true),
             'description' => fake()->paragraph(),
             'address' => fake()->address(),
         ];
