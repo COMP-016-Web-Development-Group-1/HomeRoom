@@ -29,4 +29,4 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::patch('/profile/landlord', [LandlordProfileController::class, 'update'])->name('landlord.update');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
