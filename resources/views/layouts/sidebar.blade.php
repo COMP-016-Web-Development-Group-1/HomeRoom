@@ -5,7 +5,7 @@
     </div>
 
     <button type="button"
-        class="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+        class="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
         data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar">
         <i class="ph-bold ph-list text-2xl"></i>
         <span class="sr-only">Open sidebar</span>

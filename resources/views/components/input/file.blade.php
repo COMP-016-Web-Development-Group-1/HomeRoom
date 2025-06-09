@@ -95,10 +95,10 @@
             <template x-if="files[0].isImage">
                 @if ($circle)
                     <img :src="files[0].preview" :alt="files[0].name"
-                        class="border border-gray-200 shadow-sm aspect-square w-full object-cover rounded-full" />
+                        class="border border-gray-200 shadow-xs aspect-square w-full object-cover rounded-full" />
                 @else
                     <div
-                        class="w-full rounded-lg border border-gray-200 shadow-sm object-cover flex justify-center items-center">
+                        class="w-full rounded-lg border border-gray-200 shadow-xs object-cover flex justify-center items-center">
                         <img :src="files[0].preview" :alt="files[0].name" class="rounded-lg" />
                     </div>
                 @endif
@@ -109,8 +109,8 @@
 
             <!-- Non-image file preview -->
             <template x-if="!files[0].isImage">
-                <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
-                    <div class="flex-shrink-0 mr-3">
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 shadow-xs">
+                    <div class="shrink-0 mr-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -143,8 +143,8 @@
         <input type="file" name="{{ $name }}" id="{{ $id }}" multiple
             @if ($accept) accept="{{ $accept }}" @endif
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-            focus:ring-lime-600 focus:border-lime-600 block w-full focus:outline-none
-            file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:rounded file:font-outfit file:text-xs file:mr-3
+            focus:ring-lime-600 focus:border-lime-600 block w-full focus:outline-hidden
+            file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:rounded-sm file:font-outfit file:text-xs file:mr-3
             file:bg-gray-800 file:hover:bg-gray-700 file:text-white"
             @disabled($disabled) aria-describedby="{{ $helpId }}" />
 
