@@ -34,14 +34,11 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
 
     Route::get('/properties', [PropertyController::class, 'index'])->name('property.index');
 
-
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
 
-
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcement.index');
-
 
     Route::get('/requests', [MaintenanceRequestController::class, 'index'])->name('request.index');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
