@@ -14,7 +14,7 @@
         <span class="text-sm text-gray-500">{{ $currentLabel }}</span>
     </div>
     <div class="w-full bg-gray-200 rounded-full h-2">
-        <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+        <div class="bg-lime-600 h-2 rounded-full transition-all duration-300"
             style="width: {{ ($step / $total) * 100 }}%">
         </div>
     </div>

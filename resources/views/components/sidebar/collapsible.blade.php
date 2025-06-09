@@ -21,7 +21,7 @@
         <div class="ms-auto flex items-center gap-x-2">
             @if ($badge)
                 <span
-                    class="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-2 text-xs font-semibold rounded-full text-blue-700 bg-blue-100">
+                    class="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-2 text-xs font-semibold rounded-full text-lime-800 bg-lime-200">
                     {{ $badge }}
                 </span>
             @endif

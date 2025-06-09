@@ -6,13 +6,13 @@
 
     $variants = [
         'primary' =>
-            'bg-blue-500 border-transparent text-white hover:bg-blue-600 focus:bg-blue-600 focus:ring-blue-600 active:bg-blue-700',
-        'clean' => 'bg-white border-gray-300 text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-blue-500',
+            'bg-lime-600 border-transparent text-white hover:bg-lime-700 focus:bg-lime-700 focus:ring-lime-700 active:bg-lime-800',
+        'clean' => 'bg-white border-gray-300 text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-lime-600',
         'dark' =>
-            'bg-gray-800 border-transparent text-white hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:ring-blue-500',
+            'bg-gray-800 border-transparent text-white hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:ring-lime-600',
         'danger' => 'bg-red-600 border-transparent text-white hover:bg-red-500 active:bg-red-700 focus:ring-red-500',
         'text' =>
-            'text-sm text-blue-500 hover:underline hover:text-blue-600 focus:underline focus:text-blue-600 bg-transparent focus:outline-none ',
+            'text-sm text-lime-600 hover:underline hover:text-lime-700 focus:underline focus:text-lime-700 bg-transparent focus:outline-none ',
     ];
 
     $isPlainText = $variant === 'text';

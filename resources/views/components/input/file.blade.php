@@ -59,12 +59,12 @@
         <div x-show="files.length === 0">
             <label for="{{ $id }}"
                 class="relative flex flex-col items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer
-                   hover:border-indigo-500 bg-gray-50 hover:bg-gray-100
-                   focus-within:border-indigo-500 focus-within:bg-gray-100
+                   hover:border-lime-600 bg-gray-50 hover:bg-gray-100
+                   focus-within:border-lime-600 focus-within:bg-gray-100
                    transition-all duration-200"
-                @dragover.prevent="$el.classList.add('border-indigo-500', 'bg-gray-50')"
-                @dragleave.prevent="$el.classList.remove('border-indigo-500', 'bg-gray-50')"
-                @drop.prevent="$el.classList.remove('border-indigo-500', 'bg-gray-50'); addFiles($event.dataTransfer.files)">
+                @dragover.prevent="$el.classList.add('border-lime-600', 'bg-gray-50')"
+                @dragleave.prevent="$el.classList.remove('border-lime-600', 'bg-gray-50')"
+                @drop.prevent="$el.classList.remove('border-lime-600', 'bg-gray-50'); addFiles($event.dataTransfer.files)">
 
                 <div class="text-center text-gray-600">
                     <p class="font-medium">Click to upload{{ $accept === 'image/*' ? ' an image' : ' a file' }}</p>
@@ -143,7 +143,7 @@
         <input type="file" name="{{ $name }}" id="{{ $id }}" multiple
             @if ($accept) accept="{{ $accept }}" @endif
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-            focus:ring-blue-500 focus:border-blue-500 block w-full focus:outline-none
+            focus:ring-lime-600 focus:border-lime-600 block w-full focus:outline-none
             file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:rounded file:font-lexend file:text-xs file:mr-3
             file:bg-gray-800 file:hover:bg-gray-700 file:text-white"
             @disabled($disabled) aria-describedby="{{ $helpId }}" />

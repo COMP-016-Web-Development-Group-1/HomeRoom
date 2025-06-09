@@ -12,7 +12,7 @@
                         <div class="flex bg-gray-100 pt-1 pb-2 rounded-lg relative min-w-full w-max">
                             <!-- Sliding Indicator -->
                             <div id="tab-indicator"
-                                class="absolute top-1 left-0 h-10 bg-white rounded-md shadow-sm transition-all duration-300 ease-out">
+                                class="absolute top-1 left-0 h-10 bg-white rounded-md shadow-sm transition-all duration-300 ease-out border-b-4 border-lime-800">
                             </div>
 
                             <button id="tab-profile"
@@ -103,7 +103,7 @@
                 function setActiveTab(tabId) {
                     tabButtons.forEach(button => {
                         const isActive = button.dataset.tab === tabId;
-                        button.classList.toggle('text-blue-600', isActive);
+                        button.classList.toggle('text-lime-700', isActive);
                         button.classList.toggle('text-gray-700', !isActive);
                     });
 
