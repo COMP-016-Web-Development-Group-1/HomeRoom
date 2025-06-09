@@ -1,4 +1,4 @@
-<x-app-layout title="Dashboard">
+<x-app-layout title="Transactions">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Transactions
@@ -11,4 +11,5 @@
                 Transactions (Index)
             </div>
         </div>
+    </div>
 </x-app-layout>

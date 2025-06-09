@@ -11,4 +11,5 @@
                 You're Logged In! Tenant
             </div>
         </div>
+    </div>
 </x-app-layout>

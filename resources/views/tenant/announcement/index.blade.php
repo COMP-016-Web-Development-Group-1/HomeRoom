@@ -1,4 +1,4 @@
-<x-app-layout title="Dashboard">
+<x-app-layout title="Announcements">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Announcements
@@ -11,4 +11,5 @@
                 Announcements (Index)
             </div>
         </div>
+    </div>
 </x-app-layout>

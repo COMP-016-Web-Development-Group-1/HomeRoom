@@ -1,4 +1,4 @@
-<x-app-layout title="Dashboard">
+<x-app-layout title="Properties">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Properties
@@ -11,4 +11,5 @@
                 Properties (Index)
             </div>
         </div>
+    </div>
 </x-app-layout>
