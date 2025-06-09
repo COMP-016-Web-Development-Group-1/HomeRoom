@@ -4,15 +4,15 @@
     </x-slot>
 
     <div>
-        <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8 space-y-6">
             <!-- Tab Navigation -->
-            <div class="bg-white shadow sm:rounded-lg p-4 sm:p-6">
+            <div class="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6">
                 <div class="relative">
                     <div id="tab-container" class="relative overflow-x-auto scrollbar-hidden -mx-1 px-1">
                         <div class="flex bg-gray-100 pt-1 pb-2 rounded-lg relative min-w-full w-max">
                             <!-- Sliding Indicator -->
                             <div id="tab-indicator"
-                                class="absolute top-1 left-0 h-10 bg-white rounded-md shadow-sm transition-all duration-300 ease-out border-b-4 border-lime-800">
+                                class="absolute top-1 left-0 h-10 bg-white rounded-md shadow-xs transition-all duration-300 ease-out border-b-4 border-lime-800">
                             </div>
 
                             <button id="tab-profile"
@@ -46,13 +46,13 @@
             <div>
                 <!-- Profile Tab -->
                 <div id="content-profile" class="tab-content space-y-6">
-                    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                         <div class="max-w-xl">
                             @include('profile.partials.update-profile-information-form')
                         </div>
                     </div>
 
-                    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                         <div class="max-w-xl">
                             @include('profile.partials.delete-user-form')
                         </div>
@@ -62,7 +62,7 @@
                 <!-- Landlord Tab -->
                 @if ($user->landlord)
                     <div id="content-landlord" class="tab-content hidden">
-                        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                        <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                             <div class="max-w-xl">
                                 @include('profile.partials.update-landlord-information-form')
                             </div>
@@ -72,7 +72,7 @@
 
                 <!-- Change Password Tab -->
                 <div id="content-password" class="tab-content hidden">
-                    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                         <div class="max-w-xl">
                             @include('profile.partials.update-password-form')
                         </div>

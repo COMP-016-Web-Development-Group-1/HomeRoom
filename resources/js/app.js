@@ -7,11 +7,13 @@ import "@phosphor-icons/web/fill";
 import "@phosphor-icons/web/regular";
 
 import "flowbite";
+import { DataTable } from "simple-datatables";
 
 import.meta.glob("../assets/**/*");
 // import.meta.glob(["../assets/fonts/**/*", "../assets/images/**/*"]);
 
 window.Alpine = Alpine;
+window.DataTable = DataTable;
 
 Alpine.plugin(collapse);
 Alpine.start();

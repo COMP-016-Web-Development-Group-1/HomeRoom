@@ -18,7 +18,7 @@
             <x-input.label for="gcash_qr">GCash QR</x-input.label>
             @if ($user->landlord->gcash_qr)
                 <div
-                    class="w-full mb-4 rounded-lg border border-gray-200 shadow-sm object-cover flex justify-center items-center">
+                    class="w-full mb-4 rounded-lg border border-gray-200 shadow-xs object-cover flex justify-center items-center">
                     <img src={{ $user->landlord->gcash_qr }} class="rounded-lg" />
                 </div>
                 <x-input.classic-file id="gcash_qr" name="gcash_qr" accept="image/png,image/jpeg"
@@ -34,7 +34,7 @@
             <x-input.label for="maya_qr">Maya QR</x-input.label>
             @if ($user->landlord->maya_qr)
                 <div
-                    class="w-full mb-4 rounded-lg border border-gray-200 shadow-sm object-cover flex justify-center items-center">
+                    class="w-full mb-4 rounded-lg border border-gray-200 shadow-xs object-cover flex justify-center items-center">
                     <img src={{ $user->landlord->maya_qr }} class="rounded-lg" />
                 </div>
                 <x-input.classic-file id="maya_qr" name="maya_qr" accept="image/png,image/jpeg"

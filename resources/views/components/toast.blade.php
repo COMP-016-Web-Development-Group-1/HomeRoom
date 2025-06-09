@@ -11,7 +11,7 @@
             'bg' => 'bg-green-100',
             'text' => 'text-green-500',
             'progress' => 'bg-green-500',
-            'shadow' => 'shadow-[0_0_10px_3px_rgba(34,197,94,0.7)]',
+            'shadow-sm' => 'shadow-[0_0_10px_3px_rgba(34,197,94,0.7)]',
             'icon' => 'ph-check-circle',
             'defaultTitle' => 'Success',
         ],
@@ -19,7 +19,7 @@
             'bg' => 'bg-red-100',
             'text' => 'text-red-500',
             'progress' => 'bg-red-500',
-            'shadow' => 'shadow-[0_0_10px_3px_rgba(239,68,68,0.7)]',
+            'shadow-sm' => 'shadow-[0_0_10px_3px_rgba(239,68,68,0.7)]',
             'icon' => 'ph-x-circle',
             'defaultTitle' => 'Error',
         ],
@@ -27,7 +27,7 @@
             'bg' => 'bg-yellow-100',
             'text' => 'text-yellow-500',
             'progress' => 'bg-yellow-500',
-            'shadow' => 'shadow-[0_0_10px_3px_rgba(234,179,8,0.7)]',
+            'shadow-sm' => 'shadow-[0_0_10px_3px_rgba(234,179,8,0.7)]',
             'icon' => 'ph-warning',
             'defaultTitle' => 'Warning',
         ],
@@ -35,7 +35,7 @@
             'bg' => 'bg-blue-100',
             'text' => 'text-blue-500',
             'progress' => 'bg-blue-500',
-            'shadow' => 'shadow-[0_0_10px_3px_rgba(59,130,246,0.7)]',
+            'shadow-sm' => 'shadow-[0_0_10px_3px_rgba(59,130,246,0.7)]',
             'icon' => 'ph-info',
             'defaultTitle' => 'Info',
         ],
@@ -43,7 +43,7 @@
             'bg' => 'bg-gray-100',
             'text' => 'text-gray-500',
             'progress' => 'bg-gray-500',
-            'shadow' => 'shadow-[0_0_10px_3px_rgba(107,114,128,0.7)]',
+            'shadow-sm' => 'shadow-[0_0_10px_3px_rgba(107,114,128,0.7)]',
             'icon' => '',
             'defaultTitle' => 'Notification',
         ],
@@ -74,7 +74,7 @@
     x-transition:leave="transform transition ease-in duration-300"
     x-transition:leave-start="translate-x-0 opacity-100 scale-100"
     x-transition:leave-end="translate-x-full opacity-0 scale-95"
-    class="bg-white ml-4 rounded-lg shadow-xl overflow-hidden backdrop-blur-sm {{ $type === 'plain' ? 'border border-gray-200' : '' }}">
+    class="bg-white ml-4 rounded-lg shadow-xl overflow-hidden backdrop-blur-xs {{ $type === 'plain' ? 'border border-gray-200' : '' }}">
 
     @if ($type !== 'plain')
         {{-- Standard toast with icon --}}
@@ -97,7 +97,7 @@
         @if ($autoClose)
             <div class="h-1.5 bg-gray-200">
                 <div
-                    class="h-full {{ $currentConfig['progress'] }} animate-shrink rounded-tr-full {{ $currentConfig['shadow'] }}">
+                    class="h-full {{ $currentConfig['progress'] }} animate-shrink rounded-tr-full {{ $currentConfig['shadow-sm'] }}">
                 </div>
             </div>
         @endif
@@ -112,7 +112,7 @@
         @if ($autoClose)
             <div class="h-1 bg-gray-200">
                 <div
-                    class="h-full {{ $currentConfig['progress'] }} animate-shrink rounded-tr-full {{ $currentConfig['shadow'] }}">
+                    class="h-full {{ $currentConfig['progress'] }} animate-shrink rounded-tr-full {{ $currentConfig['shadow-sm'] }}">
                 </div>
             </div>
         @endif

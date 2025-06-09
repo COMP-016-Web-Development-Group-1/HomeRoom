@@ -36,7 +36,7 @@
                     <div class="max-w-xs mb-4 mx-auto">
                         <img id="profile_frame" src="{{ Storage::url($data['profile_picture_path']) }}"
                             alt="Current Profile Picture"
-                            class="border border-gray-200 shadow-sm aspect-square w-full max-w-sm object-cover rounded-full" />
+                            class="border border-gray-200 shadow-xs aspect-square w-full max-w-sm object-cover rounded-full" />
                     </div>
                     <x-input.classic-file id="profile_picture" name="profile_picture" accept="image/png,image/jpeg"
                         help="PNG or JPG (Max 2MB)" imgId="profile_frame" />
@@ -65,7 +65,7 @@
                 <x-input.label for="gcash_qr">GCash QR</x-input.label>
                 @if (isset($data['gcash_qr_path']) && $data['gcash_qr_path'])
                     <div
-                        class="w-full mb-4 rounded-lg border border-gray-200 shadow-sm object-cover flex justify-center items-center">
+                        class="w-full mb-4 rounded-lg border border-gray-200 shadow-xs object-cover flex justify-center items-center">
                         <img src={{ Storage::url($data['gcash_qr_path']) }} class="rounded-lg" />
                     </div>
                     <x-input.classic-file id="gcash_qr" name="gcash_qr" accept="image/png,image/jpeg"
@@ -81,7 +81,7 @@
                 <x-input.label for="maya_qr">Maya QR</x-input.label>
                 @if (isset($data['maya_qr_path']) && $data['maya_qr_path'])
                     <div
-                        class="w-full mb-4 rounded-lg border border-gray-200 shadow-sm object-cover flex justify-center items-center">
+                        class="w-full mb-4 rounded-lg border border-gray-200 shadow-xs object-cover flex justify-center items-center">
                         <img src={{ Storage::url($data['maya_qr_path']) }} class="rounded-lg" />
                     </div>
                     <x-input.classic-file id="maya_qr" name="maya_qr" accept="image/png,image/jpeg"

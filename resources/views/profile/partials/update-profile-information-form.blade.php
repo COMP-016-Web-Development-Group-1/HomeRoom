@@ -34,7 +34,7 @@
                         Your email address is unverified.
 
                         <button form="send-verification"
-                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-700">
+                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-lime-700">
                             Click here to re-send the verification email.
                         </button>
                     </p>
@@ -53,7 +53,7 @@
             @if ($user->profile_picture)
                 <div class="max-w-xs mb-4 mx-auto">
                     <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile Picture"
-                        class="border border-gray-200 shadow-sm aspect-square w-full max-w-sm object-cover rounded-full" />
+                        class="border border-gray-200 shadow-xs aspect-square w-full max-w-sm object-cover rounded-full" />
                 </div>
                 <x-input.classic-file id="profile_picture" name="profile_picture" accept="image/png,image/jpeg"
                     help="PNG or JPG (Max 2MB)" />

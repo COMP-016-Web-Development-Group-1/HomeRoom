@@ -5,14 +5,14 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
+    <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
         <input type="file" />
         <div class="mt-4 mb-4">
             <x-input.date maxDate="{{ iso_to_us(now()->toDateString()) }}" :withButtons="true" name="birth_date"
                 :value="old('birth_date')" placeholder="Select Date" />
         </div>
 
-        <div class="bg-white shadow-sm sm:rounded-lg">
+        <div class="bg-white shadow-xs sm:rounded-lg">
             {{-- <div class="p-6 text-gray-900">
                 Properties (Index)
             </div> --}}
@@ -197,18 +197,11 @@
     </div>
 
     @pushOnce('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
-
         <script>
             document.addEventListener("DOMContentLoaded", () => {
-
-                if (document.getElementById("default-table") && typeof simpleDatatables.DataTable !== 'undefined') {
-                    const dataTable = new simpleDatatables.DataTable("#default-table", {
-                        searchable: false,
-                        perPageSelect: false
-                    });
+                if (document.getElementById("default-table")) {
+                    const dataTable = new DataTable("#default-table");
                 }
-
             });
         </script>
     @endPushOnce
