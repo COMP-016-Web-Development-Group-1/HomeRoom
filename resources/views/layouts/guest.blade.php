@@ -9,6 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ page_title($title ?? '') }}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ Vite::asset('resources/assets/images/logo.svg') }}">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -26,8 +26,7 @@
 
             {{-- Header --}}
             <a class="flex items-center gap-2 px-2 py-1" href={{ route('dashboard') }}>
-                <i class="ph-fill ph-house text-3xl text-blue-600"></i>
-                <span class="text-2xl font-bold">HomeRoom</span>
+                <img src="{{ Vite::asset('resources/assets/images/logo_text.svg') }}" class="w-full px-2" />
             </a>
 
             <hr class="mt-2 border-gray-200" />
