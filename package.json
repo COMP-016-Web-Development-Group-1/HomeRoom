@@ -19,7 +19,6 @@
     },
     "dependencies": {
         "@alpinejs/collapse": "^3.14.9",
-        "@phosphor-icons/web": "^2.1.2",
-        "flowbite": "^3.1.2"
+        "@phosphor-icons/web": "^2.1.2"
     }
 }
