@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class PropertyController extends Controller
+class AnnouncementController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('landlord.property.index');
+        $role = auth()->user()->role;
+
+        return match ($role) {
+            'landlord' => view('landlord.announcement.index'),
+            'tenant' => view('tenant.announcement.index'),
+            default => abort(403),
+        };
     }
 
     /**

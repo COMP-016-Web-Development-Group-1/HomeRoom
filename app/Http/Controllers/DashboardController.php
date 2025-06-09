@@ -9,8 +9,8 @@ class DashboardController extends Controller
         $role = auth()->user()->role;
 
         return match ($role) {
-            'landlord' => view('dashboard'),
-            'tenant' => view('dashboard'),
+            'landlord' => view('landlord.dashboard'),
+            'tenant' => view('tenant.dashboard'),
             default => abort(403),
         };
     }

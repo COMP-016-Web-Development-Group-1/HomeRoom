@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandlordProfileController;
 use App\Http\Controllers\LandlordSetupController;
+use App\Http\Controllers\MaintenanceRequestController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +31,17 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::patch('/profile/landlord', [LandlordProfileController::class, 'update'])->name('landlord.update');
+
+    Route::get('/properties', [PropertyController::class, 'index'])->name('property.index');
+
+
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
+
+
+    Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcement.index');
+
+
+    Route::get('/requests', [MaintenanceRequestController::class, 'index'])->name('request.index');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
