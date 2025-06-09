@@ -15,12 +15,13 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-lexend text-gray-900 antialiased">
+<body class="font-outfit text-gray-900 antialiased">
     <div class="min-h-screen bg-gray-100">
         @include('layouts.sidebar')
     </div>
 
     <x-toast-container />
+    {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script> --}}
     @stack('scripts')
 </body>
 
