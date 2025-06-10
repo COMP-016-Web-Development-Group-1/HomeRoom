@@ -11,7 +11,7 @@
                 Properties (Index)
             </div>
 
-            <x-table.container>
+            <x-table.container id="programming-language-table">
                 <x-slot name="header">
                     <x-table.header>Name</x-table.header>
                     <x-table.header>Release Date</x-table.header>
