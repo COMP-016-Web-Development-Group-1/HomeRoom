@@ -15,25 +15,22 @@ class TransactionController extends Controller
         $role = auth()->user()->role;
 
         return match ($role) {
-            'landlord' => view('landlord.transaction.index', [
-                'transactions' => \App\Models\Transaction::with(['tenant.room.property'])->orderByDesc('due_date')->get()
-            ]),
+            'landlord' => (function () {
+                    $pendingTransactions = Transaction::with(['tenant.room.property'])
+                    ->where('status', 'pending')
+                    ->orderByDesc('due_date')
+                    ->get();
+
+                    $historyTransactions = Transaction::with(['tenant.room.property'])
+                    ->where('status', '!=', 'pending')
+                    ->orderByDesc('due_date')
+                    ->get();
+
+                    return view('landlord.transaction.index', compact('pendingTransactions', 'historyTransactions'));
+                })(),
             'tenant' => view('tenant.transaction.index'),
             default => abort(403),
         };
-    }
-
-    /**
-     * Landlord transaction listing, eager-load tenant and property.
-     */
-    protected function landlordIndex()
-    {
-        // Eager load tenant and property relationship
-        $transactions = Transaction::with(['tenant.property'])
-            ->orderByDesc('due_date')
-            ->get();
-
-        return view('landlord.transaction.index', compact('transactions'));
     }
 
     /**
