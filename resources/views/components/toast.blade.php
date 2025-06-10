@@ -8,10 +8,10 @@
 @php
     $config = [
         'success' => [
-            'bg' => 'bg-green-100',
-            'text' => 'text-green-500',
-            'progress' => 'bg-green-500',
-            'shadow-sm' => 'shadow-[0_0_10px_3px_rgba(34,197,94,0.7)]',
+            'bg' => 'bg-lime-100',
+            'text' => 'text-lime-500',
+            'progress' => 'bg-lime-500',
+            'shadow-sm' => 'shadow-[0_0_10px_3px_rgba(124,207,0.7)]',
             'icon' => 'ph-check-circle',
             'defaultTitle' => 'Success',
         ],
