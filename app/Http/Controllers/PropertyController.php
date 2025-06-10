@@ -13,10 +13,12 @@ class PropertyController extends Controller
     public function index()
     {
         $properties = Property::latest()->paginate(10);
+
         return view('landlord.property.index', compact('properties'));
     }
 
-    public function rooms(){
+    public function rooms()
+    {
         return view('landlord.property.rooms');
     }
 
