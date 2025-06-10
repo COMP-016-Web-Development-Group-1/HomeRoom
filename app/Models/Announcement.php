@@ -35,12 +35,12 @@ class Announcement extends Model
 
     public function isPropertyWide(): bool
     {
-        return !is_null($this->property_id) && is_null($this->room_id);
+        return ! is_null($this->property_id) && is_null($this->room_id);
     }
 
     public function isRoomSpecific(): bool
     {
-        return !is_null($this->property_id) && !is_null($this->room_id);
+        return ! is_null($this->property_id) && ! is_null($this->room_id);
     }
 
     public function scopeRelevantToRoom($query, Room $room)

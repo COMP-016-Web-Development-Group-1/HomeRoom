@@ -85,12 +85,12 @@ class AnnouncementController extends Controller
             'property_id' => [
                 'nullable',
                 'required_if:type,property,room',
-                'exists:properties,id'
+                'exists:properties,id',
             ],
             'room_id' => [
                 'nullable',
                 'required_if:type,room',
-                'exists:rooms,id'
+                'exists:rooms,id',
             ],
         ]);
 
@@ -104,7 +104,7 @@ class AnnouncementController extends Controller
 
         return redirect()->route('announcement.index')->with('toast.success', [
             'title' => 'Announcement Created',
-            'content' => 'Your announcement has been successfully posted and is now visible to the intended audience.'
+            'content' => 'Your announcement has been successfully posted and is now visible to the intended audience.',
         ]);
     }
 
@@ -147,12 +147,12 @@ class AnnouncementController extends Controller
             'property_id' => [
                 'nullable',
                 'required_if:type,property,room',
-                'exists:properties,id'
+                'exists:properties,id',
             ],
             'room_id' => [
                 'nullable',
                 'required_if:type,room',
-                'exists:rooms,id'
+                'exists:rooms,id',
             ],
         ]);
 
@@ -166,7 +166,7 @@ class AnnouncementController extends Controller
 
         return redirect()->route('announcement.index')->with('toast.success', [
             'title' => 'Announcement Updated',
-            'content' => 'The announcement has been successfully updated.'
+            'content' => 'The announcement has been successfully updated.',
         ]);
     }
 
@@ -181,7 +181,7 @@ class AnnouncementController extends Controller
 
         return redirect()->route('announcement.index')->with('toast.success', [
             'title' => 'Announcement Deleted',
-            'content' => 'The announcement has been successfully deleted.'
+            'content' => 'The announcement has been successfully deleted.',
         ]);
     }
 }

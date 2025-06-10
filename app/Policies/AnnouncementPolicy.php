@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Announcement;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class AnnouncementPolicy
 {
@@ -27,8 +26,9 @@ class AnnouncementPolicy
 
         if ($user->role === 'tenant') {
             $tenant = $user->tenant;
-            if (!$tenant)
+            if (! $tenant) {
                 return false;
+            }
             $room = $tenant->room;
             $propertyId = $room ? $room->property_id : null;
             $roomId = $room ? $room->id : null;
@@ -55,7 +55,7 @@ class AnnouncementPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role === "landlord";
+        return $user->role === 'landlord';
     }
 
     /**
