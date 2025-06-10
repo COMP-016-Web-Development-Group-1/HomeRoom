@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Transaction;
 
 class TransactionController extends Controller
 {
@@ -14,10 +15,25 @@ class TransactionController extends Controller
         $role = auth()->user()->role;
 
         return match ($role) {
-            'landlord' => view('landlord.transaction.index'),
+            'landlord' => view('landlord.transaction.index', [
+                'transactions' => \App\Models\Transaction::with(['tenant.room.property'])->orderByDesc('due_date')->get()
+            ]),
             'tenant' => view('tenant.transaction.index'),
             default => abort(403),
         };
+    }
+
+    /**
+     * Landlord transaction listing, eager-load tenant and property.
+     */
+    protected function landlordIndex()
+    {
+        // Eager load tenant and property relationship
+        $transactions = Transaction::with(['tenant.property'])
+            ->orderByDesc('due_date')
+            ->get();
+
+        return view('landlord.transaction.index', compact('transactions'));
     }
 
     /**
