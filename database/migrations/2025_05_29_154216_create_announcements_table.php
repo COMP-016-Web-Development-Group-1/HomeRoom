@@ -1,13 +1,13 @@
 <?php
 
+use App\Enums\AnnouncementType;
 use App\Models\Property;
 use App\Models\Room;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Property::class)->nullable()->constrained()->onDelete('cascade');
             $table->foreignIdFor(Room::class)->nullable()->constrained()->onDelete('cascade');
+            $table->enum('type', array_column(AnnouncementType::cases(), 'value'));
             $table->string('title');
             $table->text('description');
             $table->timestamps();

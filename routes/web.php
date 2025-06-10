@@ -37,8 +37,16 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
 
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcement.index');
+    Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcement.store');
+    Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcement.create');
+    Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcement.show');
+    Route::put('/announcements/{announcement}', [AnnouncementController::class, 'update'])->name('announcement.update');
+    Route::get('/announcements/{announcement}/edit', [AnnouncementController::class, 'edit'])->name('announcement.edit');
+    Route::delete('/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcement.destroy');
 
     Route::get('/requests', [MaintenanceRequestController::class, 'index'])->name('request.index');
+
+    Route::view('/tests', 'table');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

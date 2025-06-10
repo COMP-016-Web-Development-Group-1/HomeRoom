@@ -120,7 +120,7 @@ class DefaultTestSeeder extends Seeder
             'description' => 'We will be servicing the air conditioning unit in Room A this Thursday between 10:00 AM and 2:00 PM. Please ensure someone is available to provide access during this time.',
         ]);
 
-        Announcement::factory()->forRoom($room)->create([
+        Announcement::factory()->forRoom($room2)->create([
             'title' => 'Room A - Plumbing Inspection',
             'description' => 'A routine plumbing inspection will be conducted in Room A next Monday at 9:00 AM. This is a quick check to ensure everything is working properly. Please let us know if you have any concerns.',
         ]);
