@@ -28,22 +28,22 @@
 
                 {{-- Tab Contents --}}
                 <div class="relative overflow-hidden" style="min-height:160px">
+                    {{-- Pending Payments Table --}}
                     <div id="pending-content" class="tab-pane transition-transform duration-500 ease-in-out"
                         style="display: block; transform: translateX(0%); position: absolute; width: 100%;">
-                        {{-- Pending Payments Table --}}
                         <x-table.container id="pending-payments-table">
                             <x-slot name="header">
-                                <th>Properties</th>
-                                <th>Room #</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Photo</th>
-                                <th>Actions</th>
+                                <th class="bg-lime-700 text-white">Properties</th>
+                                <th class="bg-lime-700 text-white">Room #</th>
+                                <th class="bg-lime-700 text-white">Type</th>
+                                <th class="bg-lime-700 text-white">Date</th>
+                                <th class="bg-lime-700 text-white">Amount</th>
+                                <th class="bg-lime-700 text-white">Status</th>
+                                <th class="bg-lime-700 text-white">Photo</th>
+                                <th class="bg-lime-700 text-white">Actions</th>
                             </x-slot>
                             <x-slot name="body">
-                                @foreach($transactions as $transaction)
+                                @foreach($pendingTransactions as $transaction)
                                     <tr>
                                         <td>{{ $transaction->tenant->room->property->name ?? '-' }}</td>
                                         <td>{{ $transaction->tenant->room->name ?? '-' }}</td>
@@ -67,24 +67,54 @@
                                 @endforeach
                             </x-slot>
                         </x-table.container>
-
-                        {{-- Photo Modal --}}
-                        <x-modal name="photo-modal" :show="false" maxWidth="md">
-                            <div id="photo-modal-content" class="flex flex-col items-center justify-center p-4">
-                                <img id="modal-photo-img" src="" alt="Transaction Photo" class="max-w-full max-h-[60vh] rounded shadow">
-                            </div>
-                        </x-modal>
                     </div>
+                    {{-- History Table --}}
                     <div id="history-content" class="tab-pane transition-transform duration-500 ease-in-out"
                         style="display: none; transform: translateX(100%); position: absolute; width: 100%;">
-                        <p>History content goes here.</p>
+                        <x-table.container id="history-table">
+                            <x-slot name="header">
+                                <th class="bg-lime-700 text-white">Properties</th>
+                                <th class="bg-lime-700 text-white">Room #</th>
+                                <th class="bg-lime-700 text-white">Type</th>
+                                <th class="bg-lime-700 text-white">Date</th>
+                                <th class="bg-lime-700 text-white">Amount</th>
+                                <th class="bg-lime-700 text-white">Status</th>
+                                <th class="bg-lime-700 text-white">Photo</th>
+                            </x-slot>
+                            <x-slot name="body">
+                                @foreach($historyTransactions as $transaction)
+                                    <tr>
+                                        <td>{{ $transaction->tenant->room->property->name ?? '-' }}</td>
+                                        <td>{{ $transaction->tenant->room->name ?? '-' }}</td>
+                                        <td>{{ $transaction->type ?? '-' }}</td>
+                                        <td>{{ $transaction->due_date ? \Carbon\Carbon::parse($transaction->due_date)->format('m/d/Y') : '-' }}</td>
+                                        <td>{{ $transaction->amount ? '₱' . number_format($transaction->amount, 2) : '-' }}</td>
+                                        <td>
+                                            <x-status :value="$transaction->status" />
+                                        </td>
+                                        <td>
+                                            <x-button onclick="showPhotoModal('{{ $transaction->photo }}')">
+                                                See Photo
+                                            </x-button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </x-slot>
+                        </x-table.container>
                     </div>
                 </div>
+
+                {{-- Single Photo Modal --}}
+                <x-modal name="photo-modal" :show="false" maxWidth="md">
+                    <div id="photo-modal-content" class="flex flex-col items-center justify-center p-4">
+                        <img id="modal-photo-img" src="" alt="Transaction Photo" class="max-w-full max-h-[60vh] rounded shadow">
+                    </div>
+                </x-modal>
             </div>
         </div>
     </div>
 
-    {{-- Tab & Modal Scripts --}}
+    {{-- Tab & Modal Scripts (unchanged) --}}
     <script>
         let currentTab = 'pending';
 
