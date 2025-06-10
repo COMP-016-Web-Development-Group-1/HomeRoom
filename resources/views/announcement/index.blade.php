@@ -18,12 +18,15 @@
                     <x-badge color="pink" icon="ph-door" :interactive="true" type="a"
                         href="{{ route('announcement.index', ['type' => 'room']) }}">Room</x-badge>
                 </div>
-                <div>
-                    <x-a variant="dark" :href="route('announcement.create')">
-                        <i class="ph-bold ph-plus"></i>
-                        New Announcement
-                    </x-a>
-                </div>
+
+                @can('create', \App\Models\Announcement::class)
+                    <div>
+                        <x-a variant="dark" :href="route('announcement.create')">
+                            <i class="ph-bold ph-plus"></i>
+                            New Announcement
+                        </x-a>
+                    </div>
+                @endcan
             </div>
 
             @forelse ($announcements as $announcement)
