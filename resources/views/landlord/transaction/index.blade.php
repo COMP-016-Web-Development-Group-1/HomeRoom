@@ -8,7 +8,6 @@
     <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow-xs sm:rounded-lg">
             <div class="p-6 text-gray-900">
-                {{-- Tab Buttons --}}
                 <div class="mb-4 flex space-x-8">
                     <button
                         id="pending-tab-btn"
@@ -26,9 +25,7 @@
                     </button>
                 </div>
 
-                {{-- Tab Contents --}}
                 <div class="relative overflow-hidden" style="min-height:160px">
-                    {{-- Pending Payments Table --}}
                     <div id="pending-content" class="tab-pane transition-transform duration-500 ease-in-out"
                         style="display: block; transform: translateX(0%); position: absolute; width: 100%;">
                         <x-table.container id="pending-payments-table">
@@ -68,7 +65,6 @@
                             </x-slot>
                         </x-table.container>
                     </div>
-                    {{-- History Table --}}
                     <div id="history-content" class="tab-pane transition-transform duration-500 ease-in-out"
                         style="display: none; transform: translateX(100%); position: absolute; width: 100%;">
                         <x-table.container id="history-table">
@@ -104,7 +100,6 @@
                     </div>
                 </div>
 
-                {{-- Single Photo Modal --}}
                 <x-modal name="photo-modal" :show="false" maxWidth="md">
                     <div id="photo-modal-content" class="flex flex-col items-center justify-center p-4">
                         <img id="modal-photo-img" src="" alt="Transaction Photo" class="max-w-full max-h-[60vh] rounded shadow">
@@ -114,7 +109,6 @@
         </div>
     </div>
 
-    {{-- Tab & Modal Scripts (unchanged) --}}
     <script>
         let currentTab = 'pending';
 
