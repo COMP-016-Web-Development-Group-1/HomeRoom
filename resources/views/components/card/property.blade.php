@@ -2,18 +2,18 @@
 
 @php
     $icon = match($property->type) {
-        'Apartment' => 'ph-building',
-        'House' => 'ph-house-line',
-        'Dorm' => 'ph-door',
-        'Condominium' => 'ph-building-apartment',
+        'apartment' => 'ph-building',
+        'house' => 'ph-house-line',
+        'dorm' => 'ph-door',
+        'condominium' => 'ph-building-apartment',
         default => 'ph-question', // fallback icon
     };
 
     $color = match($property->type) {
-        'Apartment' => 'text-yellow-600',
-        'House' => 'text-pink-600',
-        'Dorm' => 'text-orange-600',
-        'Condominium' => 'text-purple-600',
+        'apartment' => 'text-yellow-600',
+        'house' => 'text-pink-600',
+        'dorm' => 'text-orange-600',
+        'condominium' => 'text-purple-600',
         default => 'text-gray-600', // fallback icon
     };
 @endphp
@@ -29,7 +29,7 @@
                 <x-dropdown-link href="#">
                     <i class="ph-bold ph-pencil"></i> Edit
                 </x-dropdown-link>
-                <x-dropdown-link href="#">
+                <x-dropdown-link onclick="deleteProperty({{ $property->id }})">
                     <i class="ph-bold ph-trash"></i> Delete
                 </x-dropdown-link>
             </x-slot>
@@ -57,3 +57,31 @@
         </p>
     </a>
 </div>
+
+<script>
+    function deleteProperty(propertyId) {
+        if (!confirm('Are you sure you want to delete this property?')) return;
+
+        fetch(`/properties/${propertyId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                // Property deleted, refresh or redirect manually
+                location.reload(); // or window.location.href = '/properties';
+            } else {
+                return response.json().then(data => {
+                    alert(data.message || 'Delete failed.');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Delete error:', error);
+            alert('An error occurred.');
+        });
+    }
+</script>

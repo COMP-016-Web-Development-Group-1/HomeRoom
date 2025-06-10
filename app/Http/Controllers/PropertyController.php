@@ -33,7 +33,30 @@ class PropertyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate incoming request
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'type' => ['required', 'in:apartment,house,dorm,condominium'],
+            'address' => ['required', 'string', 'max:500'],
+            'description' => ['nullable', 'string'],
+        ]);
+
+        // Assuming authenticated landlord is creating this
+        $landlordId = auth()->user()->landlord->id;
+
+        // Create new property
+        Property::create([
+            'title' => $validated['name'],
+            'type' => $validated['type'],
+            'address' => $validated['address'],
+            'description' => $validated['description'] ?? null,
+            'landlord_id' => $landlordId,
+        ]);
+
+        // Redirect with success message
+        return redirect()
+            ->route('property.index')
+            ->with('success', 'Property created successfully!');
     }
 
     /**
@@ -63,8 +86,11 @@ class PropertyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $property = Property::findOrFail($id);
+        $property->delete();
+
+        return response()->json(['message' => 'Property deleted successfully.']);
     }
 }

@@ -13,7 +13,7 @@ class Property extends Model
     protected $fillable = [
         'landlord_id',
         'type',
-        'name',
+        'title',
         'description',
         'address',
     ];
