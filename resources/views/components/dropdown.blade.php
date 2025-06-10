@@ -3,6 +3,7 @@
     'width' => '48',
     'position' => 'bottom',
     'contentClasses' => 'py-1 bg-white',
+    'fullWidth' => true,
 ])
 
 @php
@@ -20,7 +21,8 @@
     $positionClasses = $position === 'top' ? 'bottom-full mb-2' : 'mt-2';
 @endphp
 
-<div class="relative w-full" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
+<div class="relative {{ $fullWidth ? 'w-full' : '' }}" x-data="{ open: false }" @click.outside="open = false"
+    @close.stop="open = false">
     <div @click="open = ! open">
         {{ $trigger }}
     </div>

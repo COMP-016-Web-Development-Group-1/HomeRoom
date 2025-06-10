@@ -6,7 +6,7 @@ import "@phosphor-icons/web/bold";
 import "@phosphor-icons/web/fill";
 import "@phosphor-icons/web/regular";
 
-import "flowbite";
+// import "flowbite";
 import { DataTable } from "simple-datatables";
 
 import.meta.glob("../assets/**/*");
