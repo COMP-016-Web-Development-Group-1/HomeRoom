@@ -15,7 +15,8 @@
 
     @pushOnce('scripts')
         <script>
-            document.addEventListener("DOMContentLoaded", () => {}
+            document.addEventListener("DOMContentLoaded", () => {
+
             });
         </script>
     @endPushOnce
