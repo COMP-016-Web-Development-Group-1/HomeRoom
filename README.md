@@ -233,6 +233,27 @@ php artisan app:clean-storage [public/private]
 
 > Note: `[]` indicates a choice
 
+### Clearing Cache
+To clear various caches during development, run:
+
+```bash
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+```
+
+> Tip: If you encounter unexpected behavior, clearing these caches often resolves common issues.
+
+When deploying to production, rebuild the caches for better performance:
+
+```bash
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan optimize
+```
+
 ---
 
 ## 🤝 Contributing
