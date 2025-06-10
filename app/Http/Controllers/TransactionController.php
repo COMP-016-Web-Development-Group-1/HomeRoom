@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
@@ -16,18 +16,18 @@ class TransactionController extends Controller
 
         return match ($role) {
             'landlord' => (function () {
-                    $pendingTransactions = Transaction::with(['tenant.room.property'])
+                $pendingTransactions = Transaction::with(['tenant.room.property'])
                     ->where('status', 'pending')
                     ->orderByDesc('due_date')
                     ->get();
 
-                    $historyTransactions = Transaction::with(['tenant.room.property'])
+                $historyTransactions = Transaction::with(['tenant.room.property'])
                     ->where('status', '!=', 'pending')
                     ->orderByDesc('due_date')
                     ->get();
 
-                    return view('landlord.transaction.index', compact('pendingTransactions', 'historyTransactions'));
-                })(),
+                return view('landlord.transaction.index', compact('pendingTransactions', 'historyTransactions'));
+            })(),
             'tenant' => view('tenant.transaction.index'),
             default => abort(403),
         };
