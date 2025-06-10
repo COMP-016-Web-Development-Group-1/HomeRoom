@@ -6,11 +6,31 @@
     </x-slot>
 
     <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow-xs sm:rounded-lg">
-            <div class="p-6 text-gray-900">
-                Properties (Index)
+        <div class="text-gray-900">
+            <div class="p-6 flex items-end justify-between gap-x-3 mb-4">
+                <div class="flex items-center flex-wrap gap-2">
+                    <x-badge color="blue" icon="ph-globe" :interactive="true" type="button">All</x-badge>
+                    <x-badge color="yellow" icon="ph-building" :interactive="true" type="button">Apartments</x-badge>
+                    <x-badge color="pink" icon="ph-house-line" :interactive="true" type="button">Houses</x-badge>
+                    <x-badge color="orange" icon="ph-door" :interactive="true" type="button">Dorms</x-badge>
+                    <x-badge color="purple" icon="ph-building-apartment" :interactive="true" type="button">Condominiums</x-badge>
+                </div>
+                <x-button onclick="window.location.href='{{ route('property.create') }}'">
+                    <i class="ph-bold ph-plus"></i>
+                    New Property
+                </x-button>
             </div>
         </div>
+
+        <div class="flex flex-wrap gap-4">
+            @forelse ($properties as $property)
+                <x-card.property :property="$property"/>
+            @empty
+                <p>Nothing here at the moment</p>
+            @endforelse
+        </div>
+
+        {{ $properties->links() }}
     </div>
 
     @pushOnce('scripts')

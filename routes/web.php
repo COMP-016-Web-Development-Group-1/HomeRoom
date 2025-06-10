@@ -33,6 +33,8 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::patch('/profile/landlord', [LandlordProfileController::class, 'update'])->name('landlord.update');
 
     Route::get('/properties', [PropertyController::class, 'index'])->name('property.index');
+    Route::get('/properties/rooms', [PropertyController::class, 'rooms'])->name('property.rooms');
+    Route::get('/properties/create', [PropertyController::class, 'create'])->name('property.create');
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
 

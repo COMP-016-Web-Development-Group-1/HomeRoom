@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Property;
 use Illuminate\Http\Request;
 
 class PropertyController extends Controller
@@ -11,7 +12,12 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        return view('landlord.property.index');
+        $properties = Property::latest()->paginate(10);
+        return view('landlord.property.index', compact('properties'));
+    }
+
+    public function rooms(){
+        return view('landlord.property.rooms');
     }
 
     /**
@@ -19,7 +25,7 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        //
+        return view('landlord.property.create');
     }
 
     /**
