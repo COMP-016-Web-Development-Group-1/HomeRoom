@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
@@ -13,8 +14,14 @@ class AnnouncementController extends Controller
     {
         $role = auth()->user()->role;
 
+        $announcements = Announcement::query()->latest()->paginate(10);
+
+        // dd(Announcement::all());
+
         return match ($role) {
-            'landlord' => view('landlord.announcement.index'),
+            'landlord' => view('landlord.announcement.index', [
+                'announcements' => $announcements,
+            ]),
             'tenant' => view('tenant.announcement.index'),
             default => abort(403),
         };
