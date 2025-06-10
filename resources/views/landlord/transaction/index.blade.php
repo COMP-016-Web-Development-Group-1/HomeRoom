@@ -1,4 +1,4 @@
-TODO: ADD functionality to acknowledge pending payments
+//TODO: ADD functionality to acknowledge pending payments
 
 <x-app-layout title="Transactions">
     <x-slot name="header">
