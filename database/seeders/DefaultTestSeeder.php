@@ -143,7 +143,7 @@ class DefaultTestSeeder extends Seeder
                         'code' => generate_code(),
                         'name' => 'Room ' . str_pad($i, 3, '0', STR_PAD_LEFT),
                         'rent_amount' => rand(8, 16) * 500,
-                        'max_occupancy' => rand(1, 4),
+                        'max_occupancy' => rand(1, 6),
                     ]);
                 }
             }
