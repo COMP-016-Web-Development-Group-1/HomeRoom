@@ -3,28 +3,59 @@
 namespace App\Http\Controllers;
 
 use App\Models\Announcement;
+use App\Models\Property;
+use App\Models\Room;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use AuthorizesRequests;
+
+    public function index(Request $request)
     {
         $role = auth()->user()->role;
+        $type = $request->query('type', 'all');
+        $announcements = collect();
 
-        $announcements = Announcement::query()->latest()->paginate(10);
+        if ($role === 'landlord') {
+            $query = Announcement::query();
 
-        // dd(Announcement::all());
+            if ($type === 'system') {
+                $query->whereNull('property_id')->whereNull('room_id');
+            } elseif ($type === 'property') {
+                $query->whereNotNull('property_id')->whereNull('room_id');
+            } elseif ($type === 'room') {
+                $query->whereNotNull('property_id')->whereNotNull('room_id');
+            }
+            // 'all' applies no additional filters
+            $announcements = $query->latest()->get();
 
-        return match ($role) {
-            'landlord' => view('landlord.announcement.index', [
-                'announcements' => $announcements,
-            ]),
-            'tenant' => view('tenant.announcement.index'),
-            default => abort(403),
-        };
+        } elseif ($role === 'tenant') {
+            $tenant = auth()->user()->tenant;
+            $query = Announcement::relevantToTenant($tenant);
+
+            if ($type === 'system') {
+                $query->whereNull('property_id')->whereNull('room_id');
+            } elseif ($type === 'property') {
+                $room = $tenant->room;
+                $propertyId = $room ? $room->property_id : null;
+                $query->where('property_id', $propertyId)->whereNull('room_id');
+            } elseif ($type === 'room') {
+                $room = $tenant->room;
+                $propertyId = $room ? $room->property_id : null;
+                $roomId = $room ? $room->id : null;
+                $query->where('property_id', $propertyId)->where('room_id', $roomId);
+            }
+            $announcements = $query->latest()->get();
+        } else {
+            return abort(403);
+        }
+
+        return view('announcement.index', [
+            'announcements' => $announcements,
+            'filter' => $type,
+        ]);
     }
 
     /**
@@ -32,7 +63,12 @@ class AnnouncementController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', Announcement::class);
+
+        $properties = Property::all();
+        $rooms = Room::with('property')->get();
+
+        return view('announcement.create', compact('properties', 'rooms'));
     }
 
     /**
@@ -40,38 +76,112 @@ class AnnouncementController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('create', Announcement::class);
+
+        $validated = $request->validate([
+            'type' => ['required', 'in:system,property,room'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'property_id' => [
+                'nullable',
+                'required_if:type,property,room',
+                'exists:properties,id',
+            ],
+            'room_id' => [
+                'nullable',
+                'required_if:type,room',
+                'exists:rooms,id',
+            ],
+        ]);
+
+        Announcement::create([
+            'type' => $validated['type'],
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'property_id' => in_array($validated['type'], ['property', 'room']) ? $validated['property_id'] : null,
+            'room_id' => $validated['type'] === 'room' ? $validated['room_id'] : null,
+        ]);
+
+        return redirect()->route('announcement.index')->with('toast.success', [
+            'title' => 'Announcement Created',
+            'content' => 'Your announcement has been successfully posted and is now visible to the intended audience.',
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Announcement $announcement)
     {
-        //
+        $this->authorize('view', $announcement);
+
+        return view('announcement.show', [
+            'announcement' => $announcement,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Announcement $announcement)
     {
-        //
+        $this->authorize('update', $announcement);
+
+        $properties = Property::all();
+        $rooms = Room::with('property')->get();
+
+        return view('announcement.edit', compact('announcement', 'properties', 'rooms'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Announcement $announcement)
     {
-        //
+        $this->authorize('update', $announcement);
+
+        $validated = $request->validate([
+            'type' => ['required', 'in:system,property,room'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'property_id' => [
+                'nullable',
+                'required_if:type,property,room',
+                'exists:properties,id',
+            ],
+            'room_id' => [
+                'nullable',
+                'required_if:type,room',
+                'exists:rooms,id',
+            ],
+        ]);
+
+        $announcement->update([
+            'type' => $validated['type'],
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'property_id' => in_array($validated['type'], ['property', 'room']) ? $validated['property_id'] : null,
+            'room_id' => $validated['type'] === 'room' ? $validated['room_id'] : null,
+        ]);
+
+        return redirect()->route('announcement.index')->with('toast.success', [
+            'title' => 'Announcement Updated',
+            'content' => 'The announcement has been successfully updated.',
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Announcement $announcement)
     {
-        //
+        $this->authorize('delete', $announcement);
+
+        $announcement->delete();
+
+        return redirect()->route('announcement.index')->with('toast.success', [
+            'title' => 'Announcement Deleted',
+            'content' => 'The announcement has been successfully deleted.',
+        ]);
     }
 }

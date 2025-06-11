@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\AnnouncementType;
 use App\Models\Property;
 use App\Models\Room;
 use Illuminate\Database\Migrations\Migration;
@@ -17,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Property::class)->nullable()->constrained()->onDelete('cascade');
             $table->foreignIdFor(Room::class)->nullable()->constrained()->onDelete('cascade');
+            $table->enum('type', array_column(AnnouncementType::cases(), 'value'));
             $table->string('title');
             $table->text('description');
             $table->timestamps();
