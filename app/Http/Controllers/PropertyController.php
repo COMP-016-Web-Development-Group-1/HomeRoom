@@ -12,9 +12,17 @@ class PropertyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $properties = Property::latest()->paginate(10);
+        $type = $request->query('type');
+
+        $query = Property::query();
+
+        if ($type) {
+            $query->where('type', $type);
+        }
+
+        $properties = $query->paginate(12); // Or however many per page
 
         return view('landlord.property.index', compact('properties'));
     }

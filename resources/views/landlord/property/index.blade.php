@@ -9,11 +9,21 @@
         <div class="text-gray-900">
             <div class="p-6 flex items-end justify-between gap-x-3 mb-4">
                 <div class="flex items-center flex-wrap gap-2">
-                    <x-badge color="blue" icon="ph-globe" :interactive="true" type="button">All</x-badge>
-                    <x-badge color="yellow" icon="ph-building" :interactive="true" type="button">Apartments</x-badge>
-                    <x-badge color="pink" icon="ph-house-line" :interactive="true" type="button">Houses</x-badge>
-                    <x-badge color="orange" icon="ph-door" :interactive="true" type="button">Dorms</x-badge>
-                    <x-badge color="purple" icon="ph-building-apartment" :interactive="true" type="button">Condominiums</x-badge>
+                    <a href="{{ route('property.index') }}" class="inline-flex">
+                        <x-badge color="blue" icon="ph-globe" :interactive="true" type="button">All</x-badge>
+                    </a>
+                    <a href="{{ route('property.index', ['type' => 'apartment']) }}" class="inline-flex">
+                        <x-badge color="yellow" icon="ph-building" :interactive="true" type="button">Apartments</x-badge>
+                    </a>
+                    <a href="{{ route('property.index', ['type' => 'house']) }}" class="inline-flex">
+                        <x-badge color="pink" icon="ph-house-line" :interactive="true" type="button">Houses</x-badge>
+                    </a>
+                    <a href="{{ route('property.index', ['type' => 'dorm']) }}" class="inline-flex">
+                        <x-badge color="orange" icon="ph-door" :interactive="true" type="button">Dorms</x-badge>
+                    </a>
+                    <a href="{{ route('property.index', ['type' => 'condominium']) }}" class="inline-flex">
+                        <x-badge color="purple" icon="ph-building-apartment" :interactive="true" type="button">Condominiums</x-badge>
+                    </a>
                 </div>
                 <x-button onclick="window.location.href='{{ route('property.create') }}'">
                     <i class="ph-bold ph-plus"></i>
