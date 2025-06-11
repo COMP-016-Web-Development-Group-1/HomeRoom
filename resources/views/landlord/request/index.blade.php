@@ -5,10 +5,30 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow-xs sm:rounded-lg">
-            <div class="p-6 text-gray-900">
-                Maintenance Request (Index)
+    <div class="bg-white px-1 py-1 rounded-lg justify-start">
+        <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
+            <div class="text-gray-900">
+                <div class="flex items-end justify-between gap-x-3 mb-4">
+                    <div class="flex items-center flex-wrap gap-2">
+                        <x-badge color="gray" icon="ph-globe" :interactive="true" type="a"
+                            href="{{ route('request.index', ['type' => 'all']) }}">All</x-badge>
+                        <x-badge color="yellow" icon="ph-warning" :interactive="true" type="a"
+                            href="{{ route('request.index', ['type' => 'system']) }}">Pending</x-badge>
+                        <x-badge color="lime" icon="ph-spinner-gap" :interactive="true" type="a"
+                            href="{{ route('request.index', ['type' => 'property']) }}">In Progress</x-badge>
+                        <x-badge color="green" icon="ph-check-fat" :interactive="true" type="a"
+                            href="{{ route('request.index', ['type' => 'room']) }}">Resolved</x-badge>
+                        <x-badge color="red" icon="ph-trash" :interactive="true" type="a"
+                            href="{{ route('request.index', ['type' => 'room']) }}">Rejected</x-badge>
+                    </div>
+
+                </div>
+                @forelse ($requests as $request)
+                    <x-card.request :request="$request" />
+                @empty
+                    <p>No Maintenance Request</p>
+                @endforelse
+
             </div>
         </div>
     </div>
