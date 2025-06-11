@@ -22,7 +22,7 @@
 
             <div class="mb-2 p-2">
                 <x-input.label for="type" :required="true">Property Type</x-input.label>
-                <x-input.select id="type" name="type"
+                <x-input.select id="type" name="type" placeholder="Select a type"
                     :options="[
                         'apartment' => 'Apartment',
                         'house' => 'House',

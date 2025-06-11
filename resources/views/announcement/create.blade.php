@@ -12,55 +12,42 @@
 
                 <!-- Type Dropdown -->
                 <div class="mb-6">
-                    <x-input.label for="type" required>Type</x-input.label>
-                    <x-input.select id="type" name="type" x-model="type" required>
-                        <x-input.option value="system" :selected="old('type') == 'system'">System</x-input.option>
-                        <x-input.option value="property" :selected="old('type') == 'property'">Property</x-input.option>
-                        <x-input.option value="room" :selected="old('type') == 'room'">Room</x-input.option>
-                    </x-input.select>
+                    <x-input.label for="type" :required="true">Type</x-input.label>
+                    <x-input.select id="type" name="type" x-model="type" :options="['system' => 'System', 'property' => 'Property', 'room' => 'Room']" :selected="old('type', 'system')"
+                        placeholder="Please select a type" />
                     <x-input.error for="type" />
                 </div>
 
                 <!-- Property Dropdown (shown for property/room) -->
                 <div class="mb-6" x-show="type == 'property' || type == 'room'" x-cloak>
-                    <x-input.label for="property_id" required>Property</x-input.label>
-                    <x-input.select id="property_id" name="property_id">
-                        <x-input.option value="" disabled selected hidden> -- Please select a
-                            property -- </x-input.option>
-                        @foreach ($properties as $property)
-                            <x-input.option value="{{ $property->id }}" :selected="old('property_id') == $property->id">
-                                {{ $property->name }}
-                            </x-input.option>
-                        @endforeach
-                    </x-input.select>
+                    <x-input.label for="property_id" :required="true">Property</x-input.label>
+                    <x-input.select id="property_id" name="property_id" :options="$properties->pluck('name', 'id')" :selected="old('property_id')"
+                        placeholder="Please select a property" />
                     <x-input.error for="property_id" />
                 </div>
 
                 <!-- Room Dropdown (shown for room only) -->
                 <div class="mb-6" x-show="type == 'room'" x-cloak>
-                    <x-input.label for="room_id" required>Room</x-input.label>
-                    <x-input.select id="room_id" name="room_id">
-                        <x-input.option value="" disabled selected hidden>-- Please select a room --
-                        </x-input.option>
-                        @foreach ($rooms as $room)
-                            <x-input.option value="{{ $room->id }}" :selected="old('room_id') == $room->id">
-                                {{ $room->name }} ({{ $room->property->name }})
-                            </x-input.option>
-                        @endforeach
-                    </x-input.select>
+                    <x-input.label for="room_id" :required="true">Room</x-input.label>
+                    <x-input.select id="room_id" name="room_id" :options="$rooms->mapWithKeys(
+                        fn($room) => [
+                            $room->id => $room->name . ' (' . $room->property->name . ')',
+                        ],
+                    )" :selected="old('room_id')"
+                        placeholder="Please select a room" />
                     <x-input.error for="room_id" />
                 </div>
 
                 <!-- Title -->
                 <div class="mb-6">
-                    <x-input.label for="title" required>Title</x-input.label>
+                    <x-input.label for="title" :required="true">Title</x-input.label>
                     <x-input.text id="title" type="text" name="title" :value="old('title')" autofocus />
                     <x-input.error for="title" />
                 </div>
 
                 <!-- Description -->
                 <div class="mb-6">
-                    <x-input.label for="description" required>Description</x-input.label>
+                    <x-input.label for="description" :required="true">Description</x-input.label>
                     <x-input.textarea id="description" name="description" rows="6">
                         {{ old('description') }}
                     </x-input.textarea>
