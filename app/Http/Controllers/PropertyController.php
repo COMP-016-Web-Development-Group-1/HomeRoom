@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PropertyType;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Enums\PropertyType;
 
 class PropertyController extends Controller
 {
@@ -77,6 +77,7 @@ class PropertyController extends Controller
     public function edit($id)
     {
         $property = Property::findOrFail($id);
+
         return view('landlord.property.edit', compact('property'));
     }
 

@@ -40,7 +40,6 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::get('/properties/{id}/edit', [PropertyController::class, 'edit'])->name('property.edit');
     Route::put('/properties/{id}', [PropertyController::class, 'update'])->name('property.update');
 
-
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
 
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcement.index');
