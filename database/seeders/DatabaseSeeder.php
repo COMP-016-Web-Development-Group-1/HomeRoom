@@ -8,7 +8,6 @@ use App\Models\Property;
 use App\Models\Room;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Carbon\Carbon;
 use Hash;
 use Illuminate\Database\Seeder;
 
@@ -35,7 +34,6 @@ class DatabaseSeeder extends Seeder
         $landlord = Landlord::firstOrCreate([
             'user_id' => $user->id,
         ]);
-
 
         // For quick testing, to be removed
         if (app()->isLocal()) {
