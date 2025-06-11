@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AnnouncementType;
 use App\Enums\MaintenanceRequestStatus;
 use App\Enums\PropertyType;
 use App\Models\Announcement;
@@ -11,6 +12,7 @@ use App\Models\Property;
 use App\Models\Room;
 use App\Models\Tenant;
 use App\Models\User;
+use Carbon\Carbon;
 use Hash;
 use Illuminate\Database\Seeder;
 
@@ -25,6 +27,7 @@ class DefaultTestSeeder extends Seeder
         $rooms = $this->createTestRooms($properties);
         $tenants = $this->createTestTenants($rooms);
         $this->createTestMaintenanceRequest($tenants);
+        $this->createTestAnnouncements($properties, $rooms);
     }
 
     /**
@@ -150,90 +153,9 @@ class DefaultTestSeeder extends Seeder
      */
     private function createTestMaintenanceRequest(array $tenants): void
     {
-        $issues = [
-            [
-                'title' => 'Leaky Faucet',
-                'description' => "Hello,\n\nI wanted to report that the faucet in the bathroom is leaking continuously. Water keeps dripping even when turned off completely.\nThis is causing water to pool in the sink and makes a constant dripping noise throughout the night.\nCould someone please take a look at it soon?\n\nThank you!",
-            ],
-            [
-                'title' => 'Air Conditioner Not Cooling',
-                'description' => "Hi,\n\nThe air conditioner in my room is running but it's not blowing any cold air. I tried adjusting the thermostat and cleaning the filter, but it didn't help.\nIt's been very uncomfortable during the afternoons.\nCan you kindly send someone to check or repair it?\n\nBest regards.",
-            ],
-            [
-                'title' => 'Broken Door Lock',
-                'description' => "Good day,\n\nThe lock on my door has been difficult to turn and now it's completely jammed. I am unable to lock my room when I go out, which is a safety concern for me.\nPlease send a maintenance staff to fix or replace the lock as soon as possible.\n\nThank you for your assistance.",
-            ],
-            [
-                'title' => 'Internet Connectivity Issues',
-                'description' => "Hello Admin,\n\nI've been experiencing frequent internet disconnections in my room. The WiFi signal is weak and sometimes the network disappears entirely.\nThis has affected my ability to attend online classes and meetings.\nWould appreciate if you could check the router or the network connection in our area.\n\nSincerely.",
-            ],
-            [
-                'title' => 'Clogged Drain',
-                'description' => "Hi,\n\nThe bathroom drain is clogged and water takes a long time to go down. It sometimes overflows onto the floor, making it slippery and causing a bad smell.\nCan you please send someone to clean or fix the drain soon?\n\nThanks!",
-            ],
-            [
-                'title' => 'No Hot Water',
-                'description' => "Hello,\n\nThere has been no hot water in the shower for the past couple of days. I checked with my roommates and they're experiencing the same issue.\nCould you please arrange for the water heater to be inspected and repaired?\n\nThank you very much.",
-            ],
-            [
-                'title' => 'Pest Infestation',
-                'description' => "Hi,\n\nI have noticed several cockroaches and ants in the kitchen and bathroom areas. They seem to be coming from under the sink.\nIt's getting worse, and I'm worried about hygiene and food safety.\nWould you please arrange for pest control soon?\n\nBest regards.",
-            ],
-            [
-                'title' => 'Light Bulb Replacement',
-                'description' => "Greetings,\n\nThe light bulb in the hallway right outside my room has burnt out and it's very dark at night. It's a bit hazardous to walk through that area.\nCould you please have someone replace the bulb?\n\nThank you!",
-            ],
-            [
-                'title' => 'Cracked Window',
-                'description' => "Hello,\n\nThere's a visible crack in the window glass of my room. I'm concerned it might break further, especially during strong winds or rain.\nCould maintenance please check and repair or replace the window soon?\n\nThank you.",
-            ],
-            [
-                'title' => 'Washing Machine Not Working',
-                'description' => "Hi,\n\nThe shared washing machine is not spinning during the wash cycle. Clothes remain soaking wet after the cycle ends.\nThis has been an ongoing issue for the past week.\nPlease send someone to inspect and repair the washing machine.\n\nThank you for your help.",
-            ],
-            [
-                'title' => 'Water Heater Making Loud Noise',
-                'description' => "Hello,\n\nThe water heater is making loud banging and rumbling noises when it's on. I'm worried it might be a sign of a malfunction.\nPlease have it inspected soon to avoid further damage or safety risks.\n\nThanks!",
-            ],
-            [
-                'title' => 'Ceiling Leak During Rain',
-                'description' => "Hi,\n\nThere's a leak in the ceiling that becomes active whenever it rains. Water drips down slowly near the corner of the room.\nIt's starting to stain the ceiling and might damage furniture.\nPlease assist at your earliest convenience.\n\nRegards.",
-            ],
-            [
-                'title' => "Toilet Won't Flush Properly",
-                'description' => "Good day,\n\nThe toilet in our bathroom isn't flushing completely. Sometimes it takes two or more tries, and even then, it doesn't clear properly.\nCould maintenance please take a look?\n\nAppreciate your help.",
-            ],
-            [
-                'title' => 'Power Outlet Sparks',
-                'description' => "Hi,\n\nOne of the power outlets in my room sparks when I plug anything in. I'm afraid it could be a fire hazard.\nCan you send an electrician to inspect it?\n\nThank you.",
-            ],
-            [
-                'title' => 'Mold on Wall',
-                'description' => "Hello,\n\nI've noticed mold growing on one of the walls in my room, possibly due to humidity or a hidden leak.\nThis could be a health issue. Can maintenance take a look?\n\nThank you very much.",
-            ],
-            [
-                'title' => 'Broken Window Screen',
-                'description' => "Hi,\n\nThe screen on the window is torn and bugs are coming in at night.\nPlease send someone to replace or repair it.\n\nThanks!",
-            ],
-            [
-                'title' => 'Fridge Not Cooling',
-                'description' => "Hi Admin,\n\nThe shared refrigerator in the common area is not cooling. Food is spoiling quickly.\nCan someone please check it urgently?\n\nThanks!",
-            ],
-            [
-                'title' => 'Loose Towel Rack',
-                'description' => "Hello,\n\nThe towel rack in the bathroom is coming loose from the wall. It feels like it could fall off any moment.\nCan it be tightened or reinstalled properly?\n\nThanks for your help!",
-            ],
-            [
-                'title' => 'Elevator Stuck Often',
-                'description' => "Hi,\n\nThe elevator in the building gets stuck frequently, especially on the 3rd floor. It's becoming unreliable.\nCould this be looked into for everyone's safety?\n\nThanks!",
-            ],
-            [
-                'title' => 'Smoke Detector Beeping',
-                'description' => "Good day,\n\nThe smoke detector in my unit is constantly beeping. I've replaced the battery but the noise continues.\nPlease have someone check or replace it.\n\nRegards.",
-            ],
-        ];
+        $issues = [];
 
-        $weights = [0, 0, 0, 0, 0, 0, 1, 1, 2, 2]; // 60% for 0, (20% for 1 or 2)
+        $weights = [0, 0, 0, 0, 0, 0, 0, 0, 1, 2]; // 80% for 0, (10% for 1 or 2)
         foreach ($tenants as $tenant) {
             $requestsToCreate = fake()->randomElement($weights);
             if ($requestsToCreate === 0) {
@@ -253,59 +175,102 @@ class DefaultTestSeeder extends Seeder
         }
     }
 
-    private function createTestAnnouncements(Property $property, Room $room, Room $room2): void
+    private function createTestAnnouncements(array $properties, array $rooms): void
     {
-        // System-wide announcements (no property or room)
-        Announcement::factory()->systemWide()->create([
-            'title' => 'System Maintenance Notice',
-            'description' => 'We will be performing system maintenance on our platform from 2:00 AM to 4:00 AM this Sunday. During this time, some features may be temporarily unavailable. We apologize for any inconvenience.',
-        ]);
+        // --- System-wide Announcements ---
+        $systemAnnouncements = [
+            [
+                'title' => 'Scheduled System Maintenance',
+                'description' => "Please be advised that our system will undergo scheduled maintenance this coming Sunday,\nfrom 1:00 AM to 3:00 AM. During this window, some features may become temporarily unavailable,\nand users might experience brief service interruptions.\n\nWe recommend saving your work and avoiding any critical transactions during this time to prevent data loss.\n\nOur team will be working diligently to ensure that everything is back up and running as quickly as possible.\nWe appreciate your patience and understanding as we continue to improve the performance and reliability of our platform.",
+            ],
+            [
+                'title' => 'Welcome to Our Platform!',
+                'description' => "We're excited to welcome you to our rental management platform! Whether you're a landlord, property manager,\nor tenant, we've built this tool to make your day-to-day operations simpler and more organized.\n\nYou can manage maintenance requests, view announcements, track payments, and communicate with other members of your community,\nall in one place.\n\nPlease take a few minutes to explore the dashboard and familiarize yourself with the features.\nIf you need any help, our support team is available via chat or email.\nWe're here to support you every step of the way.",
+            ],
+            [
+                'title' => 'New Feature: Payment Reminders',
+                'description' => "We're happy to introduce a new feature on the platform: automatic payment reminders.\nThis feature was developed in response to community feedback and aims to help tenants avoid late fees,\nand keep landlords informed about payment activity.\n\nReminders will be sent via email and will also appear in your dashboard notifications prior to your rent due date.\nYou can customize the timing of these reminders in your account settings.\n\nWe encourage everyone to check their contact details to ensure they're accurate.\nAs always, thank you for using our platform, and expect more helpful tools soon!",
+            ],
+        ];
 
-        Announcement::factory()->systemWide()->create([
-            'title' => 'New Platform Features Available',
-            'description' => 'We\'ve added new features to improve your experience including real-time notifications, enhanced payment tracking, and improved communication tools. Check them out today!',
-        ]);
 
-        // Property-wide announcements
-        Announcement::factory()->propertyWide($property)->create([
-            'title' => 'Monthly Due Reminder',
-            'description' => 'This is a friendly reminder that monthly rent payments are due by the 5th of each month. Please ensure your payments are submitted on time to avoid late fees. Thank you for your cooperation.',
-        ]);
 
-        Announcement::factory()->propertyWide($property)->create([
-            'title' => 'Common Area Cleaning Schedule',
-            'description' => 'Starting next week, we will be implementing a new cleaning schedule for all common areas. The lobby and hallways will be cleaned every Tuesday and Friday. Please keep these areas tidy to maintain a pleasant environment for everyone.',
-        ]);
+        foreach ($systemAnnouncements as $data) {
+            Announcement::create([
+                'type' => AnnouncementType::SYSTEM->value,
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'created_at' => $this->randomCreatedAt(),
+                'updated_at' => now(),
+            ]);
+        }
 
-        Announcement::factory()->propertyWide($property)->create([
-            'title' => 'WiFi Password Update',
-            'description' => 'For security reasons, the WiFi password for all common areas has been updated. The new password is "SampleProperty2024". Please update your devices accordingly.',
-        ]);
+        // --- Property-wide Announcements ---
+        $propertyWideMessages = [
+            'Water Supply Interruption' => "Please be informed that there will be a scheduled water supply interruption tomorrow,\nJune 13, from 9:00 AM to 12:00 NN. This is due to maintenance work being conducted by the local water utility provider.\n\nWe highly encourage all residents to store enough water in advance for drinking, cooking, and personal hygiene.\nAdditionally, please avoid using water heaters or washing machines during the downtime to prevent any damage.\n\nWe understand this may cause inconvenience, and we appreciate your patience as we work to maintain essential services\nwithin the property. Regular updates will be posted if there are any changes to the schedule.",
+            'Pest Control Notice' => "This is to inform all residents that our routine pest control service will be conducted this Saturday,\nstarting at 8:00 AM and continuing throughout the day in all common areas including hallways, lobbies, and stairwells.\n\nPlease ensure that food items are securely stored and that your doors and windows remain closed during the scheduled time.\nIf you are sensitive to chemicals or have pets, we recommend staying clear of treated areas until the fumes dissipate.\n\nWe appreciate your cooperation in helping us keep the property clean, safe, and pest-free for everyone.",
+            'Rent Due Reminder' => "Just a friendly reminder to all tenants that rent is due on or before the 5th of every month,\naccording to the terms of your lease agreement. Timely payment ensures uninterrupted access to services\nand helps us maintain operations smoothly.\n\nIf you anticipate any delays or need assistance with your billing statement, please contact the management office\nat least 3 days prior to the due date. Payments can be made via bank transfer, GCash, or over-the-counter at our office.\n\nThank you for your cooperation and continued tenancy. We're here to help with any concerns you may have.",
+            'Garbage Collection Schedule' => "Please be advised that effective this week, garbage will now be collected every Monday and Thursday at 6:00 AM.\nResidents are requested to place their trash outside their units before the scheduled time to ensure proper collection.\n\nMake sure your waste is properly bagged and sealed to avoid attracting pests or creating foul odors in the hallways.\nDo not leave garbage outside beyond collection hours, as this creates hygiene and safety concerns.\n\nLet's work together to keep our shared spaces clean and pleasant for everyone. Thank you for your cooperation and support.",
+            'New WiFi Password' => "We've recently updated the WiFi password for the shared connections available in the building's common areas,\nincluding the lobby, function hall, and rooftop lounge. This update is part of our regular security maintenance\nand aims to prevent unauthorized usage and ensure stable connectivity for residents.\n\nTo request the new password, please visit the property management office during business hours or send a message\nthrough the tenant portal. For security reasons, we will only release passwords to verified tenants.\n\nWe appreciate your understanding and hope this helps improve the overall WiFi experience for everyone.",
+        ];
 
-        // Room-specific announcements
-        Announcement::factory()->forRoom($room)->create([
-            'title' => 'Room A - Air Conditioning Maintenance',
-            'description' => 'We will be servicing the air conditioning unit in Room A this Thursday between 10:00 AM and 2:00 PM. Please ensure someone is available to provide access during this time.',
-        ]);
 
-        Announcement::factory()->forRoom($room2)->create([
-            'title' => 'Room A - Plumbing Inspection',
-            'description' => 'A routine plumbing inspection will be conducted in Room A next Monday at 9:00 AM. This is a quick check to ensure everything is working properly. Please let us know if you have any concerns.',
-        ]);
+        foreach ($propertyWideMessages as $title => $description) {
+            $property = fake()->randomElement($properties);
 
-        Announcement::factory()->forRoom($room2)->create([
-            'title' => 'Room B - New Tenant Welcome',
-            'description' => 'We have a new tenant joining Room B next week. Please extend a warm welcome and help them settle in. If you have any questions about shared spaces or house rules, feel free to reach out.',
-        ]);
+            Announcement::create([
+                'type' => AnnouncementType::PROPERTY->value,
+                'title' => $title,
+                'description' => $description,
+                'property_id' => $property->id,
+                'created_at' => $this->randomCreatedAt(),
+                'updated_at' => now(),
+            ]);
+        }
 
-        // Additional random announcements for variety
-        // System-wide announcements don't need landlord association since they're global
-        Announcement::factory()->count(3)->systemWide()->create();
+// --- Room-specific Announcements ---
+$roomWideMessages = [
+    'Air Conditioner Checkup' => "We will be conducting a routine air conditioner inspection and maintenance service in your room\nthis Friday between 10:00 AM and 3:00 PM. This check is part of our quarterly effort to ensure\nall cooling units are functioning efficiently and to prevent unexpected breakdowns during hotter months.\n\nPlease ensure that someone is available to provide access during this time, or you may leave your key\nat the admin office beforehand. Kindly clear the area around your air conditioner to make space\nfor our technicians to work safely. We appreciate your cooperation and aim to complete all checks smoothly.",
 
-        // Property-wide announcements should be linked to the landlord's property
-        Announcement::factory()->count(2)->propertyWide($property)->create();
+    'Room Inspection Reminder' => "This is a friendly reminder that routine room inspections will take place next week, from Monday\nto Wednesday, between 9:00 AM and 4:00 PM. The purpose of these inspections is to ensure compliance\nwith health and safety standards and to identify any necessary maintenance needs.\n\nPlease make sure your room is clean and accessible. Personal belongings should be organized,\nand any potential hazards removed from walkways. These inspections are quick and non-intrusive,\nwith a focus on maintaining a safe and comfortable living environment for everyone.\nShould you have any questions or require rescheduling, contact the admin office in advance.",
 
-        // Room-specific announcements should be for rooms owned by this landlord
-        Announcement::factory()->count(2)->forRoom($room)->create();
+    'Cleaning Schedule' => "Weekly room cleaning will take place every Wednesday at 10:00 AM. This scheduled cleaning\nis part of our housekeeping service to maintain hygiene and prevent pest buildup across all rooms.\n\nTo help our staff clean effectively, please tidy up your space beforehand and store away\nany personal or fragile items. The service includes sweeping, light dusting, and trash removal.\n\nIf you are not available during the cleaning time, we suggest arranging access with the admin office.\nRegular cleaning ensures your living space remains safe, comfortable, and pleasant for all residents.\nThank you for your cooperation and understanding.",
+
+    'Noise Complaint' => "We kindly remind all residents to be mindful of noise levels, especially during designated quiet hours\nfrom 10:00 PM to 7:00 AM. Excessive volume from music, televisions, or gatherings can negatively\nimpact the sleep and study routines of your fellow tenants.\n\nWe understand that occasional noise is unavoidable, but let's all make an effort to keep\nour shared environment respectful and peaceful. If you need to host a guest or anticipate noise,\nplease inform the management in advance.\n\nLet's continue to foster a considerate community by being aware of how our actions affect others nearby.\nThank you for your cooperation.",
+
+    'Maintenance Follow-Up' => "Our maintenance team will return to your room on Thursday to complete repairs related\nto the plumbing issue reported last week. The follow-up work includes rechecking pipe fittings,\nsealing leaks, and ensuring water flow is back to normal.\n\nPlease ensure the area is accessible by clearing the space under the sink and near\nany plumbing fixtures. If you're unavailable during the repair window, you may leave your room key\nat the admin office with a note authorizing access.\n\nWe appreciate your patience as we work to resolve the issue fully.\nIf you notice any related concerns afterward, please report them immediately.",
+
+    'Shared Appliance Usage' => "This is a reminder to please use shared appliances in a responsible and courteous manner.\nThe kitchen is a shared space, and all residents are expected to clean up after using\nappliances like the microwave, rice cooker, and refrigerator.\n\nPlease do not leave food spills or dirty utensils unattended, as this creates inconvenience for others\nand increases the risk of pests. Be sure to label your food items and discard expired goods regularly.\n\nLet's work together to keep the common kitchen clean, safe, and usable for everyone.\nIf issues persist, stricter usage guidelines may be implemented by management.",
+
+    'Fridge Cleaning' => "To maintain cleanliness and prevent foul odors, we will be cleaning out the shared refrigerator\nthis Sunday at 4:00 PM. All unlabelled, expired, or spoiled items will be removed\nduring this time without exception.\n\nPlease check your stored items before Sunday and ensure everything is clearly labeled with\nyour name and the date it was stored. We kindly ask all residents to take responsibility\nfor keeping the fridge organized and sanitary.\n\nA clean and well-maintained fridge benefits everyone and reduces the risk of cross-contamination.\nThank you for your cooperation in keeping our shared spaces tidy and hygienic.",
+
+    'New Roommate' => "We'd like to inform you that a new roommate will be joining your room starting next week.\nThis is part of our standard occupancy management, and we ask that you help them feel welcome\nduring their transition.\n\nPlease make space available for their belongings and be open to sharing important information\nabout the room and community guidelines. A short adjustment period is normal,\nand we hope this change will be a positive experience for everyone.\n\nIf you have concerns or questions regarding room sharing, feel free to reach out\nto the property manager. Thank you for your support in fostering a friendly environment.",
+
+    'Emergency Drill' => "There will be an emergency evacuation drill this Friday at 3:00 PM. Participation is mandatory\nfor all residents, as this drill ensures everyone is familiar with safety protocols in case\nof fire, earthquake, or other emergencies.\n\nPlease take the drill seriously. Familiarize yourself with the nearest exits and emergency assembly points.\nAn announcement will be made before the drill begins. Avoid using elevators during the drill,\nand follow instructions from the staff or security team.\n\nSafety is a top priority, and your cooperation is essential to make this exercise successful.\nThank you for doing your part to keep the community prepared.",
+
+    'Room Renovation Notice' => "Minor renovations will take place in your room next weekend between 9:00 AM and 5:00 PM.\nThis may include paint touch-ups, fixture replacements, or repairs to worn-out furnishings.\n\nWe understand that renovations can be disruptive, and we will do our best to minimize noise\nand disturbance during this period. Please secure any fragile or valuable items\nand inform the staff if you have specific concerns.\n\nIf you won't be home, you can authorize access by leaving your key with the admin office.\nWe appreciate your understanding and patience as we work to improve your living space.",
+];
+
+        foreach ($roomWideMessages as $title => $description) {
+            $room = fake()->randomElement($rooms);
+
+            Announcement::create([
+                'type' => AnnouncementType::ROOM->value,
+                'title' => $title,
+                'description' => $description,
+                'property_id' => $room->property_id,
+                'room_id' => $room->id,
+                'created_at' => $this->randomCreatedAt(),
+                'updated_at' => now(),
+            ]);
+        }
+    }
+
+    private function randomCreatedAt(): Carbon
+    {
+        return now()
+            ->subDays(fake()->numberBetween(1, 30))
+            ->addHours(fake()->numberBetween(0, 23))
+            ->addMinutes(fake()->numberBetween(0, 59));
     }
 }
