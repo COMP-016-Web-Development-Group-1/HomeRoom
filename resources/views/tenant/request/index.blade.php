@@ -22,25 +22,25 @@
                             href="{{ route('request.index', ['type' => 'room']) }}">Rejected</x-badge>
                     </div>
                     <div class="flex items-center flex-wrap">
-                        <x-a variant="clean" href="{{ route('tenant.request.create') }}">
-                            Cancel
+                        <x-a variant="clean" href="{{ route('request.create') }}">
+                            Issue a Maintenance Request
                         </x-a>
                     </div>
-                    {{-- @can('create', \App\Models\MaintenanceRequest::class)
+                    @can('create', \App\Models\MaintenanceRequest::class)
                         <div>
                             <x-a variant="dark" :href="route('request.create')">
                                 <i class="ph-bold ph-plus"></i>
                                 Issue a Maintenance Request
                             </x-a>
                         </div>
-                    @endcan --}}
+                    @endcan
             </div>
                 </div>
-                {{-- @forelse ($requests as $request)
+                @forelse ($request as $request)
                     <x-card.request :request="$request" />
                 @empty
                     <p>No Maintenance Request</p>
-                @endforelse --}}
+                @endforelse
 
             </div>
         </div>

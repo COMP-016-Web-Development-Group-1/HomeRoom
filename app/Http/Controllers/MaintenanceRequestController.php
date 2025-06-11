@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Enums\MaintenanceRequestStatus;
 use App\Models\{MaintenanceRequest, Tenant, Room};
 use Illuminate\Http\Request;
 
@@ -12,27 +12,13 @@ class MaintenanceRequestController extends Controller
      */
     public function index(Request $request)
     {
-        $user = auth()->user();
+        $role = auth()->user()->role;
 
-        if ($user->role === 'landlord') {
-            $propertyIds = $user->properties()->pluck('id');
-            $roomIds = Room::whereIn('property_id', $propertyIds)->pluck('id');
-            $requests = MaintenanceRequest::whereIn('room_id', $roomIds)
-                ->with(['room', 'tenant'])
-                ->latest()
-                ->get();
-
-            return view('landlord.request.index', compact('requests'));
-        } elseif ($user->role === 'tenant') {
-            $tenant = $user->tenant;
-            $requests = $tenant && $tenant->room_id
-                ? MaintenanceRequest::where('room_id', $tenant->room_id)->with(['room', 'tenant'])->latest()->get()
-                : collect();
-
-            return view('tenant.request.index', compact('requests'));
-        }
-
-        abort(403);
+        return match ($role) {
+            'landlord' => view('landlord.request.index'),
+            'tenant' => view('tenant.request.index'),
+            default => abort(403),
+        };
     }
 
     /**
@@ -44,15 +30,10 @@ class MaintenanceRequestController extends Controller
 
         if ($user->role === 'tenant') {
             $tenant = $user->tenant;
-
-            if (!$tenant || !$tenant->room) {
-                return redirect()->back()->withErrors(['You must have a room assigned to create a maintenance request.']);
-            }
-
             return view('tenant.request.create', ['room' => $tenant->room]);
         }
 
-        abort(403);
+        abort(403, 'Unauthorized Requester');
     }
 
     /**
@@ -61,26 +42,25 @@ class MaintenanceRequestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'title' => 'required|string|max:50',
+            'description' => 'required|string|max:3000',
         ]);
 
         $user = auth()->user();
         $tenant = $user->tenant;
-
-        if (!$tenant || !$tenant->room) {
-            return redirect()->back()->withErrors(['You must be assigned a room to create a maintenance request.']);
-        }
 
         MaintenanceRequest::create([
             'tenant_id' => $tenant->id,
             'room_id' => $tenant->room_id,
             'title' => $request->title,
             'description' => $request->description,
-            'status' => 'pending',
+            'status' => MaintenanceRequestStatus::PENDING->value,
         ]);
 
-        return redirect()->back()->with('success', 'Maintenance request submitted successfully.');
+        return redirect()->route('request.index')->with('toast.success', [
+            'title' => 'Request Posted',
+            'content' => 'Your request has been sent to your landlord.',
+        ]);
     }
 
     /**
@@ -98,12 +78,15 @@ class MaintenanceRequestController extends Controller
         if ($user->role === 'landlord') {
             $propertyIds = $user->properties()->pluck('id');
             if (!in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
-                abort(403);
+                abort(403, 'Went Here');
             }
         }
 
-        $view = $user->role === 'landlord' ? 'landlord.request.show' : 'tenant.request.show';
-        return view($view, compact('requestRecord'));
+        if ($user->role === 'tenant') {
+            return view('tenant.request.show', compact('requestRecord'));
+        } elseif ($user->role === 'landlord') {
+            return view('landlord.request.show', compact('requestRecord'));
+        }
     }
 
     /**
@@ -125,8 +108,11 @@ class MaintenanceRequestController extends Controller
             }
         }
 
-        $view = $user->role === 'landlord' ? 'landlord.request.edit' : 'tenant.request.edit';
-        return view($view, compact('requestRecord'));
+        if ($user->role === 'tenant') {
+            return view('tenant.request.edit', compact('requestRecord'));
+        } elseif ($user->role === 'landlord') {
+            return view('landlord.request.edit', compact('requestRecord'));
+        }
     }
 
     /**
@@ -160,8 +146,12 @@ class MaintenanceRequestController extends Controller
 
         $requestRecord->save();
 
-        $route = $user->role === 'landlord' ? 'landlord.request.index' : 'tenant.request.index';
-        return redirect()->route($route)->with('success', 'Maintenance request updated.');
+
+        return redirect()->route('request.index')->with('toast.success', [
+            'title' => 'Request Updated',
+            'content' => 'Your request has been updated successfully.',
+        ]);
+        ;
     }
 
     /**
@@ -185,7 +175,9 @@ class MaintenanceRequestController extends Controller
 
         $requestRecord->delete();
 
-        $route = $user->role === 'landlord' ? 'landlord.request.index' : 'tenant.request.index';
-        return redirect()->route($route)->with('success', 'Maintenance request deleted.');
+        return redirect()->route('request.index')->with('toast.success', [
+            'title' => 'Request Deleted',
+            'content' => 'Your request has been deleted successfully.',
+        ]);
     }
 }
