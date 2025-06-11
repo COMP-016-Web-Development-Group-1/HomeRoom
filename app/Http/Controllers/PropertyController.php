@@ -43,7 +43,7 @@ class PropertyController extends Controller
         // Validate incoming request
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'in:apartment,house,dorm,condominium'],
+            'type' => ['required', Rule::in(array_column(PropertyType::cases(), 'value'))],
             'address' => ['required', 'string', 'max:500'],
             'description' => ['nullable', 'string'],
         ]);
@@ -85,7 +85,7 @@ class PropertyController extends Controller
         return view('landlord.property.edit', compact('property'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Property $property)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -94,7 +94,6 @@ class PropertyController extends Controller
             'description' => 'required|string',
         ]);
 
-        $property = Property::findOrFail($id);
         $property->update($validated);
 
         return redirect()->route('property.index')->with('toast.success', [
@@ -106,9 +105,8 @@ class PropertyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Property $property)
     {
-        $property = Property::findOrFail($id);
         $property->delete();
 
         return redirect()->route('property.index')->with('toast.success', [
