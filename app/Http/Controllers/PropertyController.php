@@ -27,11 +27,6 @@ class PropertyController extends Controller
         return view('landlord.property.index', compact('properties'));
     }
 
-    public function rooms()
-    {
-        return view('landlord.property.rooms');
-    }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -66,9 +61,10 @@ class PropertyController extends Controller
         ]);
 
         // Redirect with success message
-        return redirect()
-            ->route('property.index')
-            ->with('success', 'Property created successfully!');
+        return redirect()->route('property.index')->with('toast.success', [
+            'title' => 'Property Created',
+            'content' => 'The property has been successfully created.',
+        ]);
     }
 
     /**
@@ -101,7 +97,10 @@ class PropertyController extends Controller
         $property = Property::findOrFail($id);
         $property->update($validated);
 
-        return redirect()->route('property.index')->with('success', 'Property updated successfully.');
+        return redirect()->route('property.index')->with('toast.success', [
+            'title' => 'Property Updated',
+            'content' => 'The property has been successfully updated.',
+        ]);
     }
 
     /**
@@ -112,6 +111,9 @@ class PropertyController extends Controller
         $property = Property::findOrFail($id);
         $property->delete();
 
-        return response()->json(['message' => 'Property deleted successfully.']);
+        return redirect()->route('property.index')->with('toast.success', [
+            'title' => 'Property Deleted',
+            'content' => 'The property has been successfully deleted.',
+        ]);
     }
 }

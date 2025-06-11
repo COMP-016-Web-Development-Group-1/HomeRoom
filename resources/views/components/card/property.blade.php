@@ -37,7 +37,7 @@
     </div>
 
     {{-- Clickable Card --}}
-    <a href="{{ route('property.rooms', $property->id) }}"
+    <a href="#"
        class="block p-4 h-[400px] bg-white rounded-lg shadow hover:bg-gray-100 transition duration-200">
 
         <i class="{{ $icon }} ph-bold {{ $color }} text-base text-xl"></i>
@@ -70,14 +70,7 @@
             },
         })
         .then(response => {
-            if (response.ok) {
-                // Property deleted, refresh or redirect manually
-                location.reload(); // or window.location.href = '/properties';
-            } else {
-                return response.json().then(data => {
-                    alert(data.message || 'Delete failed.');
-                });
-            }
+            location.reload();
         })
         .catch(error => {
             console.error('Delete error:', error);

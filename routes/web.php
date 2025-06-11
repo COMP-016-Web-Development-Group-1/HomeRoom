@@ -33,12 +33,11 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::patch('/profile/landlord', [LandlordProfileController::class, 'update'])->name('landlord.update');
 
     Route::get('/properties', [PropertyController::class, 'index'])->name('property.index');
-    Route::get('/properties/rooms', [PropertyController::class, 'rooms'])->name('property.rooms');
     Route::get('/properties/create', [PropertyController::class, 'create'])->name('property.create');
-    Route::post('/properties/store', [PropertyController::class, 'store'])->name('property.store');
-    Route::delete('/properties/{id}', [PropertyController::class, 'destroy'])->name('property.destroy');
-    Route::get('/properties/{id}/edit', [PropertyController::class, 'edit'])->name('property.edit');
-    Route::put('/properties/{id}', [PropertyController::class, 'update'])->name('property.update');
+    Route::post('/properties', [PropertyController::class, 'store'])->name('property.store');
+    Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('property.destroy');
+    Route::get('/properties/{property}', [PropertyController::class, 'edit'])->name('property.edit');
+    Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('property.update');
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
 
