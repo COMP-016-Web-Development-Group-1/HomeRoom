@@ -37,6 +37,9 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::get('/properties/create', [PropertyController::class, 'create'])->name('property.create');
     Route::post('/properties/store', [PropertyController::class, 'store'])->name('property.store');
     Route::delete('/properties/{id}', [PropertyController::class, 'destroy'])->name('property.destroy');
+    Route::get('/properties/{id}/edit', [PropertyController::class, 'edit'])->name('property.edit');
+    Route::put('/properties/{id}', [PropertyController::class, 'update'])->name('property.update');
+
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
 

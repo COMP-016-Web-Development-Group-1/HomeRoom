@@ -26,7 +26,7 @@
             </x-slot>
 
             <x-slot name="content">
-                <x-dropdown-link href="#">
+                <x-dropdown-link href="{{ route('property.edit', $property->id) }}">
                     <i class="ph-bold ph-pencil"></i> Edit
                 </x-dropdown-link>
                 <x-dropdown-link onclick="deleteProperty({{ $property->id }})">

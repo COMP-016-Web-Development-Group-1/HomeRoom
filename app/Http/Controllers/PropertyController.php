@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Enums\PropertyType;
 
 class PropertyController extends Controller
 {
@@ -72,17 +74,25 @@ class PropertyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $property = Property::findOrFail($id);
+        return view('landlord.property.edit', compact('property'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'type' => ['required', Rule::in(array_column(PropertyType::cases(), 'value'))],
+            'address' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        $property = Property::findOrFail($id);
+        $property->update($validated);
+
+        return redirect()->route('property.index')->with('success', 'Property updated successfully.');
     }
 
     /**
