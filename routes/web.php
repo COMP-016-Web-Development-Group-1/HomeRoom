@@ -50,7 +50,12 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::delete('/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcement.destroy');
 
     Route::get('/requests', [MaintenanceRequestController::class, 'index'])->name('request.index');
-
+    Route::get('/requests/create', [MaintenanceRequestController::class, 'create'])->name('request.create');
+    Route::post('/requests', [MaintenanceRequestController::class, 'store'])->name('request.store');
+    Route::get('/requests/{request}', [MaintenanceRequestController::class, 'show'])->name('request.show');
+    Route::put('/requests/{request}', [MaintenanceRequestController::class, 'update'])->name('request.update');
+    Route::get('/requests/{request}/edit', [MaintenanceRequestController::class, 'edit'])->name('request.edit');
+    Route::delete('/requests/{request}', [MaintenanceRequestController::class, 'destroy'])->name('request.destroy');
     Route::view('/tests', 'table');
 });
 

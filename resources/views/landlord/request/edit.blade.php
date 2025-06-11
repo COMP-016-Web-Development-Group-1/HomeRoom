@@ -25,7 +25,7 @@
 
                 <!-- Buttons -->
                 <div class="flex items-center justify-center gap-x-12 gap-y-3 flex-wrap">
-                    <x-a variant="clean" href="{{ route('landlord.request.index') }}">
+                    <x-a variant="clean" href="{{ route('request.index') }}">
                         Cancel
                     </x-a>
                     <x-button type="submit">
