@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Landlord;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
+use Hash;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,13 +16,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // For initial run for production
+        $user_password = 'password';
+        $user = User::firstOrCreate(
+            ['email' => env('DEFAULT_LANDLORD_EMAIL', 'landlord@gmail.com')],
+            [
+                'name' => 'Default Landlord',
+                'email_verified_at' => now(),
+                'password' => Hash::make($user_password),
+                'role' => 'landlord',
+                'profile_completed' => true,
+            ]
+        );
 
-        $this->call(DefaultTestSeeder::class);
+        $landlord = Landlord::firstOrCreate([
+            'user_id' => $user->id,
+        ]);
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // For Mocking the website
+        if (app()->isLocal()) {
+            $this->callWith(DefaultTestSeeder::class, ['landlord' => $landlord]);
+        }
     }
 }

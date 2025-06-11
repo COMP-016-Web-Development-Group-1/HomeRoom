@@ -25,5 +25,11 @@ class AppServiceProvider extends ServiceProvider
         Model::preventSilentlyDiscardingAttributes();
         Model::preventAccessingMissingAttributes();
         Model::automaticallyEagerLoadRelationships();
+
+        if (app()->isLocal()) {
+            \Barryvdh\Debugbar\Facade::enable();
+        } else {
+            \Barryvdh\Debugbar\Facade::disable();
+        }
     }
 }

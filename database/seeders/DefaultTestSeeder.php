@@ -18,71 +18,137 @@ class DefaultTestSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(Landlord $landlord): void
     {
-        $user_password = 'password';
-        $user = User::firstOrCreate(
-            ['email' => env('DEFAULT_LANDLORD_EMAIL', 'landlord@gmail.com')],
+
+        // $property = Property::firstOrCreate([
+        //     'landlord_id' => $landlord->id,
+        //     'type' => PropertyType::DORM->value,
+        //     'name' => 'Sample Property',
+        //     'description' => 'A default seeded property',
+        //     'address' => '123 Example St. Sample City',
+        // ]);
+
+        // $roomCode = generate_code();
+
+        // $room = Room::firstOrCreate([
+        //     'code' => $roomCode,
+        // ], [
+        //     'property_id' => $property->id,
+        //     'name' => 'Room 001',
+        //     'rent_amount' => 5000.00,
+        //     'max_occupancy' => 3,
+        // ]);
+
+        // $room2 = Room::firstOrCreate([
+        //     'code' => generate_code(),
+        // ], [
+        //     'property_id' => $property->id,
+        //     'name' => 'Room 002',
+        //     'rent_amount' => 4500.00,
+        //     'max_occupancy' => 2,
+        // ]);
+
+        // $user2_password = 'password';
+        // $user2 = User::firstOrCreate(['email' => 'tenant@gmail.com'], [
+        //     'name' => 'Default Tenant',
+        //     'email_verified_at' => Carbon::now(),
+        //     'password' => Hash::make($user2_password),
+        //     'role' => 'tenant',
+        //     'profile_completed' => true,
+        // ]);
+
+        // Tenant::firstOrCreate([
+        //     'user_id' => $user2->id,
+        //     'room_id' => $room->id,
+        // ]);
+
+        $properties = $this->createTestProperties($landlord);
+        $roomsByProperty = $this->createTestRooms($properties);
+        // $this->createTestAnnouncements($property, $room, $room2);
+    }
+
+    /**
+     * @param Landlord $landlord
+     * @return Property[]
+     */
+    private function createTestProperties(Landlord $landlord)
+    {
+        $propertiesData = [
             [
-                'name' => 'Default Landlord',
-                'email_verified_at' => Carbon::now(),
-                'password' => Hash::make($user_password),
-                'role' => 'landlord',
-                'profile_completed' => true,
-            ]
-        );
+                'type' => PropertyType::DORM->value,
+                'name' => 'Dormitory Haven',
+                'description' => 'Dormitory Haven offers a safe and comfortable living space designed specifically for students attending universities in Manila. The dorm features fully furnished rooms, high-speed internet, 24/7 security, and communal study areas to help residents focus on their academic goals. With a friendly atmosphere and proximity to shopping centers, food hubs, and public transportation, Dormitory Haven is your home away from home.',
+                'address' => '1232 P. Noval Street, Sampaloc, Manila, Metro Manila, Philippines',
+            ],
+            [
+                'type' => PropertyType::APARTMENT->value,
+                'name' => 'Cityview Apartment',
+                'description' => 'Cityview Apartment provides modern urban living in the heart of Cebu City. Each unit is designed for young professionals and families seeking convenience and comfort, with amenities including a swimming pool, fitness center, and 24-hour concierge. Residents enjoy easy access to business districts, schools, hospitals, and major shopping malls, making daily life stress-free and enjoyable.',
+                'address' => '15 General Maxilom Avenue, Cebu City, Cebu, Philippines',
+            ],
+            [
+                'type' => PropertyType::HOUSE->value,
+                'name' => 'Sunny Family House',
+                'description' => 'Sunny Family House is a spacious two-story home nestled in a peaceful subdivision, ideal for growing families who value both privacy and community. The house boasts four bedrooms, a large kitchen, a landscaped garden, and a secure two-car garage. Located near schools, parks, and local markets, it offers a perfect balance of suburban tranquility and urban accessibility.',
+                'address' => '45 Mango Avenue, Green Meadows Subdivision, Quezon City, Metro Manila, Philippines',
+            ],
+            [
+                'type' => PropertyType::CONDOMINIUM->value,
+                'name' => 'Luxury Condo',
+                'description' => 'Luxury Condo redefines upscale living with its breathtaking views of Manila Bay and world-class amenities. Enjoy exclusive access to infinity pools, a sky lounge, wellness spa, and a fully equipped gym. Each unit features elegant interiors with top-of-the-line appliances and smart home technology, perfect for executives and expatriates who desire both comfort and prestige.',
+                'address' => '888 Roxas Boulevard, Pasay, Metro Manila, Philippines',
+            ],
+        ];
 
-        $landlord = Landlord::firstOrCreate(
-            ['user_id' => $user->id]
-        );
+        $properties = [];
 
-        $property = Property::firstOrCreate([
-            'landlord_id' => $landlord->id,
-            'type' => PropertyType::DORM->value,
-            'name' => 'Sample Property',
-            'description' => 'A default seeded property',
-            'address' => '123 Example St. Sample City',
-        ]);
+        foreach ($propertiesData as $data) {
+            $property = Property::create([
+                'landlord_id' => $landlord->id,
+                'type' => $data['type'],
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'address' => $data['address'],
+            ]);
+            $properties[] = $property;
+        }
 
-        $roomCode = generate_code();
+        return $properties;
+    }
 
-        $room = Room::firstOrCreate([
-            'code' => $roomCode,
-        ], [
-            'property_id' => $property->id,
-            'name' => 'Room 001',
-            'rent_amount' => 5000.00,
-            'max_occupancy' => 3,
-        ]);
+    /**
+     * @param Property[] $properties
+     * @return array<int, Room[]> $roomsByProperty  Keyed by property ID
+     */
+    private function createTestRooms(array $properties)
+    {
+        $roomsByProperty = [];
 
-        $room2 = Room::firstOrCreate([
-            'code' => generate_code(),
-        ], [
-            'property_id' => $property->id,
-            'name' => 'Room 002',
-            'rent_amount' => 4500.00,
-            'max_occupancy' => 2,
-        ]);
-
-        $user2_password = 'password';
-        $user2 = User::firstOrCreate(['email' => 'tenant@gmail.com'], [
-            'name' => 'Default Tenant',
-            'email_verified_at' => Carbon::now(),
-            'password' => Hash::make($user2_password),
-            'role' => 'tenant',
-            'profile_completed' => true,
-        ]);
-
-        Tenant::firstOrCreate([
-            'user_id' => $user2->id,
-            'room_id' => $room->id,
-        ]);
-
-        $this->createTestAnnouncements($property, $room, $room2);
-
-        $this->command->info("  Default room created with code: $roomCode");
-        $this->command->info("  Landlord created with email of \"{$user->email}\" and password of \"{$user_password}\"");
-        $this->command->info("  Tenant created with email of \"{$user2->email}\" and password of \"{$user2_password}\"\n");
+        foreach ($properties as $property) {
+            // Use type instead of name
+            if ($property->type === PropertyType::HOUSE->value) {
+                $roomsByProperty[$property->id][] = Room::create([
+                    'property_id' => $property->id,
+                    'code' => generate_code(),
+                    'name' => 'Main Room',
+                    'rent_amount' => 15000.00,
+                    'max_occupancy' => 10,
+                ]);
+            } else {
+                $roomCount = rand(5, 10);
+                for ($i = 1; $i <= $roomCount; $i++) {
+                    $roomsByProperty[$property->id][] = Room::create([
+                        'property_id' => $property->id,
+                        'code' => generate_code(),
+                        'name' => 'Room ' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                        'rent_amount' => rand(8, 16) * 500,
+                        'max_occupancy' => rand(1, 4),
+                    ]);
+                }
+            }
+        }
+        return $roomsByProperty;
     }
 
     private function createTestAnnouncements(Property $property, Room $room, Room $room2): void
