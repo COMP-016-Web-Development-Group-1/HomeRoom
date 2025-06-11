@@ -16,19 +16,38 @@ class TransactionController extends Controller
 
         return match ($role) {
             'landlord' => (function () {
-                $pendingTransactions = Transaction::with(['tenant.room.property'])
+                    $pendingTransactions = Transaction::with(['tenant.room.property'])
                     ->where('status', 'pending')
                     ->orderByDesc('due_date')
                     ->get();
 
-                $historyTransactions = Transaction::with(['tenant.room.property'])
+                    $historyTransactions = Transaction::with(['tenant.room.property'])
                     ->where('status', '!=', 'pending')
                     ->orderByDesc('due_date')
                     ->get();
 
-                return view('landlord.transaction.index', compact('pendingTransactions', 'historyTransactions'));
-            })(),
-            'tenant' => view('tenant.transaction.index'),
+                    return view('landlord.transaction.index', compact('pendingTransactions', 'historyTransactions'));
+                })(),
+
+            'tenant' => (function () {
+                    $user = auth()->user();
+                    $tenantId = $user->tenant->id ?? null;
+
+                    $pendingTransactions = Transaction::with(['tenant.room.property'])
+                    ->where('tenant_id', $tenantId)
+                    ->where('status', 'pending')
+                    ->orderByDesc('due_date')
+                    ->get();
+
+                    $historyTransactions = Transaction::with(['tenant.room.property'])
+                    ->where('tenant_id', $tenantId)
+                    ->where('status', '!=', 'pending')
+                    ->orderByDesc('due_date')
+                    ->get();
+
+                    return view('tenant.transaction.index', compact('pendingTransactions', 'historyTransactions'));
+                })(),
+
             default => abort(403),
         };
     }
