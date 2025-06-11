@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\MaintenanceRequestStatus;
 use App\Enums\PropertyType;
 use App\Models\Announcement;
 use App\Models\Landlord;
+use App\Models\MaintenanceRequest;
 use App\Models\Property;
 use App\Models\Room;
 use App\Models\Tenant;
@@ -20,52 +22,10 @@ class DefaultTestSeeder extends Seeder
      */
     public function run(Landlord $landlord): void
     {
-
-        // $property = Property::firstOrCreate([
-        //     'landlord_id' => $landlord->id,
-        //     'type' => PropertyType::DORM->value,
-        //     'name' => 'Sample Property',
-        //     'description' => 'A default seeded property',
-        //     'address' => '123 Example St. Sample City',
-        // ]);
-
-        // $roomCode = generate_code();
-
-        // $room = Room::firstOrCreate([
-        //     'code' => $roomCode,
-        // ], [
-        //     'property_id' => $property->id,
-        //     'name' => 'Room 001',
-        //     'rent_amount' => 5000.00,
-        //     'max_occupancy' => 3,
-        // ]);
-
-        // $room2 = Room::firstOrCreate([
-        //     'code' => generate_code(),
-        // ], [
-        //     'property_id' => $property->id,
-        //     'name' => 'Room 002',
-        //     'rent_amount' => 4500.00,
-        //     'max_occupancy' => 2,
-        // ]);
-
-        // $user2_password = 'password';
-        // $user2 = User::firstOrCreate(['email' => 'tenant@gmail.com'], [
-        //     'name' => 'Default Tenant',
-        //     'email_verified_at' => Carbon::now(),
-        //     'password' => Hash::make($user2_password),
-        //     'role' => 'tenant',
-        //     'profile_completed' => true,
-        // ]);
-
-        // Tenant::firstOrCreate([
-        //     'user_id' => $user2->id,
-        //     'room_id' => $room->id,
-        // ]);
-
         $properties = $this->createTestProperties($landlord);
         $roomsByProperty = $this->createTestRooms($properties);
-        // $this->createTestAnnouncements($property, $room, $room2);
+        $tenants = $this->createTestTenants($roomsByProperty);
+        $this->createTestMaintenanceRequest($tenants);
     }
 
     /**
@@ -150,6 +110,152 @@ class DefaultTestSeeder extends Seeder
         }
         return $roomsByProperty;
     }
+
+    /**
+     * @param array<int, Room[]> $roomsByProperty Array of rooms, keyed by property ID
+     * @return Tenant[]
+     */
+    private function createTestTenants(array $roomsByProperty): array
+    {
+        $tenants = [];
+
+        foreach ($roomsByProperty as $propertyId => $rooms) {
+            foreach ($rooms as $room) {
+                $tenantCount = rand(0, $room->max_occupancy);
+
+                for ($j = 1; $j <= $tenantCount; $j++) {
+                    $user = User::create([
+                        'name' => fake()->name,
+                        'email' => fake()->unique()->safeEmail,
+                        'email_verified_at' => now(),
+                        'password' => Hash::make('password'),
+                        'role' => 'tenant',
+                        'profile_completed' => true,
+                    ]);
+
+                    $tenant = Tenant::create([
+                        'user_id' => $user->id,
+                        'room_id' => $room->id,
+                    ]);
+
+                    $tenants[] = $tenant;
+                }
+            }
+        }
+
+        return $tenants;
+    }
+
+    /**
+     * Creates 0–2 maintenance requests per tenant room, choosing from a pool of issues.
+     *
+     * @param Tenant[] $tenants
+     * @return void
+     */
+    private function createTestMaintenanceRequest(array $tenants): void
+    {
+        $issues = [
+            [
+                'title' => 'Leaky Faucet',
+                'description' => "Hello,\n\nI wanted to report that the faucet in the bathroom is leaking continuously. Water keeps dripping even when turned off completely.\nThis is causing water to pool in the sink and makes a constant dripping noise throughout the night.\nCould someone please take a look at it soon?\n\nThank you!"
+            ],
+            [
+                'title' => 'Air Conditioner Not Cooling',
+                'description' => "Hi,\n\nThe air conditioner in my room is running but it's not blowing any cold air. I tried adjusting the thermostat and cleaning the filter, but it didn't help.\nIt's been very uncomfortable during the afternoons.\nCan you kindly send someone to check or repair it?\n\nBest regards."
+            ],
+            [
+                'title' => 'Broken Door Lock',
+                'description' => "Good day,\n\nThe lock on my door has been difficult to turn and now it's completely jammed. I am unable to lock my room when I go out, which is a safety concern for me.\nPlease send a maintenance staff to fix or replace the lock as soon as possible.\n\nThank you for your assistance."
+            ],
+            [
+                'title' => 'Internet Connectivity Issues',
+                'description' => "Hello Admin,\n\nI've been experiencing frequent internet disconnections in my room. The WiFi signal is weak and sometimes the network disappears entirely.\nThis has affected my ability to attend online classes and meetings.\nWould appreciate if you could check the router or the network connection in our area.\n\nSincerely."
+            ],
+            [
+                'title' => 'Clogged Drain',
+                'description' => "Hi,\n\nThe bathroom drain is clogged and water takes a long time to go down. It sometimes overflows onto the floor, making it slippery and causing a bad smell.\nCan you please send someone to clean or fix the drain soon?\n\nThanks!"
+            ],
+            [
+                'title' => 'No Hot Water',
+                'description' => "Hello,\n\nThere has been no hot water in the shower for the past couple of days. I checked with my roommates and they're experiencing the same issue.\nCould you please arrange for the water heater to be inspected and repaired?\n\nThank you very much."
+            ],
+            [
+                'title' => 'Pest Infestation',
+                'description' => "Hi,\n\nI have noticed several cockroaches and ants in the kitchen and bathroom areas. They seem to be coming from under the sink.\nIt's getting worse, and I'm worried about hygiene and food safety.\nWould you please arrange for pest control soon?\n\nBest regards."
+            ],
+            [
+                'title' => 'Light Bulb Replacement',
+                'description' => "Greetings,\n\nThe light bulb in the hallway right outside my room has burnt out and it's very dark at night. It's a bit hazardous to walk through that area.\nCould you please have someone replace the bulb?\n\nThank you!"
+            ],
+            [
+                'title' => 'Cracked Window',
+                'description' => "Hello,\n\nThere's a visible crack in the window glass of my room. I'm concerned it might break further, especially during strong winds or rain.\nCould maintenance please check and repair or replace the window soon?\n\nThank you."
+            ],
+            [
+                'title' => 'Washing Machine Not Working',
+                'description' => "Hi,\n\nThe shared washing machine is not spinning during the wash cycle. Clothes remain soaking wet after the cycle ends.\nThis has been an ongoing issue for the past week.\nPlease send someone to inspect and repair the washing machine.\n\nThank you for your help."
+            ],
+            [
+                'title' => 'Water Heater Making Loud Noise',
+                'description' => "Hello,\n\nThe water heater is making loud banging and rumbling noises when it's on. I'm worried it might be a sign of a malfunction.\nPlease have it inspected soon to avoid further damage or safety risks.\n\nThanks!"
+            ],
+            [
+                'title' => 'Ceiling Leak During Rain',
+                'description' => "Hi,\n\nThere's a leak in the ceiling that becomes active whenever it rains. Water drips down slowly near the corner of the room.\nIt's starting to stain the ceiling and might damage furniture.\nPlease assist at your earliest convenience.\n\nRegards."
+            ],
+            [
+                'title' => "Toilet Won't Flush Properly",
+                'description' => "Good day,\n\nThe toilet in our bathroom isn't flushing completely. Sometimes it takes two or more tries, and even then, it doesn't clear properly.\nCould maintenance please take a look?\n\nAppreciate your help."
+            ],
+            [
+                'title' => 'Power Outlet Sparks',
+                'description' => "Hi,\n\nOne of the power outlets in my room sparks when I plug anything in. I'm afraid it could be a fire hazard.\nCan you send an electrician to inspect it?\n\nThank you."
+            ],
+            [
+                'title' => 'Mold on Wall',
+                'description' => "Hello,\n\nI've noticed mold growing on one of the walls in my room, possibly due to humidity or a hidden leak.\nThis could be a health issue. Can maintenance take a look?\n\nThank you very much."
+            ],
+            [
+                'title' => 'Broken Window Screen',
+                'description' => "Hi,\n\nThe screen on the window is torn and bugs are coming in at night.\nPlease send someone to replace or repair it.\n\nThanks!"
+            ],
+            [
+                'title' => 'Fridge Not Cooling',
+                'description' => "Hi Admin,\n\nThe shared refrigerator in the common area is not cooling. Food is spoiling quickly.\nCan someone please check it urgently?\n\nThanks!"
+            ],
+            [
+                'title' => 'Loose Towel Rack',
+                'description' => "Hello,\n\nThe towel rack in the bathroom is coming loose from the wall. It feels like it could fall off any moment.\nCan it be tightened or reinstalled properly?\n\nThanks for your help!"
+            ],
+            [
+                'title' => 'Elevator Stuck Often',
+                'description' => "Hi,\n\nThe elevator in the building gets stuck frequently, especially on the 3rd floor. It's becoming unreliable.\nCould this be looked into for everyone's safety?\n\nThanks!"
+            ],
+            [
+                'title' => 'Smoke Detector Beeping',
+                'description' => "Good day,\n\nThe smoke detector in my unit is constantly beeping. I've replaced the battery but the noise continues.\nPlease have someone check or replace it.\n\nRegards."
+            ]
+        ];
+
+        $weights = [0, 0, 0, 0, 0, 0, 1, 1, 2, 2]; // 60% for 0, (20% for 1 or 2)
+        foreach ($tenants as $tenant) {
+            $requestsToCreate = fake()->randomElement($weights);
+            if ($requestsToCreate === 0)
+                continue;
+
+            $chosenIssues = collect($issues)->shuffle()->take($requestsToCreate);
+            foreach ($chosenIssues as $issue) {
+                MaintenanceRequest::create([
+                    'tenant_id' => $tenant->id,
+                    'room_id' => $tenant->room_id,
+                    'title' => $issue['title'],
+                    'description' => $issue['description'],
+                    'status' => fake()->randomElement(MaintenanceRequestStatus::cases())->value,
+                ]);
+            }
+        }
+    }
+
 
     private function createTestAnnouncements(Property $property, Room $room, Room $room2): void
     {
