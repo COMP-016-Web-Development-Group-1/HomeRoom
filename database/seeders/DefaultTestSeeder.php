@@ -22,8 +22,8 @@ class DefaultTestSeeder extends Seeder
     public function run(Landlord $landlord): void
     {
         $properties = $this->createTestProperties($landlord);
-        $roomsByProperty = $this->createTestRooms($properties);
-        $tenants = $this->createTestTenants($roomsByProperty);
+        $rooms = $this->createTestRooms($properties);
+        $tenants = $this->createTestTenants($rooms);
         $this->createTestMaintenanceRequest($tenants);
     }
 
@@ -77,16 +77,15 @@ class DefaultTestSeeder extends Seeder
 
     /**
      * @param  Property[]  $properties
-     * @return array<int, Room[]> $roomsByProperty  Keyed by property ID
+     * @return Room[]
      */
     private function createTestRooms(array $properties)
     {
-        $roomsByProperty = [];
+        $rooms = [];
 
         foreach ($properties as $property) {
-            // Use type instead of name
             if ($property->type === PropertyType::HOUSE->value) {
-                $roomsByProperty[$property->id][] = Room::create([
+                $rooms[] = Room::create([
                     'property_id' => $property->id,
                     'code' => generate_code(),
                     'name' => 'Main Room',
@@ -96,54 +95,53 @@ class DefaultTestSeeder extends Seeder
             } else {
                 $roomCount = rand(5, 10);
                 for ($i = 1; $i <= $roomCount; $i++) {
-                    $roomsByProperty[$property->id][] = Room::create([
+                    $rooms[] = Room::create([
                         'property_id' => $property->id,
                         'code' => generate_code(),
-                        'name' => 'Room '.str_pad($i, 3, '0', STR_PAD_LEFT),
-                        'rent_amount' => rand(8, 16) * 500,
+                        'name' => 'Room ' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                        'rent_amount' => rand(8, 16) * 500, // 4000-8000
                         'max_occupancy' => rand(1, 6),
                     ]);
                 }
             }
         }
 
-        return $roomsByProperty;
+        return $rooms;
     }
 
     /**
-     * @param  array<int, Room[]>  $roomsByProperty  Array of rooms, keyed by property ID
+     * @param  Room[]  $rooms
      * @return Tenant[]
      */
-    private function createTestTenants(array $roomsByProperty): array
+    private function createTestTenants(array $rooms): array
     {
         $tenants = [];
 
-        foreach ($roomsByProperty as $propertyId => $rooms) {
-            foreach ($rooms as $room) {
-                $tenantCount = rand(0, $room->max_occupancy);
+        foreach ($rooms as $room) {
+            $tenantCount = rand(0, $room->max_occupancy);
 
-                for ($j = 1; $j <= $tenantCount; $j++) {
-                    $user = User::create([
-                        'name' => fake()->name,
-                        'email' => fake()->unique()->safeEmail,
-                        'email_verified_at' => now(),
-                        'password' => Hash::make('password'),
-                        'role' => 'tenant',
-                        'profile_completed' => true,
-                    ]);
+            for ($j = 1; $j <= $tenantCount; $j++) {
+                $user = User::create([
+                    'name' => fake()->name,
+                    'email' => fake()->unique()->safeEmail,
+                    'email_verified_at' => now(),
+                    'password' => Hash::make('password'),
+                    'role' => 'tenant',
+                    'profile_completed' => true,
+                ]);
 
-                    $tenant = Tenant::create([
-                        'user_id' => $user->id,
-                        'room_id' => $room->id,
-                    ]);
+                $tenant = Tenant::create([
+                    'user_id' => $user->id,
+                    'room_id' => $room->id,
+                ]);
 
-                    $tenants[] = $tenant;
-                }
+                $tenants[] = $tenant;
             }
         }
 
         return $tenants;
     }
+
 
     /**
      * Creates 0–2 maintenance requests per tenant room, choosing from a pool of issues.
