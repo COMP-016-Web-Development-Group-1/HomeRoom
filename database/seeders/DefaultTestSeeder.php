@@ -101,7 +101,7 @@ class DefaultTestSeeder extends Seeder
                     $rooms[] = Room::create([
                         'property_id' => $property->id,
                         'code' => generate_code(),
-                        'name' => 'Room ' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                        'name' => 'Room '.str_pad($i, 3, '0', STR_PAD_LEFT),
                         'rent_amount' => rand(8, 16) * 500, // 4000-8000
                         'max_occupancy' => rand(1, 6),
                     ]);
@@ -144,7 +144,6 @@ class DefaultTestSeeder extends Seeder
 
         return $tenants;
     }
-
 
     /**
      * Creates 0–2 maintenance requests per tenant room, choosing from a pool of issues.
@@ -274,8 +273,6 @@ class DefaultTestSeeder extends Seeder
             ],
         ];
 
-
-
         foreach ($systemAnnouncements as $data) {
             Announcement::create([
                 'type' => AnnouncementType::SYSTEM->value,
@@ -294,7 +291,6 @@ class DefaultTestSeeder extends Seeder
             'Garbage Collection Schedule' => "Please be advised that effective this week, garbage will now be collected every Monday and Thursday at 6:00 AM.\nResidents are requested to place their trash outside their units before the scheduled time to ensure proper collection.\n\nMake sure your waste is properly bagged and sealed to avoid attracting pests or creating foul odors in the hallways.\nDo not leave garbage outside beyond collection hours, as this creates hygiene and safety concerns.\n\nLet's work together to keep our shared spaces clean and pleasant for everyone. Thank you for your cooperation and support.",
             'New WiFi Password' => "We've recently updated the WiFi password for the shared connections available in the building's common areas,\nincluding the lobby, function hall, and rooftop lounge. This update is part of our regular security maintenance\nand aims to prevent unauthorized usage and ensure stable connectivity for residents.\n\nTo request the new password, please visit the property management office during business hours or send a message\nthrough the tenant portal. For security reasons, we will only release passwords to verified tenants.\n\nWe appreciate your understanding and hope this helps improve the overall WiFi experience for everyone.",
         ];
-
 
         foreach ($propertyWideMessages as $title => $description) {
             $property = fake()->randomElement($properties);
