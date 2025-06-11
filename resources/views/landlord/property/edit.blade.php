@@ -8,9 +8,9 @@
         @method('PUT')
 
         <div class="mb-2 p-2">
-            <x-input.label for="title" :required="true">Property Name</x-input.label>
-            <x-input.text id="title" type="text" name="title" :value="old('title', $property->title)" autofocus />
-            <x-input.error for="title" />
+            <x-input.label for="name" :required="true">Property Name</x-input.label>
+            <x-input.text id="name" type="text" name="name" :value="old('name', $property->name)" autofocus />
+            <x-input.error for="name" />
         </div>
 
         <div class="mb-2 p-2">

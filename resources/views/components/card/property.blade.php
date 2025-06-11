@@ -43,7 +43,7 @@
         <i class="{{ $icon }} ph-bold {{ $color }} text-base text-xl"></i>
 
         <h2 class="text-lg font-extrabold text-black leading-snug mb-1">
-            {{ $property->title }}
+            {{ $property->name }}
         </h2>
 
         <p class="text-sm text-gray-700 leading-tight mb-2">

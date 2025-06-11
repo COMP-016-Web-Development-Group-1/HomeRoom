@@ -58,7 +58,7 @@ class PropertyController extends Controller
 
         // Create new property
         Property::create([
-            'title' => $validated['name'],
+            'name' => $validated['name'],
             'type' => $validated['type'],
             'address' => $validated['address'],
             'description' => $validated['description'] ?? null,
@@ -92,7 +92,7 @@ class PropertyController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'type' => ['required', Rule::in(array_column(PropertyType::cases(), 'value'))],
             'address' => 'required|string|max:255',
             'description' => 'required|string',
