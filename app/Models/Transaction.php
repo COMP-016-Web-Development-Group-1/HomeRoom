@@ -12,6 +12,7 @@ class Transaction extends Model
         'amount',
         'due_date',
         'status',
+        'photo'
     ];
 
     public function tenant()
