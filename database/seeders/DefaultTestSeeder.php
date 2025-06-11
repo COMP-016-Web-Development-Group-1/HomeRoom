@@ -153,7 +153,88 @@ class DefaultTestSeeder extends Seeder
      */
     private function createTestMaintenanceRequest(array $tenants): void
     {
-        $issues = [];
+        $issues = [
+            [
+                'title' => 'Leaky Faucet',
+                'description' => "Hello,\n\nI wanted to report that the faucet in the bathroom is leaking continuously. Water keeps dripping even when turned off completely.\nThis is causing water to pool in the sink and makes a constant dripping noise throughout the night.\nCould someone please take a look at it soon?\n\nThank you!",
+            ],
+            [
+                'title' => 'Air Conditioner Not Cooling',
+                'description' => "Hi,\n\nThe air conditioner in my room is running but it's not blowing any cold air. I tried adjusting the thermostat and cleaning the filter, but it didn't help.\nIt's been very uncomfortable during the afternoons.\nCan you kindly send someone to check or repair it?\n\nBest regards.",
+            ],
+            [
+                'title' => 'Broken Door Lock',
+                'description' => "Good day,\n\nThe lock on my door has been difficult to turn and now it's completely jammed. I am unable to lock my room when I go out, which is a safety concern for me.\nPlease send a maintenance staff to fix or replace the lock as soon as possible.\n\nThank you for your assistance.",
+            ],
+            [
+                'title' => 'Internet Connectivity Issues',
+                'description' => "Hello Admin,\n\nI've been experiencing frequent internet disconnections in my room. The WiFi signal is weak and sometimes the network disappears entirely.\nThis has affected my ability to attend online classes and meetings.\nWould appreciate if you could check the router or the network connection in our area.\n\nSincerely.",
+            ],
+            [
+                'title' => 'Clogged Drain',
+                'description' => "Hi,\n\nThe bathroom drain is clogged and water takes a long time to go down. It sometimes overflows onto the floor, making it slippery and causing a bad smell.\nCan you please send someone to clean or fix the drain soon?\n\nThanks!",
+            ],
+            [
+                'title' => 'No Hot Water',
+                'description' => "Hello,\n\nThere has been no hot water in the shower for the past couple of days. I checked with my roommates and they're experiencing the same issue.\nCould you please arrange for the water heater to be inspected and repaired?\n\nThank you very much.",
+            ],
+            [
+                'title' => 'Pest Infestation',
+                'description' => "Hi,\n\nI have noticed several cockroaches and ants in the kitchen and bathroom areas. They seem to be coming from under the sink.\nIt's getting worse, and I'm worried about hygiene and food safety.\nWould you please arrange for pest control soon?\n\nBest regards.",
+            ],
+            [
+                'title' => 'Light Bulb Replacement',
+                'description' => "Greetings,\n\nThe light bulb in the hallway right outside my room has burnt out and it's very dark at night. It's a bit hazardous to walk through that area.\nCould you please have someone replace the bulb?\n\nThank you!",
+            ],
+            [
+                'title' => 'Cracked Window',
+                'description' => "Hello,\n\nThere's a visible crack in the window glass of my room. I'm concerned it might break further, especially during strong winds or rain.\nCould maintenance please check and repair or replace the window soon?\n\nThank you.",
+            ],
+            [
+                'title' => 'Washing Machine Not Working',
+                'description' => "Hi,\n\nThe shared washing machine is not spinning during the wash cycle. Clothes remain soaking wet after the cycle ends.\nThis has been an ongoing issue for the past week.\nPlease send someone to inspect and repair the washing machine.\n\nThank you for your help.",
+            ],
+            [
+                'title' => 'Water Heater Making Loud Noise',
+                'description' => "Hello,\n\nThe water heater is making loud banging and rumbling noises when it's on. I'm worried it might be a sign of a malfunction.\nPlease have it inspected soon to avoid further damage or safety risks.\n\nThanks!",
+            ],
+            [
+                'title' => 'Ceiling Leak During Rain',
+                'description' => "Hi,\n\nThere's a leak in the ceiling that becomes active whenever it rains. Water drips down slowly near the corner of the room.\nIt's starting to stain the ceiling and might damage furniture.\nPlease assist at your earliest convenience.\n\nRegards.",
+            ],
+            [
+                'title' => "Toilet Won't Flush Properly",
+                'description' => "Good day,\n\nThe toilet in our bathroom isn't flushing completely. Sometimes it takes two or more tries, and even then, it doesn't clear properly.\nCould maintenance please take a look?\n\nAppreciate your help.",
+            ],
+            [
+                'title' => 'Power Outlet Sparks',
+                'description' => "Hi,\n\nOne of the power outlets in my room sparks when I plug anything in. I'm afraid it could be a fire hazard.\nCan you send an electrician to inspect it?\n\nThank you.",
+            ],
+            [
+                'title' => 'Mold on Wall',
+                'description' => "Hello,\n\nI've noticed mold growing on one of the walls in my room, possibly due to humidity or a hidden leak.\nThis could be a health issue. Can maintenance take a look?\n\nThank you very much.",
+            ],
+            [
+                'title' => 'Broken Window Screen',
+                'description' => "Hi,\n\nThe screen on the window is torn and bugs are coming in at night.\nPlease send someone to replace or repair it.\n\nThanks!",
+            ],
+            [
+                'title' => 'Fridge Not Cooling',
+                'description' => "Hi Admin,\n\nThe shared refrigerator in the common area is not cooling. Food is spoiling quickly.\nCan someone please check it urgently?\n\nThanks!",
+            ],
+            [
+                'title' => 'Loose Towel Rack',
+                'description' => "Hello,\n\nThe towel rack in the bathroom is coming loose from the wall. It feels like it could fall off any moment.\nCan it be tightened or reinstalled properly?\n\nThanks for your help!",
+            ],
+            [
+                'title' => 'Elevator Stuck Often',
+                'description' => "Hi,\n\nThe elevator in the building gets stuck frequently, especially on the 3rd floor. It's becoming unreliable.\nCould this be looked into for everyone's safety?\n\nThanks!",
+            ],
+            [
+                'title' => 'Smoke Detector Beeping',
+                'description' => "Good day,\n\nThe smoke detector in my unit is constantly beeping. I've replaced the battery but the noise continues.\nPlease have someone check or replace it.\n\nRegards.",
+            ],
+        ];
 
         $weights = [0, 0, 0, 0, 0, 0, 0, 0, 1, 2]; // 80% for 0, (10% for 1 or 2)
         foreach ($tenants as $tenant) {
@@ -228,28 +309,28 @@ class DefaultTestSeeder extends Seeder
             ]);
         }
 
-// --- Room-specific Announcements ---
-$roomWideMessages = [
-    'Air Conditioner Checkup' => "We will be conducting a routine air conditioner inspection and maintenance service in your room\nthis Friday between 10:00 AM and 3:00 PM. This check is part of our quarterly effort to ensure\nall cooling units are functioning efficiently and to prevent unexpected breakdowns during hotter months.\n\nPlease ensure that someone is available to provide access during this time, or you may leave your key\nat the admin office beforehand. Kindly clear the area around your air conditioner to make space\nfor our technicians to work safely. We appreciate your cooperation and aim to complete all checks smoothly.",
+        // --- Room-specific Announcements ---
+        $roomWideMessages = [
+            'Air Conditioner Checkup' => "We will be conducting a routine air conditioner inspection and maintenance service in your room\nthis Friday between 10:00 AM and 3:00 PM. This check is part of our quarterly effort to ensure\nall cooling units are functioning efficiently and to prevent unexpected breakdowns during hotter months.\n\nPlease ensure that someone is available to provide access during this time, or you may leave your key\nat the admin office beforehand. Kindly clear the area around your air conditioner to make space\nfor our technicians to work safely. We appreciate your cooperation and aim to complete all checks smoothly.",
 
-    'Room Inspection Reminder' => "This is a friendly reminder that routine room inspections will take place next week, from Monday\nto Wednesday, between 9:00 AM and 4:00 PM. The purpose of these inspections is to ensure compliance\nwith health and safety standards and to identify any necessary maintenance needs.\n\nPlease make sure your room is clean and accessible. Personal belongings should be organized,\nand any potential hazards removed from walkways. These inspections are quick and non-intrusive,\nwith a focus on maintaining a safe and comfortable living environment for everyone.\nShould you have any questions or require rescheduling, contact the admin office in advance.",
+            'Room Inspection Reminder' => "This is a friendly reminder that routine room inspections will take place next week, from Monday\nto Wednesday, between 9:00 AM and 4:00 PM. The purpose of these inspections is to ensure compliance\nwith health and safety standards and to identify any necessary maintenance needs.\n\nPlease make sure your room is clean and accessible. Personal belongings should be organized,\nand any potential hazards removed from walkways. These inspections are quick and non-intrusive,\nwith a focus on maintaining a safe and comfortable living environment for everyone.\nShould you have any questions or require rescheduling, contact the admin office in advance.",
 
-    'Cleaning Schedule' => "Weekly room cleaning will take place every Wednesday at 10:00 AM. This scheduled cleaning\nis part of our housekeeping service to maintain hygiene and prevent pest buildup across all rooms.\n\nTo help our staff clean effectively, please tidy up your space beforehand and store away\nany personal or fragile items. The service includes sweeping, light dusting, and trash removal.\n\nIf you are not available during the cleaning time, we suggest arranging access with the admin office.\nRegular cleaning ensures your living space remains safe, comfortable, and pleasant for all residents.\nThank you for your cooperation and understanding.",
+            'Cleaning Schedule' => "Weekly room cleaning will take place every Wednesday at 10:00 AM. This scheduled cleaning\nis part of our housekeeping service to maintain hygiene and prevent pest buildup across all rooms.\n\nTo help our staff clean effectively, please tidy up your space beforehand and store away\nany personal or fragile items. The service includes sweeping, light dusting, and trash removal.\n\nIf you are not available during the cleaning time, we suggest arranging access with the admin office.\nRegular cleaning ensures your living space remains safe, comfortable, and pleasant for all residents.\nThank you for your cooperation and understanding.",
 
-    'Noise Complaint' => "We kindly remind all residents to be mindful of noise levels, especially during designated quiet hours\nfrom 10:00 PM to 7:00 AM. Excessive volume from music, televisions, or gatherings can negatively\nimpact the sleep and study routines of your fellow tenants.\n\nWe understand that occasional noise is unavoidable, but let's all make an effort to keep\nour shared environment respectful and peaceful. If you need to host a guest or anticipate noise,\nplease inform the management in advance.\n\nLet's continue to foster a considerate community by being aware of how our actions affect others nearby.\nThank you for your cooperation.",
+            'Noise Complaint' => "We kindly remind all residents to be mindful of noise levels, especially during designated quiet hours\nfrom 10:00 PM to 7:00 AM. Excessive volume from music, televisions, or gatherings can negatively\nimpact the sleep and study routines of your fellow tenants.\n\nWe understand that occasional noise is unavoidable, but let's all make an effort to keep\nour shared environment respectful and peaceful. If you need to host a guest or anticipate noise,\nplease inform the management in advance.\n\nLet's continue to foster a considerate community by being aware of how our actions affect others nearby.\nThank you for your cooperation.",
 
-    'Maintenance Follow-Up' => "Our maintenance team will return to your room on Thursday to complete repairs related\nto the plumbing issue reported last week. The follow-up work includes rechecking pipe fittings,\nsealing leaks, and ensuring water flow is back to normal.\n\nPlease ensure the area is accessible by clearing the space under the sink and near\nany plumbing fixtures. If you're unavailable during the repair window, you may leave your room key\nat the admin office with a note authorizing access.\n\nWe appreciate your patience as we work to resolve the issue fully.\nIf you notice any related concerns afterward, please report them immediately.",
+            'Maintenance Follow-Up' => "Our maintenance team will return to your room on Thursday to complete repairs related\nto the plumbing issue reported last week. The follow-up work includes rechecking pipe fittings,\nsealing leaks, and ensuring water flow is back to normal.\n\nPlease ensure the area is accessible by clearing the space under the sink and near\nany plumbing fixtures. If you're unavailable during the repair window, you may leave your room key\nat the admin office with a note authorizing access.\n\nWe appreciate your patience as we work to resolve the issue fully.\nIf you notice any related concerns afterward, please report them immediately.",
 
-    'Shared Appliance Usage' => "This is a reminder to please use shared appliances in a responsible and courteous manner.\nThe kitchen is a shared space, and all residents are expected to clean up after using\nappliances like the microwave, rice cooker, and refrigerator.\n\nPlease do not leave food spills or dirty utensils unattended, as this creates inconvenience for others\nand increases the risk of pests. Be sure to label your food items and discard expired goods regularly.\n\nLet's work together to keep the common kitchen clean, safe, and usable for everyone.\nIf issues persist, stricter usage guidelines may be implemented by management.",
+            'Shared Appliance Usage' => "This is a reminder to please use shared appliances in a responsible and courteous manner.\nThe kitchen is a shared space, and all residents are expected to clean up after using\nappliances like the microwave, rice cooker, and refrigerator.\n\nPlease do not leave food spills or dirty utensils unattended, as this creates inconvenience for others\nand increases the risk of pests. Be sure to label your food items and discard expired goods regularly.\n\nLet's work together to keep the common kitchen clean, safe, and usable for everyone.\nIf issues persist, stricter usage guidelines may be implemented by management.",
 
-    'Fridge Cleaning' => "To maintain cleanliness and prevent foul odors, we will be cleaning out the shared refrigerator\nthis Sunday at 4:00 PM. All unlabelled, expired, or spoiled items will be removed\nduring this time without exception.\n\nPlease check your stored items before Sunday and ensure everything is clearly labeled with\nyour name and the date it was stored. We kindly ask all residents to take responsibility\nfor keeping the fridge organized and sanitary.\n\nA clean and well-maintained fridge benefits everyone and reduces the risk of cross-contamination.\nThank you for your cooperation in keeping our shared spaces tidy and hygienic.",
+            'Fridge Cleaning' => "To maintain cleanliness and prevent foul odors, we will be cleaning out the shared refrigerator\nthis Sunday at 4:00 PM. All unlabelled, expired, or spoiled items will be removed\nduring this time without exception.\n\nPlease check your stored items before Sunday and ensure everything is clearly labeled with\nyour name and the date it was stored. We kindly ask all residents to take responsibility\nfor keeping the fridge organized and sanitary.\n\nA clean and well-maintained fridge benefits everyone and reduces the risk of cross-contamination.\nThank you for your cooperation in keeping our shared spaces tidy and hygienic.",
 
-    'New Roommate' => "We'd like to inform you that a new roommate will be joining your room starting next week.\nThis is part of our standard occupancy management, and we ask that you help them feel welcome\nduring their transition.\n\nPlease make space available for their belongings and be open to sharing important information\nabout the room and community guidelines. A short adjustment period is normal,\nand we hope this change will be a positive experience for everyone.\n\nIf you have concerns or questions regarding room sharing, feel free to reach out\nto the property manager. Thank you for your support in fostering a friendly environment.",
+            'New Roommate' => "We'd like to inform you that a new roommate will be joining your room starting next week.\nThis is part of our standard occupancy management, and we ask that you help them feel welcome\nduring their transition.\n\nPlease make space available for their belongings and be open to sharing important information\nabout the room and community guidelines. A short adjustment period is normal,\nand we hope this change will be a positive experience for everyone.\n\nIf you have concerns or questions regarding room sharing, feel free to reach out\nto the property manager. Thank you for your support in fostering a friendly environment.",
 
-    'Emergency Drill' => "There will be an emergency evacuation drill this Friday at 3:00 PM. Participation is mandatory\nfor all residents, as this drill ensures everyone is familiar with safety protocols in case\nof fire, earthquake, or other emergencies.\n\nPlease take the drill seriously. Familiarize yourself with the nearest exits and emergency assembly points.\nAn announcement will be made before the drill begins. Avoid using elevators during the drill,\nand follow instructions from the staff or security team.\n\nSafety is a top priority, and your cooperation is essential to make this exercise successful.\nThank you for doing your part to keep the community prepared.",
+            'Emergency Drill' => "There will be an emergency evacuation drill this Friday at 3:00 PM. Participation is mandatory\nfor all residents, as this drill ensures everyone is familiar with safety protocols in case\nof fire, earthquake, or other emergencies.\n\nPlease take the drill seriously. Familiarize yourself with the nearest exits and emergency assembly points.\nAn announcement will be made before the drill begins. Avoid using elevators during the drill,\nand follow instructions from the staff or security team.\n\nSafety is a top priority, and your cooperation is essential to make this exercise successful.\nThank you for doing your part to keep the community prepared.",
 
-    'Room Renovation Notice' => "Minor renovations will take place in your room next weekend between 9:00 AM and 5:00 PM.\nThis may include paint touch-ups, fixture replacements, or repairs to worn-out furnishings.\n\nWe understand that renovations can be disruptive, and we will do our best to minimize noise\nand disturbance during this period. Please secure any fragile or valuable items\nand inform the staff if you have specific concerns.\n\nIf you won't be home, you can authorize access by leaving your key with the admin office.\nWe appreciate your understanding and patience as we work to improve your living space.",
-];
+            'Room Renovation Notice' => "Minor renovations will take place in your room next weekend between 9:00 AM and 5:00 PM.\nThis may include paint touch-ups, fixture replacements, or repairs to worn-out furnishings.\n\nWe understand that renovations can be disruptive, and we will do our best to minimize noise\nand disturbance during this period. Please secure any fragile or valuable items\nand inform the staff if you have specific concerns.\n\nIf you won't be home, you can authorize access by leaving your key with the admin office.\nWe appreciate your understanding and patience as we work to improve your living space.",
+        ];
 
         foreach ($roomWideMessages as $title => $description) {
             $room = fake()->randomElement($rooms);
