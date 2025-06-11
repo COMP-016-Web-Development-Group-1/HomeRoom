@@ -54,7 +54,7 @@
         </form>
     </div>
 
-</x-guest-layout>
+</x-app-layout>
 
 <script>
     document.getElementById('cancelBtn').addEventListener('click', function (e) {
