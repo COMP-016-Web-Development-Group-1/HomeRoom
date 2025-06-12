@@ -11,11 +11,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-
     protected $policies = [
         MaintenanceRequest::class => MaintenanceRequestPolicy::class,
     ];
-
 
     public function register(): void
     {

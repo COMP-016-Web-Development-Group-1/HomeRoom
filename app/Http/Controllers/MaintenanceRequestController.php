@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Enums\MaintenanceRequestStatus;
-use App\Models\{MaintenanceRequest, Tenant, Room};
-use Illuminate\Http\Request;
+use App\Models\MaintenanceRequest;
+use App\Models\Room;
+use App\Models\Tenant;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class MaintenanceRequestController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -67,6 +70,7 @@ class MaintenanceRequestController extends Controller
 
         $user = auth()->user();
         $tenant = $user->tenant;
+
         return view('tenant.request.create', ['room' => $tenant->room]);
     }
 

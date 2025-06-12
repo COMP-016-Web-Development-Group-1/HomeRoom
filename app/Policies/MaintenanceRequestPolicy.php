@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\MaintenanceRequest;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class MaintenanceRequestPolicy
 {
@@ -27,6 +26,7 @@ class MaintenanceRequestPolicy
 
         if ($user->role === 'landlord') {
             $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
+
             return $propertyIds->isNotEmpty() && in_array($maintenanceRequest->room->property_id, $propertyIds->toArray());
         }
 
@@ -44,6 +44,7 @@ class MaintenanceRequestPolicy
 
         if ($user->role === 'landlord') {
             $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
+
             return $propertyIds->isNotEmpty() && in_array($maintenanceRequest->room->property_id, $propertyIds->toArray());
         }
 
@@ -61,6 +62,7 @@ class MaintenanceRequestPolicy
 
         if ($user->role === 'landlord') {
             $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
+
             return $propertyIds->isNotEmpty() && in_array($maintenanceRequest->room->property_id, $propertyIds->toArray());
         }
 
