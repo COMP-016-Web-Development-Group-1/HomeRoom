@@ -5,7 +5,6 @@
         </h2>
     </x-slot>
 
-    <div class="bg-white px-1 py-1 rounded-lg justify-start">
         <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
             <div class="text-gray-900">
                 <div class="flex items-end justify-between gap-x-3 mb-4">
@@ -39,5 +38,4 @@
 
             </div>
         </div>
-    </div>
 </x-app-layout>

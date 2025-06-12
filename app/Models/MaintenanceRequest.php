@@ -46,9 +46,5 @@ class MaintenanceRequest extends Model
         return $this->MaintenanceRequestStatus::REJECTED === $this->status;
     }
 
-    public function scopeRelevantToTenant($query, Tenant $tenant)
-    {
-        return $query->where('tenant_id', $tenant->id)
-            ->where('room_id', $tenant->room_id);
-    }
+
 }

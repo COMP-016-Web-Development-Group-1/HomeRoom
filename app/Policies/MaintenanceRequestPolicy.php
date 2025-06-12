@@ -4,41 +4,10 @@ namespace App\Policies;
 
 use App\Models\MaintenanceRequest;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 class MaintenanceRequestPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, MaintenanceRequest $maintenanceRequest): bool
-    {
-        if ($user->role === 'landlord') {
-            // Landlord can view if they own the property the request was made.
-            return $maintenanceRequest->room
-                && $maintenanceRequest->room->property
-                && $maintenanceRequest->room->property->landlord_id === $user->id;
-        }
-
-        if ($user->role === 'tenant') {
-            $tenant = $user->tenant;
-            if (!$tenant) {
-                return false;
-            }
-            // Tenant can view if the request is for their room
-            return $maintenanceRequest->room_id === $tenant->room_id;
-        }
-
-        return false;
-    }
-
     /**
      * Determine whether the user can create models.
      */
@@ -48,11 +17,37 @@ class MaintenanceRequestPolicy
     }
 
     /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, MaintenanceRequest $maintenanceRequest): bool
+    {
+        if ($user->role === 'tenant') {
+            return $user->tenant->id === $maintenanceRequest->tenant_id;
+        }
+
+        if ($user->role === 'landlord') {
+            $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
+            return $propertyIds->isNotEmpty() && in_array($maintenanceRequest->room->property_id, $propertyIds->toArray());
+        }
+
+        return false;
+    }
+
+    /**
      * Determine whether the user can update the model.
      */
     public function update(User $user, MaintenanceRequest $maintenanceRequest): bool
     {
-        return $user->role === 'tenant';
+        if ($user->role === 'tenant') {
+            return $user->tenant->id === $maintenanceRequest->tenant_id;
+        }
+
+        if ($user->role === 'landlord') {
+            $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
+            return $propertyIds->isNotEmpty() && in_array($maintenanceRequest->room->property_id, $propertyIds->toArray());
+        }
+
+        return false;
     }
 
     /**
@@ -60,22 +55,15 @@ class MaintenanceRequestPolicy
      */
     public function delete(User $user, MaintenanceRequest $maintenanceRequest): bool
     {
-        return $user->role === 'tenant';
-    }
+        if ($user->role === 'tenant') {
+            return $user->tenant->id === $maintenanceRequest->tenant_id;
+        }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, MaintenanceRequest $maintenanceRequest): bool
-    {
-        return false;
-    }
+        if ($user->role === 'landlord') {
+            $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
+            return $propertyIds->isNotEmpty() && in_array($maintenanceRequest->room->property_id, $propertyIds->toArray());
+        }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, MaintenanceRequest $maintenanceRequest): bool
-    {
         return false;
     }
 }

@@ -26,15 +26,21 @@
 
                 <div class="mb-6">
                     <x-input.label for="status" required>Status</x-input.label>
-                    {{-- TEMPORARY CHANGE: Using standard HTML <select> for testing --}}
-                    <select id="status" name="status" class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                        <option value="" disabled {{ old('status', $request->status) == '' ? 'selected' : '' }}> -- Please Select -- </option>
-                        <option value="pending" {{ old('status', $request->status) == 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="in_progress" {{ old('status', $request->status) == 'in_progress' ? 'selected' : '' }}>In Progress</option>
-                        <option value="resolved" {{ old('status', $request->status) == 'resolved' ? 'selected' : '' }}>Resolved</option>
-                        <option value="rejected" {{ old('status', $request->status) == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                    </select>
-                    {{-- End of TEMPORARY CHANGE --}}
+                    @php
+                        $statusOptions = [
+                            'pending' => 'Pending',
+                            'in_progress' => 'In Progress',
+                            'resolved' => 'Resolved',
+                            'rejected' => 'Rejected',
+                        ];
+                    @endphp
+                    <x-input.select
+                        id="status"
+                        name="status"
+                        :options="$statusOptions"
+                        :selected="old('status', $request->status)"
+                        placeholder="Select Status"
+                    />
                     <x-input.error for="status" />
                 </div>
 

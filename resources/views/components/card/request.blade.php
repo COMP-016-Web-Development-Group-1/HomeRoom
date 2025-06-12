@@ -1,6 +1,9 @@
 @props(['request','full' => false, 'statusText' => 'Unknown', 'typeDisplay' => 'status'])
 
 @php
+    // Explicitly set the $full variable, ensuring it's always defined
+    $full = $full ?? false; // This line ensures $full is set, using its passed value or defaulting to false
+
     $request_type_icon = [
         'tenant' => ['text' => 'Tenant', 'icon' => 'ph-user-circle', 'color' => 'lime'],
         'room' => ['text' => 'Room', 'icon' => 'ph-door', 'color' => 'yellow'],
@@ -20,7 +23,6 @@
     $current_status_info = $status_badge_properties[$request->status] ?? ['text' => 'Unknown Status', 'icon' => 'ph-question', 'color' => 'gray'];
 
 @endphp
-
 
 <div class="bg-white shadow p-8 sm:rounded-lg border-l-4 border-lime-800 mb-8">
     <div class="flex items-center justify-between mb-2">
@@ -80,6 +82,16 @@
                 <i class="ph-fill ph-user text-lime-600 text-base"></i>
                 {{ $request->tenant->user->name }}
             </div>
+            {{-- Add property name and room --}}
+            @if ($request->tenant->room)
+                <div class="text-gray-600 flex items-center gap-x-1">
+                    <i class="ph-fill ph-house text-lime-600 text-base"></i>
+                    {{ $request->tenant->room->name }}
+                    @if ($request->tenant->room->property)
+                        ({{ $request->tenant->room->property->name }})
+                    @endif
+                </div>
+            @endif
         </div>
 
         @if (!$full)
