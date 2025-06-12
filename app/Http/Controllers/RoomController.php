@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
 use App\Models\Property;
+use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\Tenant;
 
 class RoomController extends Controller
 {
@@ -58,8 +57,6 @@ class RoomController extends Controller
         return view('rooms.edit', compact('property', 'room'));
     }
 
-
-
     /**
      * Update the specified room.
      */
@@ -94,8 +91,6 @@ class RoomController extends Controller
         ]);
     }
 
-
-
     /**
      * Remove the specified room.
      */
@@ -111,6 +106,4 @@ class RoomController extends Controller
 
         return redirect()->route('property.rooms', $propertyId)->with('success', 'Room deleted.');
     }
-
-
 }

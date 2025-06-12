@@ -7,11 +7,9 @@ use App\Http\Controllers\LandlordSetupController;
 use App\Http\Controllers\MaintenanceRequestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\RoomTenantController;
-
 use App\Http\Controllers\RoomController;
-
+use App\Http\Controllers\RoomTenantController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -43,11 +41,11 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::get('/properties/{property}', [PropertyController::class, 'edit'])->name('property.edit');
     Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('property.update');
 
-    //ROOM
+    // ROOM
     Route::get('/properties/{property}/rooms', [RoomController::class, 'index'])->name('property.rooms');
     Route::get('/properties/{property}/rooms/create', [RoomController::class, 'create'])->name('property.rooms.create');
-    //Route::get('/rooms/{rooms}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
-    //Route::delete('/rooms/{rooms}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+    // Route::get('/rooms/{rooms}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
+    // Route::delete('/rooms/{rooms}', [RoomController::class, 'destroy'])->name('rooms.destroy');
     Route::get('properties/{property}/rooms/{room}/edit', [RoomController::class, 'edit'])->name('property.rooms.edit');
     Route::delete('properties/{property}/rooms/{room}', [RoomController::class, 'destroy'])->name('property.rooms.destroy');
     Route::post('/properties/{property}/rooms', [RoomController::class, 'store'])->name('property.rooms.store');
@@ -55,12 +53,6 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
 
     // TENANT
     Route::delete('/properties/{property}/rooms/{room}/tenants/{tenant}', [RoomTenantController::class, 'destroy'])->name('property.rooms.tenants.destroy');
-
-
-
-
-
-
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
 

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class RoomTenantController extends Controller
 {
     public function destroy($propertyId, $roomId, \App\Models\Tenant $tenant)
@@ -19,5 +17,4 @@ class RoomTenantController extends Controller
             ->route('property.rooms.edit', [$propertyId, $roomId])
             ->with('success', 'Tenant removed successfully.');
     }
-
 }
