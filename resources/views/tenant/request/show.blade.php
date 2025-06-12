@@ -43,9 +43,17 @@
                         Back To Requests
                     </x-a>
                 </div>
+                {{-- Add the Edit Request button here --}}
+                @if (auth()->check() && auth()->user()->role === 'tenant' && auth()->user()->tenant->id === $requestRecord->tenant_id)
+                    <div>
+                        <x-a variant="primary" :href="route('request.edit', $requestRecord)">
+                            <i class="ph-bold ph-pencil"></i> Edit Request
+                        </x-a>
+                    </div>
+                @endif
             </div>
 
-            {{-- Pass the correct status text and type_display to x-card.request --}}
+            {{-- Pass the correct status text and    type_display to x-card.request --}}
             <x-card.request :request="$requestRecord" :full="true" :statusText="$status_text" :typeDisplay="$type_display" />
         </div>
     </div>

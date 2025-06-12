@@ -1,24 +1,3 @@
-@php
-    $request_type_icon = [
-        'tenant' => ['text' => 'Tenant', 'icon' => 'ph-user-circle', 'color' => 'lime'],
-        'room' => ['text' => 'Room', 'icon' => 'ph-door', 'color' => 'yellow'],
-        'status' => ['text' => 'Status', 'icon' => 'ph-heartbeat', 'color' => 'red'],
-    ];
-
-    // Determine request type based on status
-    if ($request->status === 'pending') {
-        $type = 'pending';
-    } elseif ($request->status === 'in_progress') {
-        $type = 'in_progress';
-    } elseif ($request->status === 'resolved') {
-        $type = 'resolved';
-    } elseif ($request->status === 'rejected') {
-        $type = 'rejected';
-    } else {
-        $type = 'system';
-    }
-@endphp
-
 <x-app-layout title="Maintenance Requests">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -31,12 +10,22 @@
             <div class="flex items-end justify-between gap-x-3 mb-2">
                 <div class="font-bold text-2xl flex items-center">
                     <i class="ph-bold ph-caret-left text-lime-600"></i>
-                    <x-a variant="text" :href="route('landlord.request.index')">
+                    <x-a variant="text" :href="route('request.index')"> {{-- Changed to request.index --}}
                         Back To Requests
                     </x-a>
                 </div>
+                {{-- Add the Edit Status button here for landlords --}}
+                @if (auth()->check() && auth()->user()->role === 'landlord')
+                    <div>
+                        <x-a variant="primary" :href="route('request.edit', $requestRecord)">
+                            <i class="ph-bold ph-pencil"></i> Edit Status
+                        </x-a>
+                    </div>
+                @endif
             </div>
 
-            <x-card.request :request="$request" :full="true" />
+            {{-- x-card.request now dynamically displays status and tenant name --}}
+            <x-card.request :request="$requestRecord" :full="true" />
         </div>
+    </div>
 </x-app-layout>
