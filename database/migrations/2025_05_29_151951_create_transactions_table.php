@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PaymentMethod;
 use App\Enums\TransactionStatus;
 use App\Enums\TransactionType;
 use App\Models\Bill;
@@ -16,11 +17,12 @@ return new class extends Migration {
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Tenant::class)->constrained()->onDelete('cascade'); // Tenant
-            $table->foreignIdFor(Bill::class)->unique()->constrained()->onDelete('cascade'); // One-to-one
-            $table->enum('status', ['pending', 'confirmed', 'rejected'])->default('pending');
-            $table->string('payment_method')->nullable(); // optional (e.g. 'gcash', 'bank')
-            $table->string('proof_path')->nullable();     // file path to uploaded receipt
+            $table->foreignIdFor(Tenant::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Bill::class)->unique()->constrained()->onDelete('cascade');
+            $table->enum('status', array_column(TransactionStatus::cases(), 'value'))
+                ->default(TransactionStatus::PENDING->value);
+            $table->enum('payment_method', array_column(PaymentMethod::cases(), 'value'));
+            $table->string('proof_photo')->nullable();
             $table->date('payment_date');
             $table->timestamp('confirmed_at')->nullable();
             $table->timestamps();
