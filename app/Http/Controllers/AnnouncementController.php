@@ -14,40 +14,34 @@ class AnnouncementController extends Controller
 
     public function index(Request $request)
     {
-        $role = auth()->user()->role;
+        $user = auth()->user();
         $type = $request->query('type', 'all');
-        $announcements = collect();
+        $search = $request->query('search');
+        $perPage = 5;
 
-        if ($role === 'landlord') {
-            $query = Announcement::query();
-
-            if ($type === 'system') {
-                $query->whereNull('property_id')->whereNull('room_id');
-            } elseif ($type === 'property') {
-                $query->whereNotNull('property_id')->whereNull('room_id');
-            } elseif ($type === 'room') {
-                $query->whereNotNull('property_id')->whereNotNull('room_id');
-            }
-            // 'all' applies no additional filters
-            $announcements = $query->latest()->get();
-
-        } elseif ($role === 'tenant') {
-            $tenant = auth()->user()->tenant;
-            $query = Announcement::relevantToTenant($tenant);
-
-            if ($type === 'system') {
-                $query->whereNull('property_id')->whereNull('room_id');
-            } elseif ($type === 'property') {
-                $room = $tenant->room;
-                $propertyId = $room ? $room->property_id : null;
-                $query->where('property_id', $propertyId)->whereNull('room_id');
-            } elseif ($type === 'room') {
-                $room = $tenant->room;
-                $propertyId = $room ? $room->property_id : null;
-                $roomId = $room ? $room->id : null;
-                $query->where('property_id', $propertyId)->where('room_id', $roomId);
-            }
-            $announcements = $query->latest()->get();
+        if ($user->role === "landlord") {
+            $announcements = Announcement::relevantToLandlord($user->landlord)
+                ->filterByType($type)
+                ->when($search, function ($query, $search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('title', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$search}%");
+                    });
+                })
+                ->latest()
+                ->paginate($perPage)
+                ->appends($request->query());
+        } elseif ($user->role === "tenant") {
+            $announcements = Announcement::relevantToTenant($user->tenant)
+                ->filterByType($type, $user->tenant)
+                ->when($search, function ($query, $search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('title', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$search}%");
+                    });
+                })
+                ->paginate($perPage)
+                ->appends($request->query());
         } else {
             return abort(403);
         }
@@ -57,6 +51,52 @@ class AnnouncementController extends Controller
             'filter' => $type,
         ]);
     }
+
+    // public function index(Request $request)
+    // {
+    //     $role = auth()->user()->role;
+    //     $type = $request->query('type', 'all');
+    //     $announcements = collect();
+
+    //     if ($role === 'landlord') {
+    //         $query = Announcement::query();
+
+    //         if ($type === 'system') {
+    //             $query->whereNull('property_id')->whereNull('room_id');
+    //         } elseif ($type === 'property') {
+    //             $query->whereNotNull('property_id')->whereNull('room_id');
+    //         } elseif ($type === 'room') {
+    //             $query->whereNotNull('property_id')->whereNotNull('room_id');
+    //         }
+    //         // 'all' applies no additional filters
+    //         $announcements = $query->latest()->get();
+
+    //     } elseif ($role === 'tenant') {
+    //         $tenant = auth()->user()->tenant;
+    //         $query = Announcement::relevantToTenant($tenant);
+
+    //         if ($type === 'system') {
+    //             $query->whereNull('property_id')->whereNull('room_id');
+    //         } elseif ($type === 'property') {
+    //             $room = $tenant->room;
+    //             $propertyId = $room ? $room->property_id : null;
+    //             $query->where('property_id', $propertyId)->whereNull('room_id');
+    //         } elseif ($type === 'room') {
+    //             $room = $tenant->room;
+    //             $propertyId = $room ? $room->property_id : null;
+    //             $roomId = $room ? $room->id : null;
+    //             $query->where('property_id', $propertyId)->where('room_id', $roomId);
+    //         }
+    //         $announcements = $query->latest()->get();
+    //     } else {
+    //         return abort(403);
+    //     }
+
+    //     return view('announcement.index', [
+    //         'announcements' => $announcements,
+    //         'filter' => $type,
+    //     ]);
+    // }
 
     /**
      * Show the form for creating a new resource.

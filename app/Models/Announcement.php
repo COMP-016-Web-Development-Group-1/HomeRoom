@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,54 +29,70 @@ class Announcement extends Model
         return $this->belongsTo(Room::class);
     }
 
-    public function isSystemWide(): bool
+    public function scopeRelevantToLandlord(Builder $query, Landlord $landlord)
     {
-        return is_null($this->property_id) && is_null($this->room_id);
+        // Landlords can see all announcements
+        // we might want to filter by landlord's properties in the future
+        return $query;
     }
 
-    public function isPropertyWide(): bool
+    public function scopeRelevantToTenant(Builder $query, Tenant $tenant)
     {
-        return ! is_null($this->property_id) && is_null($this->room_id);
-    }
-
-    public function isRoomSpecific(): bool
-    {
-        return ! is_null($this->property_id) && ! is_null($this->room_id);
-    }
-
-    public function scopeRelevantToRoom($query, Room $room)
-    {
-        return $query->where(function ($query) use ($room) {
-            $query->whereNull('property_id') // system-wide
-                ->orWhere(function ($query) use ($room) {
-                    $query->where('property_id', $room->property_id)
-                        ->where(function ($q) use ($room) {
-                            $q->whereNull('room_id')     // property-wide
-                                ->orWhere('room_id', $room->id); // room-specific
-                        });
-                });
-        });
-    }
-
-    public function scopeRelevantToTenant($query, $tenant)
-    {
-        // Get property_id and room_id from tenant's room (if available)
         $room = $tenant->room;
         $propertyId = $room ? $room->property_id : null;
         $roomId = $room ? $room->id : null;
 
-        // Show:
-        // 1. System announcements (no property and no room)
-        // 2. Property-wide announcements (for tenant's property, room_id null)
-        // 3. Room-specific announcements (for tenant's room)
         return $query->where(function ($q) use ($propertyId, $roomId) {
+            // System announcements (no property and no room)
             $q->where(function ($q2) {
-                $q2->whereNull('property_id')->whereNull('room_id'); // system
-            })->orWhere(function ($q2) use ($propertyId) {
-                $q2->where('property_id', $propertyId)->whereNull('room_id'); // property
-            })->orWhere(function ($q2) use ($propertyId, $roomId) {
-                $q2->where('property_id', $propertyId)->where('room_id', $roomId); // room
-            });
+                $q2->whereNull('property_id')->whereNull('room_id');
+            })
+                // Property-wide announcements (for tenant's property, room_id null)
+                ->orWhere(function ($q2) use ($propertyId) {
+                    $q2->where('property_id', $propertyId)->whereNull('room_id');
+                })
+                // Room-specific announcements (for tenant's room)
+                ->orWhere(function ($q2) use ($propertyId, $roomId) {
+                    $q2->where('property_id', $propertyId)->where('room_id', $roomId);
+                });
         });
+    }
+
+    public function scopeFilterByType(Builder $query, string $type, Tenant $tenant = null)
+    {
+        if ($type === 'all') {
+            return $query;
+        }
+
+        if ($type === 'system') {
+            return $query->whereNull('property_id')->whereNull('room_id');
+        }
+
+        if ($type === 'property') {
+            if ($tenant) {
+                // For tenants, filter by their property
+                $room = $tenant->room;
+                $propertyId = $room ? $room->property_id : null;
+                return $query->where('property_id', $propertyId)->whereNull('room_id');
+            } else {
+                // For landlords, show all property announcements
+                return $query->whereNotNull('property_id')->whereNull('room_id');
+            }
+        }
+
+        if ($type === 'room') {
+            if ($tenant) {
+                // For tenants, filter by their specific room
+                $room = $tenant->room;
+                $propertyId = $room ? $room->property_id : null;
+                $roomId = $room ? $room->id : null;
+                return $query->where('property_id', $propertyId)->where('room_id', $roomId);
+            } else {
+                // For landlords, show all room announcements
+                return $query->whereNotNull('property_id')->whereNotNull('room_id');
+            }
+        }
+
+        return $query;
     }
 }
