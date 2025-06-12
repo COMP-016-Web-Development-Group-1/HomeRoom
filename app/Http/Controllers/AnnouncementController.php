@@ -78,6 +78,7 @@ class AnnouncementController extends Controller
 
         return view('announcement.create', compact('properties', 'rooms'));
     }
+
     /**
      * Store a newly created resource in storage.
      */
