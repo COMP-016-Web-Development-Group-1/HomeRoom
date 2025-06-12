@@ -21,11 +21,6 @@
                         <x-badge color="red" icon="ph-trash" :interactive="true" type="a"
                             href="{{ route('request.index', ['type' => 'room']) }}">Rejected</x-badge>
                     </div>
-                    <div class="flex items-center flex-wrap">
-                        <x-a variant="clean" href="{{ route('request.create') }}">
-                            Issue a Maintenance Request
-                        </x-a>
-                    </div>
                     @can('create', \App\Models\MaintenanceRequest::class)
                         <div>
                             <x-a variant="dark" :href="route('request.create')">
@@ -36,7 +31,7 @@
                     @endcan
             </div>
                 </div>
-                @forelse ($request as $request)
+                @forelse ($requests as $request)
                     <x-card.request :request="$request" />
                 @empty
                     <p>No Maintenance Request</p>
