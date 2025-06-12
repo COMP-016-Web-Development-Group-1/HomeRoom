@@ -17,6 +17,14 @@ class Transaction extends Model
         'confirmed_at',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'payment_date' => 'datetime',
+            'confirmed_at' => 'datetime'
+        ];
+    }
+
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);

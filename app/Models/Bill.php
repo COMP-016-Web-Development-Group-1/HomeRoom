@@ -13,8 +13,20 @@ class Bill extends Model
         'status',
     ];
 
-    public function bill()
+    protected function casts(): array
     {
-        return $this->belongsTo(Bill::class);
+        return [
+            'due_date' => 'datetime',
+        ];
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
+
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class);
     }
 }
