@@ -1,3 +1,5 @@
+{{-- resources/views/tenant/request/edit.blade.php (Adjust this file) --}}
+
 <x-app-layout title="Edit Request">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -11,14 +13,12 @@
                 @csrf
                 @method('PUT')
 
-                <!-- Title -->
                 <div class="mb-6">
                     <x-input.label for="title" required>Title</x-input.label>
                     <x-input.text id="title" type="text" name="title" :value="old('title', $request->title)" autofocus />
                     <x-input.error for="title" />
                 </div>
 
-                <!-- Description -->
                 <div class="mb-6">
                     <x-input.label for="description" required>Description</x-input.label>
                     <x-input.textarea id="description" name="description"
@@ -26,9 +26,9 @@
                     <x-input.error for="description" />
                 </div>
 
-                <!-- Buttons -->
                 <div class="flex items-center justify-center gap-x-12 gap-y-3 flex-wrap">
-                    <x-a variant="clean" href="{{ route('tenant.request.index') }}">
+                    {{-- THIS IS THE CRITICAL CHANGE --}}
+                    <x-a variant="clean" href="{{ route('request.index') }}">
                         Cancel
                     </x-a>
                     <x-button type="submit">

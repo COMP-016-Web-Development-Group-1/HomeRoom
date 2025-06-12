@@ -1,36 +1,32 @@
-@props(['request','full' => false, 'statusText' => 'Unknown', 'typeDisplay' => 'status']) {{-- Added statusText and typeDisplay --}}
+@props(['request','full' => false, 'statusText' => 'Unknown', 'typeDisplay' => 'status'])
 
 @php
     $request_type_icon = [
         'tenant' => ['text' => 'Tenant', 'icon' => 'ph-user-circle', 'color' => 'lime'],
         'room' => ['text' => 'Room', 'icon' => 'ph-door', 'color' => 'yellow'],
+        // This 'status' key can be a fallback or for generic display if needed, but we'll use specific status mappings below.
         'status' => ['text' => 'Status', 'icon' => 'ph-heartbeat', 'color' => 'red'],
     ];
 
-    // Determine request type for badge display based on the passed prop
-    $badge_type = $typeDisplay;
+    // Define mappings for status to color and icon
+    $status_badge_properties = [
+        'pending' => ['text' => 'Pending', 'icon' => 'ph-warning', 'color' => 'yellow'],
+        'in_progress' => ['text' => 'In Progress', 'icon' => 'ph-spinner-gap', 'color' => 'lime'],
+        'resolved' => ['text' => 'Resolved', 'icon' => 'ph-check-fat', 'color' => 'green'],
+        'rejected' => ['text' => 'Rejected', 'icon' => 'ph-trash', 'color' => 'red'],
+    ];
 
-    // Determine request status based on status value for display
-    $current_status_text = 'Overall Request'; // Default text
-    if (isset($request->status)) {
-        if ($request->status === 'pending') {
-            $current_status_text = 'Pending';
-        } elseif ($request->status === 'in_progress') {
-            $current_status_text = 'In Progress';
-        } elseif ($request->status === 'resolved') {
-            $current_status_text = 'Resolved';
-        } elseif ($request->status === 'rejected') {
-            $current_status_text = 'Rejected';
-        }
-    }
+    // Determine current status text, icon, and color based on the request's status
+    $current_status_info = $status_badge_properties[$request->status] ?? ['text' => 'Unknown Status', 'icon' => 'ph-question', 'color' => 'gray'];
+
 @endphp
 
 
 <div class="bg-white shadow p-8 sm:rounded-lg border-l-4 border-lime-800 mb-8">
     <div class="flex items-center justify-between mb-2">
-        {{-- Use $badge_type for the color and icon lookup --}}
-        <x-badge :color="$request_type_icon[$badge_type]['color']" :icon="$request_type_icon[$badge_type]['icon']" :size="$full ? 'lg' : 'md'" :interactive="true">
-            {{ $request_type_icon[$badge_type]['text'] }}
+        {{-- Use the current status info for the badge --}}
+        <x-badge :color="$current_status_info['color']" :icon="$current_status_info['icon']" :size="$full ? 'lg' : 'md'" :interactive="true">
+            {{ $current_status_info['text'] }}
         </x-badge>
 
         @if (auth()->user()->role === 'landlord')
@@ -81,9 +77,8 @@
                 {{ $request->created_at->format('F j, Y, g:i a') }}
             </div>
             <div class="text-gray-600 flex items-center gap-x-1">
-                <i class="ph-fill ph-map-pin text-lime-600 text-base"></i>
-                {{-- Display the determined status text --}}
-                {{ $current_status_text }}
+                <i class="ph-fill ph-user text-lime-600 text-base"></i>
+                {{ $request->tenant->user->name }}
             </div>
         </div>
 
