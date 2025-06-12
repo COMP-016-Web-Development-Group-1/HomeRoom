@@ -12,7 +12,7 @@ class Transaction extends Model
         'amount',
         'status',
         'payment_method',
-        'proof_path',
+        'proof_photo',
         'payment_date',
         'confirmed_at',
     ];
