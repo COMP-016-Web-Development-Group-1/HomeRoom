@@ -1,8 +1,11 @@
-@props(['variant' => 'text'])
+@props(['variant' => 'text', 'uppercase' => true, 'disabled' => false])
 
 @php
+    $case = $uppercase ? 'text-xs uppercase tracking-widest' : 'text-sm';
     $baseClass =
-        'inline-flex text-center items-center gap-x-1 justify-center px-4 py-2 border rounded-md font-semibold text-xs uppercase tracking-widest focus:outline-hidden focus:ring-2 focus:ring-offset-2 transition ease-in-out duration-150';
+        $case .
+        ' ' .
+        'inline-flex text-center items-center gap-x-1 justify-center px-4 py-2 border rounded-md font-semibold focus:outline-hidden focus:ring-2 focus:ring-offset-2 transition ease-in-out duration-150';
 
     $variants = [
         'primary' =>
@@ -20,6 +23,12 @@
     $buttonClass = $isPlainText ? $variants['text'] : $baseClass . ' ' . ($variants[$variant] ?? $variants['primary']);
 @endphp
 
-<a {{ $attributes->merge(['class' => $buttonClass]) }}>
-    {{ $slot }}
-</a>
+@if ($disabled)
+    <span {{ $attributes->merge(['class' => $buttonClass . ' opacity-60']) }}>
+        {{ $slot }}
+    </span>
+@else
+    <a {{ $attributes->merge(['class' => $buttonClass]) }}>
+        {{ $slot }}
+    </a>
+@endif
