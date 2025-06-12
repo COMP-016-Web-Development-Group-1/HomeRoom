@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AnnouncementType;
 use App\Models\Announcement;
 use App\Models\Property;
 use App\Models\Room;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AnnouncementController extends Controller
 {
@@ -127,9 +129,9 @@ class AnnouncementController extends Controller
         $this->authorize('create', Announcement::class);
 
         $validated = $request->validate([
-            'type' => ['required', 'in:system,property,room'],
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'type' => ['required', Rule::in(array_column(AnnouncementType::cases(), 'value'))],
+            'title' => ['required', 'string', 'min:5', 'max:255'],
+            'description' => ['required', 'string', 'min:10', 'max:500'],
             'property_id' => [
                 'nullable',
                 'required_if:type,property,room',
@@ -197,9 +199,9 @@ class AnnouncementController extends Controller
         $this->authorize('update', $announcement);
 
         $validated = $request->validate([
-            'type' => ['required', 'in:system,property,room'],
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'type' => ['required', Rule::in(array_column(AnnouncementType::cases(), 'value'))],
+            'title' => ['required', 'string', 'min:5', 'max:255'],
+            'description' => ['required', 'string', 'min:10', 'max:500'],
             'property_id' => [
                 'nullable',
                 'required_if:type,property,room',
