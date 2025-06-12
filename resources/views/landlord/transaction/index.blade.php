@@ -27,7 +27,7 @@
                     </button>
                 </div>
 
-                <div class="relative overflow-hidden" style="min-height:160px">
+                <div class="relative overflow-hidden" style="min-height:760px">
                     <div id="pending-content" class="tab-pane transition-transform duration-500 ease-in-out"
                         style="display: block; transform: translateX(0%); position: absolute; width: 100%;">
                         <x-table.container id="pending-payments-table">
