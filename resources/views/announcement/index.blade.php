@@ -1,4 +1,4 @@
-<x-app-layout title="Announcements" :manualSlide="false">
+<x-app-layout title="Announcements" :manualSlide="true">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Announcements

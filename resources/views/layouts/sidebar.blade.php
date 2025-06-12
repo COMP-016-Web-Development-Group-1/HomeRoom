@@ -102,7 +102,7 @@
 </aside>
 
 <!-- Main Content Area -->
-<div class="p-4 sm:ml-64" @if (!$manualSlide) id="view-transition-slider" @endif>
+<div class="p-4 sm:ml-64" @if (!$manualSlide) id="view-transition-slide" @endif>
     <main class="p-4 border-2 border-dashed rounded-lg">
         {{ $slot }}
     </main>
