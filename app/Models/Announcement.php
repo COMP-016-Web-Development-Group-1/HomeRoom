@@ -58,7 +58,7 @@ class Announcement extends Model
         });
     }
 
-    public function scopeFilterByType(Builder $query, string $type, Tenant $tenant = null)
+    public function scopeFilterByType(Builder $query, string $type, ?Tenant $tenant = null)
     {
         if ($type === 'all') {
             return $query;
@@ -73,6 +73,7 @@ class Announcement extends Model
                 // For tenants, filter by their property
                 $room = $tenant->room;
                 $propertyId = $room ? $room->property_id : null;
+
                 return $query->where('property_id', $propertyId)->whereNull('room_id');
             } else {
                 // For landlords, show all property announcements
@@ -86,6 +87,7 @@ class Announcement extends Model
                 $room = $tenant->room;
                 $propertyId = $room ? $room->property_id : null;
                 $roomId = $room ? $room->id : null;
+
                 return $query->where('property_id', $propertyId)->where('room_id', $roomId);
             } else {
                 // For landlords, show all room announcements

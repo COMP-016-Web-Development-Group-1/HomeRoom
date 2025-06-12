@@ -19,7 +19,7 @@ class AnnouncementController extends Controller
         $search = $request->query('search');
         $perPage = 5;
 
-        if ($user->role === "landlord") {
+        if ($user->role === 'landlord') {
             $announcements = Announcement::relevantToLandlord($user->landlord)
                 ->filterByType($type)
                 ->when($search, function ($query, $search) {
@@ -31,7 +31,7 @@ class AnnouncementController extends Controller
                 ->latest()
                 ->paginate($perPage)
                 ->appends($request->query());
-        } elseif ($user->role === "tenant") {
+        } elseif ($user->role === 'tenant') {
             $announcements = Announcement::relevantToTenant($user->tenant)
                 ->filterByType($type, $user->tenant)
                 ->when($search, function ($query, $search) {
