@@ -1,6 +1,8 @@
 <x-guest-layout title="Login">
     <div class="text-center">
-        <p>Logo Here</p>
+        <div class="flex items-center justify-center">
+            <img src="{{ Vite::asset('resources/assets/images/logo.svg') }}" class="aspect-square size-32 -m-8" />
+        </div>
         <h2 class="font-medium text-xl">Welcome back!</h2>
         <p class="text-sm text-gray-900">Please enter your details to log in</p>
     </div>

@@ -1,6 +1,8 @@
 <x-guest-layout title="Register - Step {{ $step }} of 3">
     <div class="text-center">
-        <p>Logo Here</p>
+        <div class="flex items-center justify-center">
+            <img src="{{ Vite::asset('resources/assets/images/logo.svg') }}" class="aspect-square size-32 -m-8" />
+        </div>
         <h2 class="font-medium text-xl">Let's Get Started!</h2>
         <p class="text-sm text-gray-900">Create an account to join your property and get connected with your landlord</p>
     </div>
