@@ -63,18 +63,19 @@
         </p>
     @endif
 
-    <div class="flex flex-col sm:flex-row gap-2 items-center justify-between mt-4 text-base">
-        <div class="flex items-center gap-x-4 flex-wrap text-center">
+    <div
+        class="flex flex-col sm:flex-row gap-2 items-center mt-4 justify-center text-sm sm:text-base sm:justify-between">
+        <div class="flex items-center gap-x-4 flex-wrap text-center justify-center sm:justify-normal">
             <div class="text-gray-600 flex items-center gap-x-1">
                 <i class="ph-fill ph-calendar-dots text-lime-600 text-base"></i>
                 {{ $announcement->created_at->format('F j, Y, g:i a') }}
             </div>
-            <div class="text-gray-600 flex items-center gap-x-1">
+            <div class="text-gray-600 flex items-center gap-1">
                 <i class="ph-fill ph-map-pin text-lime-600 text-base"></i>
                 @if ($announcement->room_id && $announcement->room)
-                    {{ $announcement->room->name ?? 'Room' }}
-                @elseif($announcement->property_id && $announcement->property)
-                    {{ $announcement->property->name ?? 'Property' }}
+                    {{ $announcement->room->name }} ({{ $announcement->room->property->name ?? 'Property' }})
+                @elseif ($announcement->property_id && $announcement->property)
+                    {{ $announcement->property->name }}
                 @else
                     All Properties
                 @endif

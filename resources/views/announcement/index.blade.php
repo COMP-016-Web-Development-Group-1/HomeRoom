@@ -7,7 +7,7 @@
 
     <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
         <div class="text-gray-900">
-            <div class="flex items-end justify-between gap-x-3 mb-4">
+            <div class="flex flex-col items-center justify-between gap-3 mb-4 sm:flex-row">
                 <div class="flex items-center flex-wrap gap-2">
                     <x-badge color="blue" icon="ph-globe" :interactive="true" type="a"
                         href="{{ route('announcement.index', ['type' => 'all']) }}">All</x-badge>
