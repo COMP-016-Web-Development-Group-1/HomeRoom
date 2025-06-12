@@ -63,37 +63,36 @@ class RoomController extends Controller
     /**
      * Update the specified room.
      */
-public function update(Request $request, Property $property, Room $room)
-{
-    $validated = $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'code' => ['required', 'string', 'max:50', Rule::unique('rooms', 'code')->ignore($room->id)],
-        'rent_amount' => ['required', 'numeric'],
-        'max_occupancy' => ['required', 'integer', 'min:1'],
-    ]);
+    public function update(Request $request, Property $property, Room $room)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:50', Rule::unique('rooms', 'code')->ignore($room->id)],
+            'rent_amount' => ['required', 'numeric'],
+            'max_occupancy' => ['required', 'integer', 'min:1'],
+        ]);
 
-    $room->update($validated);
+        $room->update($validated);
 
-    // ✅ Handle staged tenant removal
-    if ($request->filled('remove_tenants')) {
-        $tenantIds = json_decode($request->input('remove_tenants'), true);
+        if ($request->filled('remove_tenants')) {
+            $tenantIds = json_decode($request->input('remove_tenants'), true);
 
-        if (is_array($tenantIds)) {
-            foreach ($tenantIds as $tenantId) {
-                $tenant = $room->tenants()->find($tenantId);
-                if ($tenant) {
-                    $tenant->delete(); // If you soft-delete tenants or detach them
-                    // Or use: $room->tenants()->detach($tenantId); if it's a pivot
+            if (is_array($tenantIds)) {
+                foreach ($tenantIds as $tenantId) {
+                    $tenant = $room->tenants()->find($tenantId);
+                    if ($tenant) {
+                        $tenant->delete(); // If you soft-delete tenants or detach them
+                        // Or use: $room->tenants()->detach($tenantId); if it's a pivot
+                    }
                 }
             }
         }
-    }
 
-    return redirect()->route('property.rooms', $property->id)->with('toast.success', [
-        'title' => 'Room Updated',
-        'content' => 'The room has been successfully updated.',
-    ]);
-}
+        return redirect()->route('property.rooms', $property->id)->with('toast.success', [
+            'title' => 'Room Updated',
+            'content' => 'The room has been successfully updated.',
+        ]);
+    }
 
 
 

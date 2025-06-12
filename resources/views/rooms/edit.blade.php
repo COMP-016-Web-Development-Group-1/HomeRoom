@@ -80,18 +80,18 @@
 
         if (tenantList) {
             tenantList.addEventListener('click', function (e) {
-if (e.target.classList.contains('remove-tenant')) {
-    const tenantItem = e.target.closest('.tenant-item');
-    const tenantId = tenantItem.dataset.tenantId;
-    const tenantName = tenantItem.querySelector('p')?.textContent || 'this tenant';
+            if (e.target.classList.contains('remove-tenant')) {
+                const tenantItem = e.target.closest('.tenant-item');
+                const tenantId = tenantItem.dataset.tenantId;
+                const tenantName = tenantItem.querySelector('p')?.textContent || 'this tenant';
 
-    const confirmRemoval = confirm(`Are you sure you want to remove ${tenantName}?`);
-    if (confirmRemoval) {
-        removedTenantIds.push(tenantId);
-        removeTenantsInput.value = JSON.stringify(removedTenantIds);
-        tenantItem.remove(); // hide tenant from UI
-    }
-}
+                const confirmRemoval = confirm(`Are you sure you want to remove ${tenantName}?`);
+                if (confirmRemoval) {
+                    removedTenantIds.push(tenantId);
+                    removeTenantsInput.value = JSON.stringify(removedTenantIds);
+                    tenantItem.remove();
+                }
+            }
 
             });
         }
@@ -99,7 +99,7 @@ if (e.target.classList.contains('remove-tenant')) {
         const cancelBtn = document.querySelector(`a[href="{{ route('property.rooms', $property->id) }}"]`);
         if (cancelBtn) {
             cancelBtn.addEventListener('click', function () {
-                removeTenantsInput.value = '[]'; // reset hidden input on cancel
+                removeTenantsInput.value = '[]';
             });
         }
     </script>
