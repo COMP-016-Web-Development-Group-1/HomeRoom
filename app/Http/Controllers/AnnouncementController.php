@@ -64,13 +64,20 @@ class AnnouncementController extends Controller
     public function create()
     {
         $this->authorize('create', Announcement::class);
-
         $properties = Property::all();
-        $rooms = Room::with('property')->get();
+
+        // Get rooms with their property information and structure for JavaScript
+        $rooms = Room::with('property')->get()->map(function ($room) {
+            return [
+                'id' => $room->id,
+                'name' => $room->name,
+                'property_id' => $room->property_id,
+                'property_name' => $room->property->name,
+            ];
+        });
 
         return view('announcement.create', compact('properties', 'rooms'));
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -126,9 +133,17 @@ class AnnouncementController extends Controller
     public function edit(Announcement $announcement)
     {
         $this->authorize('update', $announcement);
-
         $properties = Property::all();
-        $rooms = Room::with('property')->get();
+
+        // Get rooms with their property information and structure for JavaScript
+        $rooms = Room::with('property')->get()->map(function ($room) {
+            return [
+                'id' => $room->id,
+                'name' => $room->name,
+                'property_id' => $room->property_id,
+                'property_name' => $room->property->name,
+            ];
+        });
 
         return view('announcement.edit', compact('announcement', 'properties', 'rooms'));
     }
