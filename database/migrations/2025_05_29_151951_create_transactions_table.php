@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Tenant::class)->constrained()->onDelete('cascade'); // Tenant
             $table->foreignIdFor(Bill::class)->unique()->constrained()->onDelete('cascade'); // One-to-one
-            $table->decimal('amount', 10, 2);
             $table->enum('status', ['pending', 'confirmed', 'rejected'])->default('pending');
             $table->string('payment_method')->nullable(); // optional (e.g. 'gcash', 'bank')
             $table->string('proof_path')->nullable();     // file path to uploaded receipt
