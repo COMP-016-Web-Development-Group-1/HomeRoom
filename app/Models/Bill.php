@@ -4,24 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Transaction extends Model
+class Bill extends Model
 {
     protected $fillable = [
         'tenant_id',
-        'bill_id',
-        'amount',
+        'amount_due',
+        'due_date',
         'status',
-        'payment_method',
-        'proof_path',
-        'payment_date',
-        'confirmed_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'payment_date' => 'datetime',
-            'confirmed_at' => 'datetime',
+            'due_date' => 'datetime',
         ];
     }
 
@@ -30,8 +25,8 @@ class Transaction extends Model
         return $this->belongsTo(Tenant::class);
     }
 
-    public function bill()
+    public function transaction()
     {
-        return $this->belongsTo(Bill::class);
+        return $this->hasOne(Transaction::class);
     }
 }

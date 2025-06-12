@@ -1,7 +1,8 @@
 <?php
 
+use App\Enums\PaymentMethod;
 use App\Enums\TransactionStatus;
-use App\Enums\TransactionType;
+use App\Models\Bill;
 use App\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,12 +18,13 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Tenant::class)->constrained()->onDelete('cascade');
-            $table->enum('type', array_column(TransactionType::cases(), 'value'));
-            $table->decimal('amount', 10, 2);
-            $table->date('due_date')->nullable();
+            $table->foreignIdFor(Bill::class)->unique()->constrained()->onDelete('cascade');
             $table->enum('status', array_column(TransactionStatus::cases(), 'value'))
                 ->default(TransactionStatus::PENDING->value);
-            $table->string('photo')->nullable();
+            $table->enum('payment_method', array_column(PaymentMethod::cases(), 'value'));
+            $table->string('proof_photo')->nullable();
+            $table->date('payment_date');
+            $table->timestamp('confirmed_at')->nullable();
             $table->timestamps();
         });
     }

@@ -17,6 +17,21 @@ class Tenant extends Model
         'move_out_date',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'move_in_date' => 'datetime',
+            'move_out_date' => 'datetime',
+        ];
+    }
+
+    public function outstandingBalance()
+    {
+        return $this->bills()
+            ->where('status', 'overdue')
+            ->sum('amount_due');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -30,5 +45,10 @@ class Tenant extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function bills()
+    {
+        return $this->hasMany(Bill::class);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Jobs\GenerateBillsJob;
+use App\Jobs\UpdateOverdueBillsJob;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -8,3 +10,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('app:clean-temp-storage public --force')->daily();
+
+Schedule::job(new GenerateBillsJob)->daily();
+Schedule::job(new UpdateOverdueBillsJob)->daily();
