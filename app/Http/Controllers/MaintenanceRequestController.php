@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Enums\MaintenanceRequestStatus;
 use App\Models\{MaintenanceRequest, Tenant, Room};
 use Illuminate\Http\Request;
@@ -12,37 +13,45 @@ class MaintenanceRequestController extends Controller
      */
     public function index(Request $request)
     {
-        $role = auth()->user()->role;
-        $info = $request->query('status');
-        $requests = collect();
+        $user = auth()->user(); // Get the authenticated user
+        $role = $user->role;
+        $info = $request->query('status'); // 'status' is the correct query parameter
+
+        $requests = collect(); // Initialize an empty collection
 
         if ($role === 'landlord') {
             // Correctly access properties through the landlord relationship on the User model
-            $propertyIds = auth()->user()->landlord->properties()->pluck('id');
-            $query = MaintenanceRequest::whereIn('room_id', Room::whereIn('property_id', $propertyIds)->pluck('id'));
+            // Ensure the user has a landlord record before trying to access properties
+            $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
 
-            if ($info) {
-                $query->where('status', $info);
+            // Only query if landlord has properties
+            if ($propertyIds->isNotEmpty()) {
+                $query = MaintenanceRequest::whereIn('room_id', Room::whereIn('property_id', $propertyIds)->pluck('id'));
+
+                if ($info && $info !== 'all') { // Filter by status if provided and not 'all'
+                    $query->where('status', $info);
+                }
+
+                // Eager load tenant and their user data for displaying tenant names on cards
+                $requests = $query->with('tenant.user')->latest()->get();
+            } else {
+                $requests = collect(); // No properties means no requests to show for landlord
             }
 
-            // Eager load tenant and their user data for displaying tenant names on cards
-            $requests = $query->with('tenant.user')->latest()->get();
 
         } elseif ($role === 'tenant') {
-            $tenant = auth()->user()->tenant;
+            $tenant = $user->tenant;
             $query = MaintenanceRequest::where('tenant_id', $tenant->id);
 
-            if ($info) {
+            if ($info && $info !== 'all') { // Filter by status if provided and not 'all'
                 $query->where('status', $info);
             }
 
-            // Eager load tenant and their user data for consistency
+            // Eager load tenant and their user data for consistency (though less critical for tenant's own requests)
             $requests = $query->with('tenant.user')->latest()->get();
         } else {
             abort(403, 'Unauthorized Access');
         }
-
-        // The previous duplicate $requests = $query->latest()->get(); line is removed here.
 
         return match ($role) {
             'landlord' => view('landlord.request.index', [
@@ -52,7 +61,6 @@ class MaintenanceRequestController extends Controller
                 'requests' => $requests,
             ]),
         };
-
     }
 
     /**
@@ -103,18 +111,18 @@ class MaintenanceRequestController extends Controller
     public function show(Request $request, $id)
     {
         $user = $request->user();
-        // Eager load room, tenant, and tenant's user data
-        $requestRecord = MaintenanceRequest::with(['room', 'tenant.user'])->findOrFail($id);
+        // Eager load room, tenant, and tenant's user data for comprehensive display
+        $requestRecord = MaintenanceRequest::with(['room.property', 'tenant.user'])->findOrFail($id); // Added room.property eager loading
 
         if ($user->role === 'tenant' && $user->tenant->id !== $requestRecord->tenant_id) {
-            abort(403, 'Went Somewhere');
+            abort(403, 'Unauthorized Access');
         }
 
         if ($user->role === 'landlord') {
             // Correctly access properties through the landlord relationship on the User model
-            $propertyIds = $user->landlord->properties()->pluck('id');
-            if (!in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
-                abort(403, 'Went Here');
+            $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
+            if ($propertyIds->isEmpty() || !in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
+                abort(403, 'Unauthorized Access');
             }
         }
 
@@ -130,25 +138,29 @@ class MaintenanceRequestController extends Controller
      */
     public function edit($id)
     {
-        $user = auth()->user();
         $requestRecord = MaintenanceRequest::findOrFail($id);
+        $user = auth()->user();
 
+        // Authorization check for tenants
         if ($user->role === 'tenant' && $user->tenant->id !== $requestRecord->tenant_id) {
             abort(403);
         }
 
+        // Authorization check for landlords
         if ($user->role === 'landlord') {
-            // Correctly access properties through the landlord relationship on the User model
             $propertyIds = $user->landlord->properties()->pluck('id');
             if (!in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
                 abort(403);
             }
         }
 
+        // Pass 'requestRecord' as 'request' to the view
         if ($user->role === 'tenant') {
-            return view('tenant.request.edit', compact('requestRecord'));
+            return view('tenant.request.edit', ['request' => $requestRecord]);
         } elseif ($user->role === 'landlord') {
-            return view('landlord.request.edit', compact('requestRecord'));
+            return view('landlord.request.edit', ['request' => $requestRecord]);
+        } else {
+            abort(403, 'Unauthorized Access');
         }
     }
 
@@ -161,30 +173,32 @@ class MaintenanceRequestController extends Controller
         $requestRecord = MaintenanceRequest::findOrFail($id);
 
         if ($user->role === 'tenant' && $user->tenant->id !== $requestRecord->tenant_id) {
-            abort(403);
+            abort(403, 'Unauthorized Access');
         }
 
         if ($user->role === 'landlord') {
             // Correctly access properties through the landlord relationship on the User model
-            $propertyIds = $user->landlord->properties()->pluck('id');
-            if (!in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
-                abort(403);
+            $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
+            if ($propertyIds->isEmpty() || !in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
+                abort(403, 'Unauthorized Access');
             }
 
-            // Corrected status validation to match the statuses in edit.blade.php
+            // Corrected status validation to match the MaintenanceRequestStatus enum and blade dropdown
             $request->validate(['status' => 'required|in:pending,in_progress,resolved,rejected']);
             $requestRecord->status = $request->status;
-        } else {
+
+            // Optional: Add a field for landlord notes here if you create it in the model
+            // $requestRecord->landlord_notes = $request->input('landlord_notes'); // Uncomment if you add this field
+        } else { // Tenant attempting to update
             $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'required|string',
+                'title' => 'required|string|max:50', // Adjusted max length as per store method
+                'description' => 'required|string|max:3000', // Adjusted max length as per store method
             ]);
             $requestRecord->title = $request->title;
             $requestRecord->description = $request->description;
         }
 
         $requestRecord->save();
-
 
         return redirect()->route('request.index')->with('toast.success', [
             'title' => 'Request Updated',
@@ -201,14 +215,14 @@ class MaintenanceRequestController extends Controller
         $requestRecord = MaintenanceRequest::findOrFail($id);
 
         if ($user->role === 'tenant' && $user->tenant->id !== $requestRecord->tenant_id) {
-            abort(403);
+            abort(403, 'Unauthorized Access');
         }
 
         if ($user->role === 'landlord') {
             // Correctly access properties through the landlord relationship on the User model
-            $propertyIds = $user->landlord->properties()->pluck('id');
-            if (!in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
-                abort(403);
+            $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
+            if ($propertyIds->isEmpty() || !in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
+                abort(403, 'Unauthorized Access');
             }
         }
 

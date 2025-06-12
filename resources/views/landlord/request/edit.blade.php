@@ -1,4 +1,4 @@
-{{-- resources/views/landlord/request/edit.blade.php (Adjust this file) --}}
+{{-- resources/views/landlord/request/edit.blade.php --}}
 
 <x-app-layout title="Edit Request Status">
     <x-slot name="header">
@@ -26,17 +26,19 @@
 
                 <div class="mb-6">
                     <x-input.label for="status" required>Status</x-input.label>
-                    <x-input.select id="status" name="status">
+                    {{-- TEMPORARY CHANGE: Using standard HTML <select> for testing --}}
+                    <select id="status" name="status" class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                        <option value="" disabled {{ old('status', $request->status) == '' ? 'selected' : '' }}> -- Please Select -- </option>
                         <option value="pending" {{ old('status', $request->status) == 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="in_progress" {{ old('status', $request->status) == 'in_progress' ? 'selected' : '' }}>In Progress</option>
                         <option value="resolved" {{ old('status', $request->status) == 'resolved' ? 'selected' : '' }}>Resolved</option>
                         <option value="rejected" {{ old('status', $request->status) == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                    </x-input.select>
+                    </select>
+                    {{-- End of TEMPORARY CHANGE --}}
                     <x-input.error for="status" />
                 </div>
 
                 <div class="flex items-center justify-center gap-x-12 gap-y-3 flex-wrap">
-                    {{-- THIS IS THE CRITICAL CHANGE --}}
                     <x-a variant="clean" href="{{ route('request.index') }}">
                         Cancel
                     </x-a>

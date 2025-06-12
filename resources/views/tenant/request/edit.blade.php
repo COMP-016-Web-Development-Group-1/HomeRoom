@@ -1,4 +1,4 @@
-{{-- resources/views/tenant/request/edit.blade.php (Adjust this file) --}}
+{{-- resources/views/tenant/request/edit.blade.php --}}
 
 <x-app-layout title="Edit Request">
     <x-slot name="header">
@@ -9,7 +9,7 @@
 
     <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow sm:rounded-lg p-8">
-            <form method="POST" action="{{ route('request.update', $request) }}" x-data="{ type: '{{ old('type', $request->type) }}' }">
+            <form method="POST" action="{{ route('request.update', $request) }}">
                 @csrf
                 @method('PUT')
 
@@ -27,7 +27,6 @@
                 </div>
 
                 <div class="flex items-center justify-center gap-x-12 gap-y-3 flex-wrap">
-                    {{-- THIS IS THE CRITICAL CHANGE --}}
                     <x-a variant="clean" href="{{ route('request.index') }}">
                         Cancel
                     </x-a>
