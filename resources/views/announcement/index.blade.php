@@ -30,7 +30,7 @@
             </div>
 
             <form method="GET" action="{{ route('announcement.index') }}" class="mb-4">
-                <x-input.search name="search" value="{{ request('search') }}" placeholdeer="Search announcements..." />
+                <x-input.search name="search" value="{{ request('search') }}" placeholder="Search announcements..." />
                 <input type="hidden" name="type" value="{{ request('type', 'all') }}">
             </form>
 
