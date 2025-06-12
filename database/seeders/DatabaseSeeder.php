@@ -104,7 +104,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // For Mocking the website
-        if (app()->isLocal() && false) {
+        if (app()->isLocal()) {
             $this->callWith(DefaultTestSeeder::class, ['landlord' => $landlord]);
         }
     }
