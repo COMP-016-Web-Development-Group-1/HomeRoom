@@ -29,12 +29,27 @@
                 @endcan
             </div>
 
+            <form method="GET" action="{{ route('announcement.index') }}" class="mb-4">
+                <x-input.search name="search" value="{{ request('search') }}" placeholdeer="Search announcements..." />
+                <input type="hidden" name="type" value="{{ request('type', 'all') }}">
+            </form>
+
+
+            {{ $announcements->links() }}
+
+            <br />
+
             @forelse ($announcements as $announcement)
                 <x-card.announcement :announcement="$announcement" />
             @empty
-                <p>No Announcements</p>
+                <div class="bg-white shadow p-8 sm:rounded-lg border-l-4 border-lime-800 mb-8 text-center text-2xl">
+                    No Announcements
+                </div>
             @endforelse
 
+            @if ($announcements->count() > 0)
+                {{ $announcements->links() }}
+            @endif
         </div>
     </div>
 </x-app-layout>
