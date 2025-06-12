@@ -7,7 +7,6 @@
         </h2>
     </x-slot>
 
-
         <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
             <div class="text-gray-900">
                 <div class="flex items-end justify-between gap-x-3 mb-4">

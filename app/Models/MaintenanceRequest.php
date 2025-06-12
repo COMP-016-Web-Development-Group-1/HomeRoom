@@ -46,5 +46,4 @@ class MaintenanceRequest extends Model
         return $this->MaintenanceRequestStatus::REJECTED === $this->status;
     }
 
-
 }
