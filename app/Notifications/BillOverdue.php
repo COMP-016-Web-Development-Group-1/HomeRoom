@@ -36,12 +36,12 @@ class BillOverdue extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-        ->subject('Your Bill is Overdue')
-        ->greeting('Reminder!')
-        ->line('Your rent bill was due on ' . $this->bill->due_date->format('F j, Y') . '.')
-        ->line('Amount Due: ₱' . number_format($this->bill->amount_due, 2))
+            ->subject('Your Bill is Overdue')
+            ->greeting('Reminder!')
+            ->line('Your rent bill was due on '.$this->bill->due_date->format('F j, Y').'.')
+            ->line('Amount Due: ₱'.number_format($this->bill->amount_due, 2))
         // ->action('Pay Now', url('/bills')) todo
-        ->line('Please settle your payment immediately to avoid penalties.');
+            ->line('Please settle your payment immediately to avoid penalties.');
     }
 
     /**

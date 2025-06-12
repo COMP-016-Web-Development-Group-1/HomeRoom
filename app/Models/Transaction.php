@@ -21,7 +21,7 @@ class Transaction extends Model
     {
         return [
             'payment_date' => 'datetime',
-            'confirmed_at' => 'datetime'
+            'confirmed_at' => 'datetime',
         ];
     }
 

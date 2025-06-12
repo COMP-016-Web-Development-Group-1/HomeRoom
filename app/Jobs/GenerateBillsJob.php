@@ -43,8 +43,7 @@ class GenerateBillsJob implements ShouldQueue
                 ->whereYear('due_date', $today->year)
                 ->exists();
 
-
-            if (!$exists) {
+            if (! $exists) {
                 $bill = Bill::create([
                     'tenant_id' => $tenant->id,
                     'amount_due' => $tenant->room->rent_amount, // or dynamic

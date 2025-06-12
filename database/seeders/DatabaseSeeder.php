@@ -100,10 +100,8 @@ class DatabaseSeeder extends Seeder
             //     'status' => 'paid',
             // ]);
 
-
             $this->command->info("Seeded Room Code: {$room->code}");
         }
-
 
         // For Mocking the website
         if (app()->isLocal() && false) {

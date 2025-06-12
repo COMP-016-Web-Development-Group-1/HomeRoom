@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Bill;
+use App\Models\Tenant;
 use App\Models\Transaction;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TesterSeeder extends Seeder
@@ -21,15 +22,20 @@ class TesterSeeder extends Seeder
         //     'payment_date' => now(),
         // ]);
 
-        $transaction = Transaction::find(1);
+        // $bill = Bill::find(1);
 
-        $transaction->update([
-            'status' => 'confirmed',
-            'confirmed_at' => now(),
-        ]);
+        $tenant = Tenant::find(1);
+        $this->command->info('Tenant Outstanding Balance: '.$tenant->outstandingBalance());
 
-        $transaction->bill->update([
-            'status' => 'paid',
-        ]);
+        // $transaction = Transaction::find(1);
+
+        // $transaction->update([
+        //     'status' => 'confirmed',
+        //     'confirmed_at' => now(),
+        // ]);
+
+        // $transaction->bill->update([
+        //     'status' => 'paid',
+        // ]);
     }
 }

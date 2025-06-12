@@ -39,8 +39,8 @@ class BillCreated extends Notification implements ShouldQueue
             ->subject('Your New Rent Bill')
             ->greeting('Hello!')
             ->line('A new bill has been generated for you.')
-            ->line('Amount Due: ₱' . number_format($this->bill->amount_due, 2))
-            ->line('Due Date: ' . $this->bill->due_date->format('F j, Y'))
+            ->line('Amount Due: ₱'.number_format($this->bill->amount_due, 2))
+            ->line('Due Date: '.$this->bill->due_date->format('F j, Y'))
             // ->action('View Bill', url('/bills')) todo
             ->line('Please make your payment on or before the due date.');
 
