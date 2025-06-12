@@ -1,4 +1,4 @@
-<x-app-layout title="Announcements">
+<x-app-layout title="Announcements" :manualSlide="false">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Announcements
@@ -30,7 +30,8 @@
             </div>
 
             <form method="GET" action="{{ route('announcement.index') }}" class="mb-4">
-                <x-input.search class="max-w-md" name="search" value="{{ request('search') }}" placeholder="Search announcements..." />
+                <x-input.search class="max-w-md" name="search" value="{{ request('search') }}"
+                    placeholder="Search announcements..." />
                 <input type="hidden" name="type" value="{{ request('type', 'all') }}">
             </form>
 
@@ -39,13 +40,15 @@
 
             <br />
 
-            @forelse ($announcements as $announcement)
-                <x-card.announcement :announcement="$announcement" />
-            @empty
-                <div class="bg-white shadow p-8 sm:rounded-lg border-l-4 border-lime-800 mb-8 text-center text-2xl">
-                    No Announcements
-                </div>
-            @endforelse
+            <div id="view-transition-slide">
+                @forelse ($announcements as $announcement)
+                    <x-card.announcement :announcement="$announcement" id="side-content" />
+                @empty
+                    <div class="bg-white shadow p-8 sm:rounded-lg border-l-4 border-lime-800 mb-8 text-center text-2xl">
+                        No Announcements
+                    </div>
+                @endforelse
+            </div>
 
             @if ($announcements->count() > 0)
                 {{ $announcements->links() }}

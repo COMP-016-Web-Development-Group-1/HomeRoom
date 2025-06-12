@@ -1,4 +1,4 @@
-@props(['title' => ''])
+@props(['title' => '', 'manualSlide' => false])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -17,7 +17,7 @@
 
 <body class="font-outfit text-gray-900 antialiased">
     <div class="min-h-screen bg-gray-100">
-        @include('layouts.sidebar')
+        @include('layouts.sidebar', ['manualSlide' => $manualSlide])
     </div>
 
     <x-toast-container />
