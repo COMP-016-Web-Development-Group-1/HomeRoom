@@ -29,9 +29,10 @@ class MaintenanceRequestPolicy
 
         if ($user->role === 'tenant') {
             $tenant = $user->tenant;
-            if (!$tenant) {
+            if (! $tenant) {
                 return false;
             }
+
             // Tenant can view if the request is for their room
             return $maintenanceRequest->room_id === $tenant->room_id;
         }

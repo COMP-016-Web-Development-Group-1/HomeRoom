@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\MaintenanceRequestStatus;
-use App\Models\{MaintenanceRequest, Tenant, Room};
+use App\Models\MaintenanceRequest;
+use App\Models\Room;
+use App\Models\Tenant;
 use Illuminate\Http\Request;
 
 class MaintenanceRequestController extends Controller
@@ -38,7 +40,6 @@ class MaintenanceRequestController extends Controller
                 $requests = collect(); // No properties means no requests to show for landlord
             }
 
-
         } elseif ($role === 'tenant') {
             $tenant = $user->tenant;
             $query = MaintenanceRequest::where('tenant_id', $tenant->id);
@@ -72,6 +73,7 @@ class MaintenanceRequestController extends Controller
 
         if ($user->role === 'tenant') {
             $tenant = $user->tenant;
+
             return view('tenant.request.create', ['room' => $tenant->room]);
         }
 
@@ -121,7 +123,7 @@ class MaintenanceRequestController extends Controller
         if ($user->role === 'landlord') {
             // Correctly access properties through the landlord relationship on the User model
             $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
-            if ($propertyIds->isEmpty() || !in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
+            if ($propertyIds->isEmpty() || ! in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
                 abort(403, 'Unauthorized Access');
             }
         }
@@ -149,7 +151,7 @@ class MaintenanceRequestController extends Controller
         // Authorization check for landlords
         if ($user->role === 'landlord') {
             $propertyIds = $user->landlord->properties()->pluck('id');
-            if (!in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
+            if (! in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
                 abort(403);
             }
         }
@@ -179,7 +181,7 @@ class MaintenanceRequestController extends Controller
         if ($user->role === 'landlord') {
             // Correctly access properties through the landlord relationship on the User model
             $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
-            if ($propertyIds->isEmpty() || !in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
+            if ($propertyIds->isEmpty() || ! in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
                 abort(403, 'Unauthorized Access');
             }
 
@@ -221,7 +223,7 @@ class MaintenanceRequestController extends Controller
         if ($user->role === 'landlord') {
             // Correctly access properties through the landlord relationship on the User model
             $propertyIds = $user->landlord ? $user->landlord->properties()->pluck('id') : collect();
-            if ($propertyIds->isEmpty() || !in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
+            if ($propertyIds->isEmpty() || ! in_array($requestRecord->room->property_id, $propertyIds->toArray())) {
                 abort(403, 'Unauthorized Access');
             }
         }
