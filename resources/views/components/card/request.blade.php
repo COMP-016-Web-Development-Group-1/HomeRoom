@@ -1,4 +1,4 @@
-@props(['request', 'full' => false])
+@props(['request','full' => false, 'statusText' => 'Unknown', 'typeDisplay' => 'status']) {{-- Added statusText and typeDisplay --}}
 
 @php
     $request_type_icon = [
@@ -7,25 +7,30 @@
         'status' => ['text' => 'Status', 'icon' => 'ph-heartbeat', 'color' => 'red'],
     ];
 
-    // Determine request type based on status
-    if ($request->user() === 'pending') {
-        $type = 'pending';
-    } elseif ($request->status === 'in_progress') {
-        $type = 'in_progress';
-    } elseif ($request->status === 'resolved') {
-        $type = 'resolved';
-    } elseif ($request->status === 'rejected') {
-        $type = 'rejected';
-    } else {
-        $type = 'system';
+    // Determine request type for badge display based on the passed prop
+    $badge_type = $typeDisplay;
+
+    // Determine request status based on status value for display
+    $current_status_text = 'Overall Request'; // Default text
+    if (isset($request->status)) {
+        if ($request->status === 'pending') {
+            $current_status_text = 'Pending';
+        } elseif ($request->status === 'in_progress') {
+            $current_status_text = 'In Progress';
+        } elseif ($request->status === 'resolved') {
+            $current_status_text = 'Resolved';
+        } elseif ($request->status === 'rejected') {
+            $current_status_text = 'Rejected';
+        }
     }
 @endphp
 
 
 <div class="bg-white shadow p-8 sm:rounded-lg border-l-4 border-lime-800 mb-8">
     <div class="flex items-center justify-between mb-2">
-        <x-badge :color="$request_type_icon[$type]['color']" :icon="$request_type_icon[$type]['icon']" :size="$full ? 'lg' : 'md'" :interactive="true">
-            {{ $request_type_icon[$type]['text'] }}
+        {{-- Use $badge_type for the color and icon lookup --}}
+        <x-badge :color="$request_type_icon[$badge_type]['color']" :icon="$request_type_icon[$badge_type]['icon']" :size="$full ? 'lg' : 'md'" :interactive="true">
+            {{ $request_type_icon[$badge_type]['text'] }}
         </x-badge>
 
         @if (auth()->user()->role === 'landlord')
@@ -37,12 +42,12 @@
                 </x-slot>
 
                 <x-slot name="content">
-                    <x-dropdown-link href="{{ route('announcement.edit', $announcement) }}">
-                        <i class="ph-bold ph-pencil"></i> Edit
+                    <x-dropdown-link href="{{ route('request.edit', $request) }}">
+                        <i class="ph-bold ph-pencil"></i> Edit Status
                     </x-dropdown-link>
 
                     <x-dropdown-link href="#" color="red" x-data=""
-                        x-on:click.prevent="$dispatch('open-modal', 'confirm-announcement-deletion-{{ $announcement->id }}')">
+                        x-on:click.prevent="$dispatch('open-modal', 'confirm-announcement-deletion-{{ $request->id }}')">
                         <i class="ph-bold ph-trash"></i> Delete
                     </x-dropdown-link>
                 </x-slot>
@@ -50,22 +55,22 @@
         @endif
     </div>
     @if ($full)
-        <h3 class="font-extrabold text-4xl my-4">{{ $announcement->title }}</h3>
+        <h3 class="font-extrabold text-4xl my-4">{{ $request->title }}</h3>
     @else
-        <h3 class="font-extrabold text-2xl my-4">{{ $announcement->title }}</h3>
+        <h3 class="font-extrabold text-2xl my-4">{{ $request->title }}</h3>
     @endif
     <hr class="mb-4 border-gray-200" />
 
     @if ($full)
         <p class="text-gray-800 pr-4 max-w-4xl text-xl leading-relaxed mb-8">
-            {!! nl2br(e($announcement->description)) !!}
+            {!! nl2br(e($request->description)) !!}
         </p>
     @else
         <p class="text-gray-800 pr-4 max-w-4xl block sm:hidden text-base">
-            {{ Str::words($announcement->description, 25) }}
+            {{ Str::words($request->description, 25) }}
         </p>
         <p class="text-gray-800 pr-4 max-w-4xl hidden sm:block text-base">
-            {{ Str::words($announcement->description, 50) }}
+            {{ Str::words($request->description, 50) }}
         </p>
     @endif
 
@@ -73,35 +78,30 @@
         <div class="flex items-center gap-x-4 flex-wrap text-center">
             <div class="text-gray-600 flex items-center gap-x-1">
                 <i class="ph-fill ph-calendar-dots text-lime-600 text-base"></i>
-                {{ $announcement->created_at->format('F j, Y, g:i a') }}
+                {{ $request->created_at->format('F j, Y, g:i a') }}
             </div>
             <div class="text-gray-600 flex items-center gap-x-1">
                 <i class="ph-fill ph-map-pin text-lime-600 text-base"></i>
-                @if ($announcement->room_id && $announcement->room)
-                    {{ $announcement->room->name ?? 'Room' }}
-                @elseif($announcement->property_id && $announcement->property)
-                    {{ $announcement->property->name ?? 'Property' }}
-                @else
-                    All Properties
-                @endif
+                {{-- Display the determined status text --}}
+                {{ $current_status_text }}
             </div>
         </div>
 
         @if (!$full)
             <div>
-                <x-a variant="primary" href="{{ route('announcement.show', $announcement) }}">View Details</x-a>
+                <x-a variant="primary" href="{{ route('request.show', $request) }}">View Details</x-a>
             </div>
         @endif
     </div>
 </div>
 
-<x-modal name="confirm-announcement-deletion-{{ $announcement->id }}" :show="false" :centered="true" focusable>
-    <form method="POST" action="{{ route('announcement.destroy', $announcement) }}" class="p-6">
+<x-modal name="confirm-announcement-deletion-{{ $request->id }}" :show="false" :centered="true" focusable>
+    <form method="POST" action="{{ route('request.destroy', $request) }}" class="p-6">
         @csrf
         @method('DELETE')
 
         <h2 class="text-lg font-medium text-gray-900">
-            Are you sure you want to delete this announcement?
+            Are you sure you want to delete this request?
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
@@ -114,7 +114,7 @@
             </x-button>
 
             <x-button type="submit" variant="danger" class="ms-3">
-                Delete Announcement
+                Delete Request
             </x-button>
         </div>
     </form>

@@ -13,12 +13,43 @@ class MaintenanceRequestController extends Controller
     public function index(Request $request)
     {
         $role = auth()->user()->role;
+        $info = $request->query('status');
+        $requests = collect();
+
+        if ($role === 'landlord') {
+            $propertyIds = auth()->user()->properties()->pluck('id');
+            $query = MaintenanceRequest::whereIn('room_id', Room::whereIn('property_id', $propertyIds)->pluck('id'));
+
+            if ($info) {
+                $query->where('status', $info);
+            }
+
+            $requests = $query->latest()->get();
+        } elseif ($role === 'tenant') {
+            $tenant = auth()->user()->tenant;
+            $query = MaintenanceRequest::where('tenant_id', $tenant->id);
+
+            if ($info) {
+                $query->where('status', $info);
+            }
+
+            $requests = $query->latest()->get();
+        } else {
+            abort(403, 'Unauthorized Access');
+        }
+
+        $requests = $query->latest()->get();
+
 
         return match ($role) {
-            'landlord' => view('landlord.request.index'),
-            'tenant' => view('tenant.request.index'),
-            default => abort(403),
+            'landlord' => view('landlord.request.index', [
+                'requests' => $requests,
+            ]),
+            'tenant' => view('tenant.request.index', [
+                'requests' => $requests,
+            ]),
         };
+
     }
 
     /**
@@ -72,7 +103,7 @@ class MaintenanceRequestController extends Controller
         $requestRecord = MaintenanceRequest::with(['room', 'tenant'])->findOrFail($id);
 
         if ($user->role === 'tenant' && $user->tenant->id !== $requestRecord->tenant_id) {
-            abort(403);
+            abort(403, 'Went Somewhere');
         }
 
         if ($user->role === 'landlord') {
