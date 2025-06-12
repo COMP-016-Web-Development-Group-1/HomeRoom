@@ -17,6 +17,13 @@ class Tenant extends Model
         'move_out_date',
     ];
 
+    public function outstandingBalance()
+    {
+        return $this->bills()
+            ->where('status', 'unpaid')
+            ->sum('amount_due');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

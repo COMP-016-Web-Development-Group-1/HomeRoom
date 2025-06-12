@@ -8,15 +8,22 @@ class Transaction extends Model
 {
     protected $fillable = [
         'tenant_id',
-        'type',
+        'bill_id',
         'amount',
-        'due_date',
         'status',
-        'photo',
+        'payment_method',
+        'proof_path',
+        'payment_date',
+        'confirmed_at',
     ];
 
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    public function bill()
+    {
+        return $this->belongsTo(Bill::class);
     }
 }
