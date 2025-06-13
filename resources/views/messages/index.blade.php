@@ -10,61 +10,14 @@
 
             <!-- Start Conversation Modal/Form -->
             <x-button class="mb-4" x-data=""
-                x-on:click.prevent="$dispatch('open-modal', 'start-conversation-modal')">Start New
-                Conversation</x-button>
-
-            <x-modal maxWidth="lg" name="start-conversation-modal" :show="$errors->isNotEmpty()" focusable>
-                <form method="post" action="{{ route('messages.start') }}" class="p-6">
-                    @csrf
-
-                    <h2 class="text-lg font-medium text-gray-900">
-                        Select User
-                    </h2>
-
-                    <x-input.search id="user-search" placeholder="Search by name, email, property, room..." />
-
-                    <div class="mt-4">
-                        <x-input.label for="recipient_id" :required="true">User</x-input.label>
-                        <x-input.select id="recipient_id" size="12" name="recipient_id" :selected="old('recipient_id')"
-                            placeholder="Select the user">
-                            @foreach ($availableUsers as $user)
-                                <option value="{{ $user->id }}"
-                                    data-search="{{ $user->name }} {{ $user->email }}
-                        @if ($user->role === 'tenant' && $user->tenant && $user->tenant->room) {{ $user->tenant->room->name }} {{ $user->tenant->room->property->name }} @endif
-                        @if ($user->role === 'landlord') Landlord @endif"
-                                    {{ old('recipient_id') == $user->id ? 'selected' : '' }}> 👤
-                                    {{ $user->name }} ({{ $user->tenant?->room?->property?->name }} -
-                                    {{ $user->tenant?->room?->name }})
-                                </option>
-                            @endforeach
-                        </x-input.select>
-
-                        <x-input.error for="recipient_id" />
-
-                    </div>
-
-                    <div class="mt-6 flex justify-end">
-                        <x-button variant="clean" type="button" x-on:click="$dispatch('close')">
-                            Cancel
-                        </x-button>
-
-                        <x-button class="ms-3">
-                            Start Conversation
-                        </x-button>
-                    </div>
-                </form>
-            </x-modal>
+                x-on:click.prevent="$dispatch('open-modal', 'start-conversation-modal')">
+                Start New Conversation
+            </x-button>
 
             <div>
                 @if ($conversations->isEmpty())
                     <div class="p-8 text-center bg-white">
-                        <div class="text-gray-500 mb-4">
-                            <svg class="mx-auto h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-4.126-.98L3 21l1.98-5.874A8.955 8.955 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z">
-                                </path>
-                            </svg>
-                        </div>
+                        <i class="ph-bold ph-chat-circle-text text-7xl text-gray-700"></i>
                         <h3 class="text-lg font-medium text-gray-900 mb-2">No conversations yet</h3>
                         <p class="text-gray-500">Start a conversation to get in touch with other users.</p>
                     </div>
@@ -75,7 +28,7 @@
                                 $otherParticipant = $conversation->getOtherParticipant(auth()->id());
                                 $latestMessage = $conversation->latestMessage->first();
 
-                                $profilePicture =$otherParticipant->profile_picture
+                                $profilePicture = $otherParticipant->profile_picture
                                     ? Storage::url($otherParticipant->profile_picture)
                                     : Vite::asset('resources/assets/images/default_profile.png');
                             @endphp
@@ -127,6 +80,54 @@
             </div>
         </div>
     </div>
+
+    <x-modal maxWidth="lg" name="start-conversation-modal" :show="$errors->isNotEmpty()" focusable>
+        <form method="post" action="{{ route('messages.start') }}" class="p-6">
+            @csrf
+
+            <h2 class="text-lg font-medium text-gray-900">
+                Select User
+            </h2>
+
+            <x-input.search id="user-search" placeholder="Search by name, email, property, room..." />
+
+            <div class="mt-4">
+                <x-input.label for="recipient_id" :required="true">User</x-input.label>
+                <x-input.select id="recipient_id" size="12" name="recipient_id" :selected="old('recipient_id')"
+                    placeholder="Select the user">
+                    @foreach ($availableUsers as $user)
+                        <option value="{{ $user->id }}"
+                            data-search="{{ $user->name }} {{ $user->email }}
+                @if ($user->role === 'tenant' && $user->tenant && $user->tenant->room) {{ $user->tenant->room->name }} {{ $user->tenant->room->property->name }} @endif
+                @if ($user->role === 'landlord') Landlord @endif"
+                            {{ old('recipient_id') == $user->id ? 'selected' : '' }}> 👤
+                            {{ $user->name }}
+                            @if ($user->role === 'tenant')
+                                ({{ $user->tenant?->room?->property?->name }} - {{ $user->tenant?->room?->name }})
+                            @elseif ($user->role === 'landlord')
+                                (Landlord)
+                            @endif
+
+
+                        </option>
+                    @endforeach
+                </x-input.select>
+
+                <x-input.error for="recipient_id" />
+
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <x-button variant="clean" type="button" x-on:click="$dispatch('close')">
+                    Cancel
+                </x-button>
+
+                <x-button class="ms-3">
+                    Start Conversation
+                </x-button>
+            </div>
+        </form>
+    </x-modal>
 
     @pushOnce('scripts')
         <script>
