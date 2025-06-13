@@ -34,7 +34,7 @@ class RoomController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', Rule::unique('rooms', 'code')],
+            'code' => ['required', 'string', 'max:7', Rule::unique('rooms', 'code')],
             'rent_amount' => ['required', 'numeric'],
             'max_occupancy' => ['required', 'integer', 'min:1'],
         ]);
@@ -64,7 +64,7 @@ class RoomController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', Rule::unique('rooms', 'code')->ignore($room->id)],
+            'code' => ['required', 'string', 'max:7', Rule::unique('rooms', 'code')->ignore($room->id)],
             'rent_amount' => ['required', 'numeric'],
             'max_occupancy' => ['required', 'integer', 'min:1'],
         ]);
@@ -78,7 +78,7 @@ class RoomController extends Controller
                 foreach ($tenantIds as $tenantId) {
                     $tenant = $room->tenants()->find($tenantId);
                     if ($tenant) {
-                        $tenant->delete(); // If you soft-delete tenants or detach them
+                        $tenant->user()->delete(); // If you soft-delete tenants or detach them
                         // Or use: $room->tenants()->detach($tenantId); if it's a pivot
                     }
                 }

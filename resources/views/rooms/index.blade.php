@@ -7,29 +7,29 @@
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-4">
 
-    {{-- Property Name Heading --}}
-    @php
-        $icon = match($property->type) {
-            'apartment' => 'ph-building',
-            'house' => 'ph-house-line',
-            'dorm' => 'ph-door',
-            'condominium' => 'ph-building-apartment',
-            default => 'ph-question',
-        };
+        {{-- Property Name Heading --}}
+        @php
+            $icon = match ($property->type) {
+                'apartment' => 'ph-building',
+                'house' => 'ph-house-line',
+                'dorm' => 'ph-door',
+                'condominium' => 'ph-building-apartment',
+                default => 'ph-question',
+            };
 
-        $color = match($property->type) {
-            'apartment' => 'text-yellow-600',
-            'house' => 'text-pink-600',
-            'dorm' => 'text-orange-600',
-            'condominium' => 'text-purple-600',
-            default => 'text-gray-600',
-        };
-    @endphp
+            $color = match ($property->type) {
+                'apartment' => 'text-yellow-600',
+                'house' => 'text-pink-600',
+                'dorm' => 'text-orange-600',
+                'condominium' => 'text-purple-600',
+                default => 'text-gray-600',
+            };
+        @endphp
 
-    <h1 class="text-4xl font-bold mb-6 flex items-center gap-3">
-        <i class="ph-bold {{ $icon }} {{ $color }} text-4xl"></i>
-        {{ $property->name }}
-    </h1>
+        <h1 class="text-4xl font-bold mb-6 flex items-center gap-3">
+            <i class="ph-bold {{ $icon }} {{ $color }} text-4xl"></i>
+            {{ $property->name }}
+        </h1>
 
 
 
@@ -56,24 +56,24 @@
             </div>
         @else
             <div class="relative overflow-hidden" style="min-height: 760px;">
-                <div class="tab-pane transition-transform duration-500 ease-in-out"
+                <div class="tab-pane transition-transform duration-500 ease-in-out bg-white"
                     style="display: block; transform: translateX(0%); position: absolute; width: 100%;">
                     <x-table.container id="rooms-table">
                         <x-slot name="header">
-                            <th class="bg-lime-700 text-white">No.</th>
-                            <th class="bg-lime-700 text-white">Room Code</th>
-                            <th class="bg-lime-700 text-white">Room Name</th>
-                            <th class="bg-lime-700 text-white">Capacity</th>
-                            <th class="bg-lime-700 text-white">Tenants</th>
-                            <th class="bg-lime-700 text-white">Move-In Date</th>
-                            <th class="bg-lime-700 text-white">Move-Out Date</th>
-                            <th class="bg-lime-700 text-white">Rent Amount</th>
-                            <th class="bg-lime-700 text-white">Actions</th>
+                            <x-table.header>No.</x-table.header>
+                            <x-table.header>Room Code</x-table.header>
+                            <x-table.header>Room Name</x-table.header>
+                            <x-table.header>Capacity</x-table.header>
+                            <x-table.header>Tenants</x-table.header>
+                            <x-table.header>Move-In Date</x-table.header>
+                            <x-table.header>Move-Out Date</x-table.header>
+                            <x-table.header>Rent Amount</x-table.header>
+                            <x-table.header>Actions</x-table.header>
                         </x-slot>
 
                         <x-slot name="body">
                             @foreach ($rooms as $index => $room)
-                                <tr>
+                                <x-table.row>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $room->code }}</td>
                                     <td>{{ $room->name }}</td>
@@ -84,7 +84,7 @@
                                     <td>₱{{ number_format($room->rent_amount, 2) }}</td>
                                     <td class="space-x-2">
                                         <a href="{{ route('property.rooms.edit', [$property->id, $room->id]) }}"
-                                        class="text-blue-600 hover:underline">Edit</a>
+                                            class="text-blue-600 hover:underline">Edit</a>
 
                                         <form method="POST"
                                             action="{{ route('property.rooms.destroy', [$property->id, $room->id]) }}"
@@ -92,12 +92,12 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:underline ml-1"
-                                                    onclick="return confirm('Are you sure you want to delete this room?')">
+                                                onclick="return confirm('Are you sure you want to delete this room?')">
                                                 Delete
                                             </button>
                                         </form>
                                     </td>
-                                </tr>
+                                </x-table.row>
                             @endforeach
                         </x-slot>
                     </x-table.container>
