@@ -37,7 +37,9 @@
     </div>
 
     {{-- Clickable Card --}}
-    <a href="#"
+
+    <a href="{{ route('property.rooms', $property->id) }}" {{-- Edited--}}
+
        class="block p-4 h-[400px] bg-white rounded-lg shadow hover:bg-gray-100 transition duration-200">
 
         <i class="{{ $icon }} ph-bold {{ $color }} text-xl"></i>
