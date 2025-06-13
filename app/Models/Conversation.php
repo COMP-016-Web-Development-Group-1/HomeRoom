@@ -34,6 +34,7 @@ class Conversation extends Model
     public function hasParticipant($userId): bool
     {
         $participants = array_map('intval', $this->participants);
+
         return in_array((int) $userId, $participants);
     }
 
@@ -48,8 +49,8 @@ class Conversation extends Model
     // Get other participant (for 1-on-1 conversations)
     public function getOtherParticipant($currentUserId)
     {
-        $otherParticipantId = collect($this->participants)->first(fn($id) => $id != $currentUserId);
+        $otherParticipantId = collect($this->participants)->first(fn ($id) => $id != $currentUserId);
+
         return User::find($otherParticipantId);
     }
-
 }

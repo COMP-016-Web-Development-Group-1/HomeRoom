@@ -1,12 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Events\MessageSent;
 use Storage;
 
 class MessageController extends Controller
@@ -29,7 +30,6 @@ class MessageController extends Controller
                     -$conversation->created_at->timestamp;
             });
 
-
         $availableUsers = User::where('id', '!=', auth()->id());
 
         // If current user is a tenant, only show landlords
@@ -45,7 +45,7 @@ class MessageController extends Controller
     public function show(Conversation $conversation)
     {
         // Check if current user is participant
-        if (!$conversation->hasParticipant(Auth::id())) {
+        if (! $conversation->hasParticipant(Auth::id())) {
             abort(403);
         }
 
@@ -67,10 +67,10 @@ class MessageController extends Controller
                 'attachment.mimes' => 'Only jpeg, png, jpg, gif, pdf, doc, docx, and txt files are allowed.',
             ]);
 
-            if (!$conversation->hasParticipant(Auth::id())) {
+            if (! $conversation->hasParticipant(Auth::id())) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You are not authorized to send messages in this conversation.'
+                    'message' => 'You are not authorized to send messages in this conversation.',
                 ], 403);
             }
 
@@ -91,10 +91,10 @@ class MessageController extends Controller
                 ];
             }
 
-            if (!$request->filled('content') && !$path) {
+            if (! $request->filled('content') && ! $path) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Please enter a message or attach a file.'
+                    'message' => 'Please enter a message or attach a file.',
                 ], 422);
             }
 
@@ -111,25 +111,24 @@ class MessageController extends Controller
 
             return response()->json([
                 'message' => $message->load('user'),
-                'success' => true
+                'success' => true,
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed.',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Message store error: ' . $e->getMessage());
+            \Log::error('Message store error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while sending the message. Please try again.'
+                'message' => 'An error occurred while sending the message. Please try again.',
             ], 500);
         }
     }
-
 
     public function startConversation(Request $request)
     {
@@ -147,7 +146,7 @@ class MessageController extends Controller
         // Check if both users are tenants - if so, deny the conversation
         if ($currentUser->role === 'tenant' && $recipient->role === 'tenant') {
             return back()->withErrors([
-                'recipient_id' => 'Tenant-to-tenant messaging is not allowed. You can only message landlords.'
+                'recipient_id' => 'Tenant-to-tenant messaging is not allowed. You can only message landlords.',
             ])->withInput();
         }
 
@@ -155,6 +154,7 @@ class MessageController extends Controller
         $existingConversation = Conversation::all()
             ->filter(function ($conversation) use ($currentUserId, $recipientId) {
                 $participants = array_map('intval', $conversation->participants);
+
                 return in_array((int) $currentUserId, $participants) && in_array($recipientId, $participants);
             })
             ->first();

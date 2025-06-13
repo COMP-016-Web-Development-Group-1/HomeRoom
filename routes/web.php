@@ -81,4 +81,4 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::view('/tests', 'table');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
