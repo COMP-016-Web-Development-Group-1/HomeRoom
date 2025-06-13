@@ -12,6 +12,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Storage;
+use Vite;
 
 class MessageSent implements ShouldBroadcastNow
 {
@@ -33,21 +34,36 @@ class MessageSent implements ShouldBroadcastNow
 
     public function broadcastWith(): array
     {
+        $messageData = [
+            'id' => $this->message->id,
+            'conversation_id' => $this->message->conversation_id,
+            'user_id' => $this->message->user_id,
+            'content' => $this->message->content,
+            'type' => $this->message->type,
+            'created_at' => $this->message->created_at->format('g:i A'),
+            'user' => [
+                'id' => $this->message->user->id,
+                'name' => $this->message->user->name,
+                'profile_picture' => $this->message->user->profile_picture
+                    ? Storage::url($this->message->user->profile_picture)
+                    : Vite::asset('resources/assets/images/default_profile.png'),
+            ],
+        ];
+
+        // Handle metadata properly
+        if ($this->message->metadata) {
+            // Check if metadata is already an array or needs to be decoded
+            if (is_string($this->message->metadata)) {
+                $messageData['metadata'] = json_decode($this->message->metadata, true);
+            } else {
+                $messageData['metadata'] = $this->message->metadata;
+            }
+        } else {
+            $messageData['metadata'] = null;
+        }
+
         return [
-            'message' => [
-                'id' => $this->message->id,
-                'content' => $this->message->content,
-                'user_id' => $this->message->user_id,
-                'user' => [
-                    'id' => $this->message->user->id,
-                    'name' => $this->message->user->name,
-                    'profile_picture' => $this->message->user->profile_picture
-                        ? Storage::url($this->message->user->profile_picture)
-                        : asset('assets/images/default_profile.png'),
-                ],
-                'created_at' => $this->message->created_at->format('g:i A'),
-                'conversation_id' => $this->message->conversation_id,
-            ]
+            'message' => $messageData
         ];
     }
 }

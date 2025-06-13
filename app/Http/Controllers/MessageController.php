@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageSent;
+use Storage;
 
 class MessageController extends Controller
 {
@@ -56,39 +57,79 @@ class MessageController extends Controller
 
     public function store(Request $request, Conversation $conversation)
     {
-        $request->validate([
-            'content' => 'required|string|max:1000',
-        ]);
+        try {
+            $request->validate([
+                'content' => 'nullable|string|max:1000', // Fixed: was max:10
+                'attachment' => 'nullable|file|max:5120', // 5MB limit with allowed file types
+            ], [
+                'content.max' => 'Message content cannot exceed 1000 characters.',
+                'attachment.max' => 'File size cannot exceed 5MB.',
+                'attachment.mimes' => 'Only jpeg, png, jpg, gif, pdf, doc, docx, and txt files are allowed.',
+            ]);
 
-        // Check if current user is participant
-        if (!$conversation->hasParticipant(Auth::id())) {
-            abort(403);
-        }
+            if (!$conversation->hasParticipant(Auth::id())) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You are not authorized to send messages in this conversation.'
+                ], 403);
+            }
 
-        $message = Message::create([
-            'conversation_id' => $conversation->id,
-            'user_id' => Auth::id(),
-            'content' => $request->content,
-            'type' => 'text',
-        ]);
+            $path = null;
+            $type = 'text';
+            $metadata = null;
 
-        // Update conversation's last message timestamp
-        $conversation->update([
-            'last_message_at' => now(),
-        ]);
+            if ($request->hasFile('attachment')) {
+                $file = $request->file('attachment');
+                $path = $file->store('attachments', 'public');
+                $type = str_starts_with($file->getMimeType(), 'image') ? 'image' : 'file';
+                $metadata = [
+                    'original_name' => $file->getClientOriginalName(),
+                    'mime' => $file->getMimeType(),
+                    'size' => $file->getSize(),
+                    'path' => $path,
+                    'url' => Storage::url($path),
+                ];
+            }
 
-        // Broadcast the message
-        broadcast(new MessageSent($message->load('user')));
+            if (!$request->filled('content') && !$path) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please enter a message or attach a file.'
+                ], 422);
+            }
 
-        if ($request->ajax()) {
+            $message = Message::create([
+                'conversation_id' => $conversation->id,
+                'user_id' => Auth::id(),
+                'content' => $request->content,
+                'type' => $type,
+                'metadata' => $metadata,
+            ]);
+
+            $conversation->update(['last_message_at' => now()]);
+            broadcast(new MessageSent($message->load('user')));
+
             return response()->json([
                 'message' => $message->load('user'),
                 'success' => true
             ]);
-        }
 
-        return redirect()->route('messages.show', $conversation);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Message store error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while sending the message. Please try again.'
+            ], 500);
+        }
     }
+
 
     public function startConversation(Request $request)
     {
