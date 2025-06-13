@@ -42,6 +42,8 @@
                 <hr />
                 <x-sidebar.item :href="route('announcement.index')" :active="request()->routeIs('announcement.index')" title="Announcements" icon="megaphone" />
                 <x-sidebar.item :href="route('request.index')" :active="request()->routeIs('request.index')" title="Maintenance Request" icon="wrench" />
+                <hr />
+                <x-sidebar.item :href="route('messages.index')" :active="request()->routeIs('messages.index')" title="Chat" icon="chat-circle-text" />
 
 
                 {{-- <x-sidebar.collapsible icon="package" title="Test" badge="3">

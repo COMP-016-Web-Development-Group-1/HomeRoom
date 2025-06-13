@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Conversation;
@@ -21,10 +20,25 @@ class MessageController extends Controller
             ->filter(function ($conversation) use ($userId) {
                 return $conversation->hasParticipant($userId);
             })
-            ->sortByDesc('last_message_at')
-            ->sortByDesc('created_at');
+            ->sortBy(function ($conversation) {
+                // Sort by last_message_at if it exists, otherwise by created_at
+                // Using negative timestamp to sort in descending order
+                return $conversation->last_message_at ?
+                    -$conversation->last_message_at->timestamp :
+                    -$conversation->created_at->timestamp;
+            });
 
-        return view('messages.index', compact('conversations'));
+
+        $availableUsers = User::where('id', '!=', auth()->id());
+
+        // If current user is a tenant, only show landlords
+        if (auth()->user()->role === 'tenant') {
+            $availableUsers = $availableUsers->where('role', 'landlord');
+        }
+
+        $availableUsers = $availableUsers->orderBy('name')->get();
+
+        return view('messages.index', compact('conversations', 'availableUsers'));
     }
 
     public function show(Conversation $conversation)
@@ -80,11 +94,21 @@ class MessageController extends Controller
     {
         $request->validate([
             'recipient_id' => 'required|exists:users,id',
-            'message' => 'required|string|max:1000',
+            'message' => 'nullable|string|max:1000',
         ]);
 
         $currentUserId = Auth::id();
         $recipientId = (int) $request->recipient_id;
+
+        $currentUser = Auth::user();
+        $recipient = User::findOrFail($recipientId);
+
+        // Check if both users are tenants - if so, deny the conversation
+        if ($currentUser->role === 'tenant' && $recipient->role === 'tenant') {
+            return back()->withErrors([
+                'recipient_id' => 'Tenant-to-tenant messaging is not allowed. You can only message landlords.'
+            ])->withInput();
+        }
 
         // Check if conversation already exists - filter in PHP for reliability
         $existingConversation = Conversation::all()
@@ -104,16 +128,18 @@ class MessageController extends Controller
             'last_message_at' => now(),
         ]);
 
-        // Create first message
-        $message = Message::create([
-            'conversation_id' => $conversation->id,
-            'user_id' => $currentUserId,
-            'content' => $request->message,
-            'type' => 'text',
-        ]);
+        // Create first message if provided
+        if ($request->message) {
+            $message = Message::create([
+                'conversation_id' => $conversation->id,
+                'user_id' => $currentUserId,
+                'content' => $request->message,
+                'type' => 'text',
+            ]);
 
-        // Broadcast the message
-        broadcast(new MessageSent($message->load('user')));
+            // Broadcast the message
+            broadcast(new MessageSent($message->load('user')));
+        }
 
         return redirect()->route('messages.show', $conversation);
     }

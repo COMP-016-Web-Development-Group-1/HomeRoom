@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('conversation_id')->constrained('conversations')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->string('type', 50)->default('text');
             $table->json('metadata')->nullable();
             $table->timestamp('edited_at')->nullable();
