@@ -43,7 +43,7 @@ it('shows room-specific announcements to tenants in that room', function () {
 it('does not show announcements from unrelated rooms or properties', function () {
     $tenant = Tenant::factory()->create();
 
-    $unrelated = Announcement::factory()->create([
+    $unrelated = Announcement::factory()->unrelatedTo()->create([
         'title' => 'Unrelated',
     ]);
 
