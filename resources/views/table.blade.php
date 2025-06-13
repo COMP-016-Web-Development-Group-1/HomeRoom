@@ -11,6 +11,84 @@
                 Properties (Index)
             </div>
 
+            <!-- Start Conversation Modal/Form -->
+            <!-- You can include this in any view where you want users to start conversations -->
+
+            <div class="mb-4">
+                <button onclick="openStartConversationModal()"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Start New Conversation
+                </button>
+            </div>
+
+            <!-- Modal -->
+            <div id="start-conversation-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+                <div class="flex items-center justify-center min-h-screen p-4">
+                    <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium">Start New Conversation</h3>
+                                <button onclick="closeStartConversationModal()"
+                                    class="text-gray-400 hover:text-gray-600">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <form action="{{ route('messages.start') }}" method="POST">
+                                @csrf
+                                <div class="mb-4">
+                                    <label for="recipient_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Select User
+                                    </label>
+                                    <select name="recipient_id" id="recipient_id"
+                                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        required>
+                                        <option value="">Choose a user...</option>
+                                        @foreach (\App\Models\User::where('id', '!=', auth()->id())->get() as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}
+                                                ({{ $user->email }})</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Message
+                                    </label>
+                                    <textarea name="message" id="message" rows="3"
+                                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Type your message..." required></textarea>
+                                </div>
+
+                                <div class="flex justify-end space-x-3">
+                                    <button type="button" onclick="closeStartConversationModal()"
+                                        class="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">
+                                        Cancel
+                                    </button>
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                                        Start Conversation
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function openStartConversationModal() {
+                    document.getElementById('start-conversation-modal').classList.remove('hidden');
+                }
+
+                function closeStartConversationModal() {
+                    document.getElementById('start-conversation-modal').classList.add('hidden');
+                }
+            </script>
+
             {{-- <x-input.textarea name="description" rows="5" placeholder="Enter your description..." :disabled="false">
                 {{ old('description') }}
             </x-input.textarea> --}}
