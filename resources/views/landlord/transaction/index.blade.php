@@ -30,7 +30,6 @@
     >
         <div class="bg-white shadow-xs sm:rounded-lg main-blur-area transition-all duration-200 min-h-[760px] flex flex-col" :class="showAcknowledgeModal ? 'blur-md pointer-events-none select-none' : ''">
             <div class="p-6 text-gray-900 flex flex-col flex-1">
-                <!-- Added H1 for Transaction Tab -->
                 <h1 class="text-3xl font-bold mb-8 text-lime-800">
                     Manage Transactions
                 </h1>
@@ -66,12 +65,12 @@
                 <div class="relative flex-1">
                     <!-- Pending Tab -->
                     <div
-                        class="tab-pane transition-transform duration-500 ease-in-out"
+                        class="tab-pane tab-slide"
                         :class="{
-                            'block': activeTab === 'pending',
-                            'hidden': activeTab !== 'pending'
+                            'tab-slide-active': activeTab === 'pending',
+                            'tab-slide-inactive-left': activeTab !== 'pending' && activeTab === 'history',
+                            'tab-slide-inactive-right': activeTab !== 'pending' && activeTab !== 'history'
                         }"
-                        style="transform: translateX(0%);"
                     >
                         <x-table.container id="pending-payments-table">
                             <x-slot name="header">
@@ -136,12 +135,12 @@
                     </div>
                     <!-- History Tab -->
                     <div
-                        class="tab-pane transition-transform duration-500 ease-in-out"
+                        class="tab-pane tab-slide"
                         :class="{
-                            'block': activeTab === 'history',
-                            'hidden': activeTab !== 'history'
+                            'tab-slide-active': activeTab === 'history',
+                            'tab-slide-inactive-right': activeTab !== 'history' && activeTab === 'pending',
+                            'tab-slide-inactive-left': activeTab !== 'history' && activeTab !== 'pending'
                         }"
-                        style="transform: translateX(0%);"
                     >
                         <x-table.container id="history-table">
                             <x-slot name="header">
@@ -234,7 +233,38 @@
     </script>
     <style>
         .tab-pane {
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            /* base styles, keep if needed */
+        }
+        .tab-slide {
+            transition:
+                opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            left: 0; right: 0; top: 0; bottom: 0;
+            width: 100%;
+            will-change: opacity, transform, visibility;
+            z-index: 0;
+        }
+        .tab-slide-active {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateX(0) scale(1) !important;
+            position: relative !important;
+            z-index: 1;
+            pointer-events: auto;
+        }
+        .tab-slide-inactive-left {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transform: translateX(-60px) scale(0.97) !important;
+            pointer-events: none;
+        }
+        .tab-slide-inactive-right {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transform: translateX(60px) scale(0.97) !important;
+            pointer-events: none;
         }
         .tab-btn-text {
             display: inline-block;

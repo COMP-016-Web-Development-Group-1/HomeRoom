@@ -5,7 +5,17 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8 relative">
+    <div
+        x-data="{
+            activeTab: 'paybills',
+            switchTab(tab) {
+                if (this.activeTab !== tab) {
+                    this.activeTab = tab;
+                }
+            }
+        }"
+        class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8 relative"
+    >
         <div class="bg-white shadow-xs sm:rounded-lg main-blur-area transition-all duration-200 flex flex-col">
             <div class="p-6 text-gray-900 flex flex-col flex-1">
                 <h1 class="text-3xl font-bold mb-8 text-lime-800">
@@ -16,21 +26,41 @@
                     <button
                         id="paybills-tab-btn"
                         type="button"
-                        class="tab-btn text-lime-600 font-semibold border-b-2 border-lime-600 focus:outline-none transition-all duration-500"
-                        onclick="showTab('paybills')">
-                        <span id="paybills-tab-text" class="tab-btn-text transition-all duration-500">Pay Bills</span>
+                        :class="activeTab === 'paybills'
+                            ? 'tab-btn text-lime-600 font-semibold border-b-2 border-lime-600'
+                            : 'tab-btn text-lime-700 font-semibold border-b-2 border-transparent hover:text-lime-600'"
+                        @click="switchTab('paybills')"
+                    >
+                        <span id="paybills-tab-text"
+                              :class="activeTab === 'paybills' ? 'tab-btn-text tab-btn-text-active' : 'tab-btn-text tab-btn-text-inactive'"
+                              class="transition-all duration-500"
+                        >Pay Bills</span>
                     </button>
                     <button
                         id="history-tab-btn"
                         type="button"
-                        class="tab-btn text-lime-700 font-semibold border-b-2 border-transparent hover:text-lime-600 focus:outline-none transition-all duration-500"
-                        onclick="showTab('history')">
-                        <span id="history-tab-text" class="tab-btn-text transition-all duration-500">History</span>
+                        :class="activeTab === 'history'
+                            ? 'tab-btn text-lime-600 font-semibold border-b-2 border-lime-600'
+                            : 'tab-btn text-lime-700 font-semibold border-b-2 border-transparent hover:text-lime-600'"
+                        @click="switchTab('history')"
+                    >
+                        <span id="history-tab-text"
+                              :class="activeTab === 'history' ? 'tab-btn-text tab-btn-text-active' : 'tab-btn-text tab-btn-text-inactive'"
+                              class="transition-all duration-500"
+                        >History</span>
                     </button>
                 </div>
 
                 <div class="relative flex-1 overflow-hidden">
-                    <div id="paybills-content" class="tab-pane">
+                    <!-- Pay Bills Tab -->
+                    <div
+                        class="tab-pane tab-slide"
+                        :class="{
+                            'tab-slide-active': activeTab === 'paybills',
+                            'tab-slide-inactive-left': activeTab !== 'paybills' && activeTab === 'history',
+                            'tab-slide-inactive-right': activeTab !== 'paybills' && activeTab !== 'history'
+                        }"
+                    >
                         <div class="flex flex-col gap-3 items-center mb-12 mt-1">
                             <x-bill-card
                                 title="Monthly Payment"
@@ -54,7 +84,15 @@
                             />
                         </div>
                     </div>
-                    <div id="history-content" class="tab-pane hidden">
+                    <!-- History Tab -->
+                    <div
+                        class="tab-pane tab-slide"
+                        :class="{
+                            'tab-slide-active': activeTab === 'history',
+                            'tab-slide-inactive-right': activeTab !== 'history' && activeTab === 'paybills',
+                            'tab-slide-inactive-left': activeTab !== 'history' && activeTab !== 'paybills'
+                        }"
+                    >
                         <x-table.container id="history-table">
                             <x-slot name="header">
                                 <th class="bg-lime-700 text-white">Property</th>
@@ -116,60 +154,6 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let currentTab = 'paybills';
-            const paybillsBtn = document.getElementById('paybills-tab-btn');
-            const historyBtn = document.getElementById('history-tab-btn');
-            const paybillsContent = document.getElementById('paybills-content');
-            const historyContent = document.getElementById('history-content');
-            const paybillsText = document.getElementById('paybills-tab-text');
-            const historyText = document.getElementById('history-tab-text');
-
-            window.showTab = function(tab) {
-                if (tab === currentTab) return;
-
-                // Tab label styling
-                if (tab === 'paybills') {
-                    paybillsBtn.classList.add('text-lime-600', 'border-lime-600');
-                    paybillsBtn.classList.remove('text-lime-700', 'border-transparent');
-                    historyBtn.classList.add('text-lime-700', 'border-transparent');
-                    historyBtn.classList.remove('text-lime-600', 'border-lime-600');
-
-                    paybillsText.classList.add('tab-btn-text-active');
-                    paybillsText.classList.remove('tab-btn-text-inactive');
-                    historyText.classList.remove('tab-btn-text-active');
-                    historyText.classList.add('tab-btn-text-inactive');
-                } else {
-                    historyBtn.classList.add('text-lime-600', 'border-lime-600');
-                    historyBtn.classList.remove('text-lime-700', 'border-transparent');
-                    paybillsBtn.classList.add('text-lime-700', 'border-transparent');
-                    paybillsBtn.classList.remove('text-lime-600', 'border-lime-600');
-
-                    historyText.classList.add('tab-btn-text-active');
-                    historyText.classList.remove('tab-btn-text-inactive');
-                    paybillsText.classList.remove('tab-btn-text-active');
-                    paybillsText.classList.add('tab-btn-text-inactive');
-                }
-
-                // Show/Hide tab panes using Tailwind's hidden class
-                if(tab === 'paybills') {
-                    paybillsContent.classList.remove('hidden');
-                    historyContent.classList.add('hidden');
-                } else {
-                    paybillsContent.classList.add('hidden');
-                    historyContent.classList.remove('hidden');
-                }
-
-                currentTab = tab;
-            };
-
-            // Set initial state
-            paybillsContent.classList.remove('hidden');
-            historyContent.classList.add('hidden');
-            paybillsText.classList.add('tab-btn-text-active');
-            historyText.classList.add('tab-btn-text-inactive');
-        });
-
         function showPhotoModal(photoUrl) {
             const img = document.getElementById('modal-photo-img');
             img.src = photoUrl || '';
@@ -178,7 +162,38 @@
     </script>
     <style>
         .tab-pane {
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            /* base styles, keep if needed */
+        }
+        .tab-slide {
+            transition:
+                opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            left: 0; right: 0; top: 0; bottom: 0;
+            width: 100%;
+            will-change: opacity, transform, visibility;
+            z-index: 0;
+        }
+        .tab-slide-active {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateX(0) scale(1) !important;
+            position: relative !important;
+            z-index: 1;
+            pointer-events: auto;
+        }
+        .tab-slide-inactive-left {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transform: translateX(-60px) scale(0.97) !important;
+            pointer-events: none;
+        }
+        .tab-slide-inactive-right {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transform: translateX(60px) scale(0.97) !important;
+            pointer-events: none;
         }
         .tab-btn-text {
             display: inline-block;
@@ -230,5 +245,6 @@
         .cursor-not-allowed {
             cursor: not-allowed;
         }
+        [x-cloak] { display: none !important; }
     </style>
 </x-app-layout>
