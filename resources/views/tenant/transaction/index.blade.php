@@ -36,21 +36,22 @@
                             {{-- Monthly Payment Card --}}
                             <x-bill-card
                                 title="Monthly Payment"
-                                payment-methods="GCash, Maya, Credit Card"
-                                amount="₱5000.00"
-                                date="01-02-2025"
+                                payment-methods="{{ $paymentMethods }}"
+                                amount="{{ $monthlyBill ? '₱' . number_format($monthlyBill->amount_due, 2) : '₱0.00' }}"
+                                date="{{ $monthlyBill && $monthlyBill->due_date ? $monthlyBill->due_date->format('m-d-Y') : '-' }}"
                                 button-text="Pay Bill"
-                                button-url="#"
+                                button-url="{{ $monthlyBill ? route('pay-bills', ['type' => 'monthly']) : '#' }}"
+                                :disabled="!$monthlyBill"
                                 class="max-w-5xl py-12 px-16"
                             />
-                            {{-- Outstanding Bill Card --}}
                             <x-bill-card
                                 title="Outstanding Bill"
-                                payment-methods="GCash, Maya, Credit Card"
-                                amount="₱0.00"
-                                date="01-02-2025"
+                                payment-methods="{{ $paymentMethods }}"
+                                amount="₱{{ number_format($totalOutstandingBill, 2) }}"
+                                date="{{ $nextOutstandingDueDate ? \Carbon\Carbon::parse($nextOutstandingDueDate)->format('m-d-Y') : '-' }}"
                                 button-text="Pay Bill"
-                                button-url="#"
+                                button-url="{{ $totalOutstandingBill > 0 ? route('pay-bills', ['type' => 'outstanding']) : '#' }}"
+                                :disabled="$totalOutstandingBill == 0"
                                 class="max-w-5xl py-12 px-16"
                             />
                         </div>
@@ -61,29 +62,43 @@
                         style="display: none; transform: translateX(100%); position: absolute; width: 100%;">
                         <x-table.container id="history-table">
                             <x-slot name="header">
-                                <th class="bg-lime-700 text-white">Properties</th>
+                                <th class="bg-lime-700 text-white">Property</th>
                                 <th class="bg-lime-700 text-white">Room #</th>
-                                <th class="bg-lime-700 text-white">Type</th>
-                                <th class="bg-lime-700 text-white">Date</th>
+                                <th class="bg-lime-700 text-white">Bill Due Date</th>
                                 <th class="bg-lime-700 text-white">Amount</th>
+                                <th class="bg-lime-700 text-white">Payment Method</th>
                                 <th class="bg-lime-700 text-white">Status</th>
-                                <th class="bg-lime-700 text-white">Photo</th>
+                                <th class="bg-lime-700 text-white">Reference #</th>
+                                <th class="bg-lime-700 text-white">Proof</th>
                             </x-slot>
                             <x-slot name="body">
                                 @foreach($historyTransactions as $transaction)
                                     <tr>
                                         <td>{{ $transaction->tenant->room->property->name ?? '-' }}</td>
                                         <td>{{ $transaction->tenant->room->name ?? '-' }}</td>
-                                        <td>{{ $transaction->type ?? '-' }}</td>
-                                        <td>{{ $transaction->due_date ? \Carbon\Carbon::parse($transaction->due_date)->format('m/d/Y') : '-' }}</td>
-                                        <td>{{ $transaction->amount ? '₱' . number_format($transaction->amount, 2) : '-' }}</td>
+                                        <td>
+                                            {{ $transaction->bill?->due_date ? \Carbon\Carbon::parse($transaction->bill->due_date)->format('m/d/Y') : '-' }}
+                                        </td>
+                                        <td>
+                                            {{ $transaction->amount ? '₱' . number_format($transaction->amount, 2) : '-' }}
+                                        </td>
+                                        <td>
+                                            {{ ucfirst($transaction->payment_method) }}
+                                        </td>
                                         <td>
                                             <x-status :value="$transaction->status" />
                                         </td>
                                         <td>
-                                            <x-button onclick="showPhotoModal('{{ $transaction->photo }}')">
-                                                See Photo
-                                            </x-button>
+                                            {{ $transaction->reference_number ?? '-' }}
+                                        </td>
+                                        <td>
+                                            @if($transaction->proof_photo)
+                                                <x-button onclick="showPhotoModal('{{ asset('storage/' . ltrim($transaction->proof_photo, '/')) }}')">
+                                                    See Photo
+                                                </x-button>
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -222,6 +237,13 @@
         }
         .border-lime-600 {
             border-color: #65a30d !important;
+        }
+        /* Add styles for disabled button */
+        .opacity-50 {
+            opacity: 0.5;
+        }
+        .cursor-not-allowed {
+            cursor: not-allowed;
         }
     </style>
 </x-app-layout>
