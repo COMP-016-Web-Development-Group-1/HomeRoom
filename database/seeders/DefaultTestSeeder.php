@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\AnnouncementType;
 use App\Enums\BillStatus;
 use App\Enums\MaintenanceRequestStatus;
+use App\Enums\PaymentMethod;
 use App\Enums\PropertyType;
 use App\Enums\TransactionStatus;
 use App\Models\Announcement;
@@ -31,8 +32,8 @@ class DefaultTestSeeder extends Seeder
         $rooms = $this->createTestRooms($properties);
         $tenants = $this->createTestTenants($rooms);
         $this->createTestBillsAndTransactions($tenants);
-        $this->createTestMaintenanceRequest($tenants);
-        $this->createTestAnnouncements($properties, $rooms);
+        // $this->createTestMaintenanceRequest($tenants);
+        // $this->createTestAnnouncements($properties, $rooms);
     }
 
     /**
@@ -106,7 +107,7 @@ class DefaultTestSeeder extends Seeder
                     $rooms[] = Room::create([
                         'property_id' => $property->id,
                         'code' => generate_code(),
-                        'name' => 'Room '.str_pad($i, 3, '0', STR_PAD_LEFT),
+                        'name' => 'Room ' . str_pad($i, 3, '0', STR_PAD_LEFT),
                         'rent_amount' => rand(8, 16) * 500, // 4000-8000
                         'max_occupancy' => rand(1, 6),
                     ]);
@@ -156,7 +157,11 @@ class DefaultTestSeeder extends Seeder
      */
     private function createTestBillsAndTransactions(array $tenants): void
     {
-        $paymentMethods = ['cash', 'gcash', 'maya'];
+        $paymentMethods = [
+            PaymentMethod::CASH->value,
+            PaymentMethod::GCASH->value,
+            PaymentMethod::MAYA->value
+        ];
 
         foreach ($tenants as $tenant) {
             $moveInDate = Carbon::parse($tenant->move_in_date);
@@ -170,7 +175,7 @@ class DefaultTestSeeder extends Seeder
             // Generate bills for each month stayed
             for ($i = 0; $i < $monthsStayed; $i++) {
                 // Calculate due date (same day as move_in_date each month)
-                $dueDate = $moveInDate->copy()->addMonths($i + 1);
+                $dueDate = $moveInDate->copy()->addMonths($i + 1)->endOfDay();
 
                 // Adjust for months with fewer days
                 $daysInMonth = $dueDate->daysInMonth;
@@ -180,7 +185,7 @@ class DefaultTestSeeder extends Seeder
                 // Create bill on move_in_date (for first) or previous due date
                 $createdAt = ($i === 0)
                     ? $moveInDate->copy()
-                    : $moveInDate->copy()->addMonths($i);
+                    : $moveInDate->copy()->addMonths($i)->startOfDay();
 
                 $bill = Bill::create([
                     'tenant_id' => $tenant->id,
@@ -191,9 +196,9 @@ class DefaultTestSeeder extends Seeder
                     'updated_at' => $createdAt,
                 ]);
 
-                // 70% chance of payment (except for future bills)
-                if ($dueDate->isPast() && fake()->boolean(70)) {
-                    $isOnTime = fake()->boolean(80); // 80% on-time
+                // 90% chance of payment (except for future bills)
+                if ($dueDate->isPast() && fake()->boolean(90)) {
+                    $isOnTime = fake()->boolean(90); // 90% on-time
 
                     if ($isOnTime) {
                         // On-time payment between creation and due date
@@ -220,9 +225,13 @@ class DefaultTestSeeder extends Seeder
                         'confirmed_at' => $paymentDate,
                     ]);
 
-                    $bill->update(['status' => BillStatus::PAID->value]);
+                    $bill->timestamps = false;
+                    $bill->status = BillStatus::PAID->value;
+                    $bill->save();
                 } elseif ($dueDate->isPast()) {
-                    $bill->update(['status' => BillStatus::OVERDUE->value]);
+                    $bill->timestamps = false;
+                    $bill->status = BillStatus::OVERDUE->value;
+                    $bill->save();
                 }
             }
         }
