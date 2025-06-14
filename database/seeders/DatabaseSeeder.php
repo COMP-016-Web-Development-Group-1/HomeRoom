@@ -71,6 +71,7 @@ class DatabaseSeeder extends Seeder
             $tenant = Tenant::firstOrCreate([
                 'user_id' => $user2->id,
                 'room_id' => $room->id,
+                'move_in_date' => now()
             ]);
 
             // $bill = Bill::create([
@@ -105,7 +106,7 @@ class DatabaseSeeder extends Seeder
 
         // For Mocking the website
         if (app()->isLocal()) {
-            $this->callWith(DefaultTestSeeder::class, ['landlord' => $landlord]);
+            // $this->callWith(DefaultTestSeeder::class, ['landlord' => $landlord]);
         }
     }
 }
