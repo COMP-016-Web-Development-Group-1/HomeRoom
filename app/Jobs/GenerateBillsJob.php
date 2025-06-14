@@ -33,33 +33,34 @@ class GenerateBillsJob implements ShouldQueue
             $daysInMonth = $today->daysInMonth;
             $expectedBillingDay = min($billingDay, $daysInMonth);
 
-            if ($today->day !== $expectedBillingDay) {
+            // Only bill if today is on or after expected billing day
+            if ($today->day < $expectedBillingDay) {
                 return;
             }
 
-            // Check if bill already exists for this user/month
-            $exists = Bill::where('tenant_id', $tenant->id)
+            // Avoid duplicates by checking if a bill exists for this month
+            $alreadyBilled = Bill::where('tenant_id', $tenant->id)
                 ->whereMonth('created_at', $today->month)
                 ->whereYear('created_at', $today->year)
                 ->exists();
 
-            if (!$exists) {
-                $dueDate = $today->copy()->addMonth();
-
-                // Ensure due date uses the same billing day logic
-                $dueDateBillingDay = min($billingDay, $dueDate->daysInMonth);
-                $dueDate->day = $dueDateBillingDay;
-                $dueDate = $dueDate->endOfDay();
-
-                $bill = Bill::create([
-                    'tenant_id' => $tenant->id,
-                    'amount_due' => $tenant->room->rent_amount,
-                    'due_date' => $dueDate,
-                    'status' => 'unpaid',
-                ]);
-
-                $tenant->user->notify(new BillCreated($bill));
+            if ($alreadyBilled) {
+                return;
             }
+
+            $dueDate = $today->copy()->addMonth();
+            $dueDay = min($billingDay, $dueDate->daysInMonth);
+            $dueDate->day = $dueDay;
+            $dueDate = $dueDate->endOfDay();
+
+            $bill = Bill::create([
+                'tenant_id' => $tenant->id,
+                'amount_due' => $tenant->room->rent_amount,
+                'due_date' => $dueDate,
+                'status' => 'unpaid',
+            ]);
+
+            $tenant->user->notify(new BillCreated($bill));
         });
     }
 }
