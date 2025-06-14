@@ -1,15 +1,31 @@
-{{-- TODO: ADD functionality to acknowledge pending payments --}}
-
 <x-app-layout title="Transactions">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Transactions
         </h2>
     </x-slot>
-
-    <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow-xs sm:rounded-lg">
-            <div class="p-6 text-gray-900">
+    <div
+        x-data="{
+            showAcknowledgeModal: false,
+            acknowledgeId: null,
+            openAcknowledgeModal(id) {
+                this.acknowledgeId = id;
+                this.showAcknowledgeModal = true;
+            },
+            closeAcknowledgeModal() {
+                this.showAcknowledgeModal = false;
+                this.acknowledgeId = null;
+            },
+            submitAcknowledgeForm() {
+                if (this.acknowledgeId !== null) {
+                    this.$refs['acknowledgeForm' + this.acknowledgeId].submit();
+                }
+            }
+        }"
+        class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8 relative"
+    >
+        <div class="bg-white shadow-xs sm:rounded-lg main-blur-area transition-all duration-200 min-h-[760px] flex flex-col" :class="showAcknowledgeModal ? 'blur-md pointer-events-none select-none' : ''">
+            <div class="p-6 text-gray-900 flex flex-col flex-1">
                 <div class="mb-4 flex space-x-8">
                     <button
                         id="pending-tab-btn"
@@ -26,19 +42,19 @@
                         <span id="history-tab-text" class="tab-btn-text transition-all duration-500">History</span>
                     </button>
                 </div>
-
-                <div class="relative overflow-hidden" style="min-height:760px">
+                <div class="relative overflow-visible flex-1">
                     <div id="pending-content" class="tab-pane transition-transform duration-500 ease-in-out"
                         style="display: block; transform: translateX(0%); position: absolute; width: 100%;">
                         <x-table.container id="pending-payments-table">
                             <x-slot name="header">
-                                <th class="bg-lime-700 text-white">Properties</th>
+                                <th class="bg-lime-700 text-white">Property</th>
                                 <th class="bg-lime-700 text-white">Room #</th>
-                                <th class="bg-lime-700 text-white">Type</th>
-                                <th class="bg-lime-700 text-white">Date</th>
+                                <th class="bg-lime-700 text-white">Bill Due Date</th>
                                 <th class="bg-lime-700 text-white">Amount</th>
+                                <th class="bg-lime-700 text-white">Payment Method</th>
                                 <th class="bg-lime-700 text-white">Status</th>
-                                <th class="bg-lime-700 text-white">Photo</th>
+                                <th class="bg-lime-700 text-white">Reference #</th>
+                                <th class="bg-lime-700 text-white">Proof</th>
                                 <th class="bg-lime-700 text-white">Actions</th>
                             </x-slot>
                             <x-slot name="body">
@@ -46,21 +62,44 @@
                                     <tr>
                                         <td>{{ $transaction->tenant->room->property->name ?? '-' }}</td>
                                         <td>{{ $transaction->tenant->room->name ?? '-' }}</td>
-                                        <td>{{ $transaction->type ?? '-' }}</td>
-                                        <td>{{ $transaction->due_date ? \Carbon\Carbon::parse($transaction->due_date)->format('m/d/Y') : '-' }}</td>
-                                        <td>{{ $transaction->amount ? '₱' . number_format($transaction->amount, 2) : '-' }}</td>
+                                        <td>
+                                            {{ $transaction->bill?->due_date ? \Carbon\Carbon::parse($transaction->bill->due_date)->format('m/d/Y') : '-' }}
+                                        </td>
+                                        <td>
+                                            {{ $transaction->amount ? '₱' . number_format($transaction->amount, 2) : '-' }}
+                                        </td>
+                                        <td>
+                                            {{ ucfirst($transaction->payment_method) }}
+                                        </td>
                                         <td>
                                             <x-status :value="$transaction->status" />
                                         </td>
                                         <td>
-                                            <x-button onclick="showPhotoModal('{{ $transaction->photo }}')">
-                                                See Photo
-                                            </x-button>
+                                            {{ $transaction->reference_number ?? '-' }}
                                         </td>
                                         <td>
-                                            <x-button>
-                                                Acknowledge
-                                            </x-button>
+                                            @if($transaction->proof_photo)
+                                                <x-button onclick="showPhotoModal('{{ asset('storage/' . ltrim($transaction->proof_photo, '/')) }}')">
+                                                    See Photo
+                                                </x-button>
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <form method="POST"
+                                                  action="{{ route('transaction.update', $transaction->id) }}"
+                                                  x-ref="acknowledgeForm{{ $transaction->id }}"
+                                                  style="display:inline;">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" name="action" value="acknowledge">
+                                                <x-button type="button"
+                                                          variant="success"
+                                                          @click="openAcknowledgeModal({{ $transaction->id }})">
+                                                    Acknowledge
+                                                </x-button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -71,29 +110,43 @@
                         style="display: none; transform: translateX(100%); position: absolute; width: 100%;">
                         <x-table.container id="history-table">
                             <x-slot name="header">
-                                <th class="bg-lime-700 text-white">Properties</th>
+                                <th class="bg-lime-700 text-white">Property</th>
                                 <th class="bg-lime-700 text-white">Room #</th>
-                                <th class="bg-lime-700 text-white">Type</th>
-                                <th class="bg-lime-700 text-white">Date</th>
+                                <th class="bg-lime-700 text-white">Bill Due Date</th>
                                 <th class="bg-lime-700 text-white">Amount</th>
+                                <th class="bg-lime-700 text-white">Payment Method</th>
                                 <th class="bg-lime-700 text-white">Status</th>
-                                <th class="bg-lime-700 text-white">Photo</th>
+                                <th class="bg-lime-700 text-white">Reference #</th>
+                                <th class="bg-lime-700 text-white">Proof</th>
                             </x-slot>
                             <x-slot name="body">
                                 @foreach($historyTransactions as $transaction)
                                     <tr>
                                         <td>{{ $transaction->tenant->room->property->name ?? '-' }}</td>
                                         <td>{{ $transaction->tenant->room->name ?? '-' }}</td>
-                                        <td>{{ $transaction->type ?? '-' }}</td>
-                                        <td>{{ $transaction->due_date ? \Carbon\Carbon::parse($transaction->due_date)->format('m/d/Y') : '-' }}</td>
-                                        <td>{{ $transaction->amount ? '₱' . number_format($transaction->amount, 2) : '-' }}</td>
+                                        <td>
+                                            {{ $transaction->bill?->due_date ? \Carbon\Carbon::parse($transaction->bill->due_date)->format('m/d/Y') : '-' }}
+                                        </td>
+                                        <td>
+                                            {{ $transaction->amount ? '₱' . number_format($transaction->amount, 2) : '-' }}
+                                        </td>
+                                        <td>
+                                            {{ ucfirst($transaction->payment_method) }}
+                                        </td>
                                         <td>
                                             <x-status :value="$transaction->status" />
                                         </td>
                                         <td>
-                                            <x-button onclick="showPhotoModal('{{ $transaction->photo }}')">
-                                                See Photo
-                                            </x-button>
+                                            {{ $transaction->reference_number ?? '-' }}
+                                        </td>
+                                        <td>
+                                            @if($transaction->proof_photo)
+                                                <x-button onclick="showPhotoModal('{{ asset('storage/' . ltrim($transaction->proof_photo, '/')) }}')">
+                                                    See Photo
+                                                </x-button>
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -101,12 +154,38 @@
                         </x-table.container>
                     </div>
                 </div>
-
                 <x-modal name="photo-modal" :show="false" maxWidth="md">
                     <div id="photo-modal-content" class="flex flex-col items-center justify-center p-4">
                         <img id="modal-photo-img" src="" alt="Transaction Photo" class="max-w-full max-h-[60vh] rounded shadow">
                     </div>
                 </x-modal>
+            </div>
+        </div>
+
+        <!-- Custom Confirm Modal, only the modal is NOT blurred -->
+        <div
+            x-show="showAcknowledgeModal"
+            x-cloak
+            class="fixed inset-0 z-50 flex items-center justify-center"
+            style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"
+        >
+            <div class="relative bg-white rounded-lg shadow-lg p-8 max-w-md w-full z-10 border border-lime-600">
+                <div class="text-center mb-6">
+                    <h3 class="text-xl font-bold mb-4">Acknowledge Payment</h3>
+                    <p class="mb-6">Are you sure you want to acknowledge this transaction?</p>
+                </div>
+                <div class="flex justify-center space-x-4">
+                    <button type="button"
+                            class="px-4 py-2 rounded bg-gray-300 text-gray-800 hover:bg-gray-400"
+                            @click="closeAcknowledgeModal()">
+                        Cancel
+                    </button>
+                    <button type="button"
+                            class="px-4 py-2 rounded bg-lime-600 text-white hover:bg-lime-700"
+                            @click="submitAcknowledgeForm()">
+                        Yes, Acknowledge
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -209,5 +288,6 @@
             color: #365314;
             filter: none;
         }
+        [x-cloak] { display: none !important; }
     </style>
 </x-app-layout>
