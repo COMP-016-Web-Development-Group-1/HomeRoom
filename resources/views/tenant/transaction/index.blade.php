@@ -5,11 +5,12 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow-xs sm:rounded-lg">
-            <div class="p-6 text-gray-900">
-
-                <h1 class="text-3xl font-extrabold text-gray-900 mb-8">Transaction Dashboard</h1>
+    <div class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8 relative">
+        <div class="bg-white shadow-xs sm:rounded-lg main-blur-area transition-all duration-200 flex flex-col">
+            <div class="p-6 text-gray-900 flex flex-col flex-1">
+                <h1 class="text-3xl font-bold mb-8 text-lime-800">
+                    Manage Transactions
+                </h1>
 
                 <div class="mb-4 flex space-x-8">
                     <button
@@ -28,12 +29,9 @@
                     </button>
                 </div>
 
-                <div class="relative overflow-hidden" style="min-height:690px">
-                    {{-- Pay Bills content --}}
-                    <div id="paybills-content" class="tab-pane transition-transform duration-500 ease-in-out"
-                        style="display: block; transform: translateX(0%); position: absolute; width: 100%;">
+                <div class="relative flex-1 overflow-hidden">
+                    <div id="paybills-content" class="tab-pane">
                         <div class="flex flex-col gap-3 items-center mb-12 mt-1">
-                            {{-- Monthly Payment Card --}}
                             <x-bill-card
                                 title="Monthly Payment"
                                 payment-methods="{{ $paymentMethods }}"
@@ -56,10 +54,7 @@
                             />
                         </div>
                     </div>
-
-                    {{-- History content --}}
-                    <div id="history-content" class="tab-pane transition-transform duration-500 ease-in-out"
-                        style="display: none; transform: translateX(100%); position: absolute; width: 100%;">
+                    <div id="history-content" class="tab-pane hidden">
                         <x-table.container id="history-table">
                             <x-slot name="header">
                                 <th class="bg-lime-700 text-white">Property</th>
@@ -72,7 +67,7 @@
                                 <th class="bg-lime-700 text-white">Proof</th>
                             </x-slot>
                             <x-slot name="body">
-                                @foreach($historyTransactions as $transaction)
+                                @forelse($historyTransactions as $transaction)
                                     <tr>
                                         <td>{{ $transaction->tenant->room->property->name ?? '-' }}</td>
                                         <td>{{ $transaction->tenant->room->name ?? '-' }}</td>
@@ -101,7 +96,11 @@
                                             @endif
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center text-gray-400 py-6">No transactions found.</td>
+                                    </tr>
+                                @endforelse
                             </x-slot>
                         </x-table.container>
                     </div>
@@ -117,11 +116,8 @@
     </div>
 
     <script>
-        let currentTab = 'paybills';
-
-        function showTab(tab) {
-            if (tab === currentTab) return;
-
+        document.addEventListener("DOMContentLoaded", function() {
+            let currentTab = 'paybills';
             const paybillsBtn = document.getElementById('paybills-tab-btn');
             const historyBtn = document.getElementById('history-tab-btn');
             const paybillsContent = document.getElementById('paybills-content');
@@ -129,67 +125,56 @@
             const paybillsText = document.getElementById('paybills-tab-text');
             const historyText = document.getElementById('history-tab-text');
 
-            if (tab === 'paybills') {
-                historyText.classList.remove('tab-btn-text-active');
-                historyText.classList.add('tab-btn-text-inactive');
-                paybillsText.classList.remove('tab-btn-text-inactive');
-                paybillsText.classList.add('tab-btn-text-active');
-            } else {
-                paybillsText.classList.remove('tab-btn-text-active');
-                paybillsText.classList.add('tab-btn-text-inactive');
-                historyText.classList.remove('tab-btn-text-inactive');
-                historyText.classList.add('tab-btn-text-active');
-            }
+            window.showTab = function(tab) {
+                if (tab === currentTab) return;
 
-            if (tab === 'paybills') {
-                paybillsBtn.classList.add('text-lime-600', 'border-lime-600');
-                paybillsBtn.classList.remove('text-lime-700', 'border-transparent');
-                historyBtn.classList.add('text-lime-700', 'border-transparent');
-                historyBtn.classList.remove('text-lime-600', 'border-lime-600');
-            } else {
-                historyBtn.classList.add('text-lime-600', 'border-lime-600');
-                historyBtn.classList.remove('text-lime-700', 'border-transparent');
-                paybillsBtn.classList.add('text-lime-700', 'border-transparent');
-                paybillsBtn.classList.remove('text-lime-600', 'border-lime-600');
-            }
+                // Tab label styling
+                if (tab === 'paybills') {
+                    paybillsBtn.classList.add('text-lime-600', 'border-lime-600');
+                    paybillsBtn.classList.remove('text-lime-700', 'border-transparent');
+                    historyBtn.classList.add('text-lime-700', 'border-transparent');
+                    historyBtn.classList.remove('text-lime-600', 'border-lime-600');
 
-            let outgoing, incoming, direction;
-            if (tab === 'paybills') {
-                outgoing = historyContent;
-                incoming = paybillsContent;
-                direction = -1;
-            } else {
-                outgoing = paybillsContent;
-                incoming = historyContent;
-                direction = 1;
-            }
+                    paybillsText.classList.add('tab-btn-text-active');
+                    paybillsText.classList.remove('tab-btn-text-inactive');
+                    historyText.classList.remove('tab-btn-text-active');
+                    historyText.classList.add('tab-btn-text-inactive');
+                } else {
+                    historyBtn.classList.add('text-lime-600', 'border-lime-600');
+                    historyBtn.classList.remove('text-lime-700', 'border-transparent');
+                    paybillsBtn.classList.add('text-lime-700', 'border-transparent');
+                    paybillsBtn.classList.remove('text-lime-600', 'border-lime-600');
 
-            incoming.style.display = 'block';
-            incoming.style.transform = `translateX(${direction * 100}%)`;
+                    historyText.classList.add('tab-btn-text-active');
+                    historyText.classList.remove('tab-btn-text-inactive');
+                    paybillsText.classList.remove('tab-btn-text-active');
+                    paybillsText.classList.add('tab-btn-text-inactive');
+                }
 
-            setTimeout(() => {
-                outgoing.style.transform = `translateX(${-direction * 100}%)`;
-                incoming.style.transform = 'translateX(0%)';
-            }, 20);
+                // Show/Hide tab panes using Tailwind's hidden class
+                if(tab === 'paybills') {
+                    paybillsContent.classList.remove('hidden');
+                    historyContent.classList.add('hidden');
+                } else {
+                    paybillsContent.classList.add('hidden');
+                    historyContent.classList.remove('hidden');
+                }
 
-            setTimeout(() => {
-                outgoing.style.display = 'none';
-                outgoing.style.transform = `translateX(${direction * 100}%)`;
-            }, 520);
+                currentTab = tab;
+            };
 
-            currentTab = tab;
-        }
+            // Set initial state
+            paybillsContent.classList.remove('hidden');
+            historyContent.classList.add('hidden');
+            paybillsText.classList.add('tab-btn-text-active');
+            historyText.classList.add('tab-btn-text-inactive');
+        });
 
         function showPhotoModal(photoUrl) {
             const img = document.getElementById('modal-photo-img');
             img.src = photoUrl || '';
             window.dispatchEvent(new CustomEvent('open-modal', { detail: 'photo-modal' }));
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('paybills-tab-text').classList.add('tab-btn-text-active');
-            document.getElementById('history-tab-text').classList.add('tab-btn-text-inactive');
-        });
     </script>
     <style>
         .tab-pane {
