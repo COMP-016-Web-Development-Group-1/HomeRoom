@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tenant;
-use App\Models\Landlord;
 use App\Models\Announcement;
 use App\Models\Bill;
+use App\Models\Landlord;
 use App\Models\MaintenanceRequest;
+use App\Models\Tenant;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +33,7 @@ class DashboardController extends Controller
                 $query->orderBy('due_date', 'desc'); // Order by due date for latest bill logic
             },
             'maintenanceRequests',
-            'user'
+            'user',
         ]);
 
         // Get the latest unpaid bill for "Rent Due"
@@ -45,7 +45,6 @@ class DashboardController extends Controller
 
         // Get the latest overdue bill for "Outstanding Balance" footer
         $latestOverdueBill = $tenant->bills->where('status', 'overdue')->sortByDesc('due_date')->first();
-
 
         // Calculate months stayed
         $monthsStayed = 0;
@@ -59,7 +58,6 @@ class DashboardController extends Controller
 
         // Fetch maintenance requests for the tenant, limited and ordered
         $maintenanceRequests = MaintenanceRequest::where('tenant_id', $tenant->id)->latest()->take(5)->get();
-
 
         return view('tenant.dashboard', compact(
             'tenant',
@@ -111,7 +109,6 @@ class DashboardController extends Controller
         $landlordMaintenanceRequests = MaintenanceRequest::whereHas('room.property', function ($query) use ($landlord) {
             $query->where('landlord_id', $landlord->id);
         })->where('status', 'pending')->latest()->take(5)->get();
-
 
         return view('landlord.dashboard', compact(
             'landlord',
