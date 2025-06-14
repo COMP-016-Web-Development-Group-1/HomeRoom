@@ -1,4 +1,4 @@
-<x-guest-layout title="Login">
+<x-new-guest-layout title="Login">
     <div class="text-center">
         <div class="flex items-center justify-center">
             <img src="{{ Vite::asset('resources/assets/images/logo.svg') }}" class="aspect-square size-32 -m-8" />
@@ -47,4 +47,4 @@
         <p class="text-center mt-4 text-sm text-gray-900">Don't have an account yet? <x-a
                 href="{{ route('register') }}">Sign Up</x-a></p>
     </form>
-</x-guest-layout>
+</x-new-guest-layout>
