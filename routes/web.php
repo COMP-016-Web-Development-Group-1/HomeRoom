@@ -40,6 +40,10 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('property.update');
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::post('/transactions', [TransactionController::class, 'store'])->name('transaction.store');
+    Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transaction.update');
+
+    Route::get('/pay-bills', [TransactionController::class, 'showPayBills'])->name('pay-bills');
 
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcement.index');
     Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcement.store');
@@ -54,4 +58,4 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::view('/tests', 'table');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

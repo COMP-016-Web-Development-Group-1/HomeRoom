@@ -12,7 +12,11 @@ class Transaction extends Model
         'amount',
         'status',
         'payment_method',
+        'amount',
         'proof_photo',
+        'gcash_number',
+        'maya_number',
+        'reference_number',
         'payment_date',
         'confirmed_at',
     ];
