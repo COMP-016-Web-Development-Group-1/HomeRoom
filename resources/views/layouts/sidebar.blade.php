@@ -35,13 +35,15 @@
             <nav class="space-y-2 font-medium mt-6">
                 <x-sidebar.item :href="route('dashboard')" :active="request()->routeIs('dashboard')" title="Dashboard" icon="squares-four" />
                 @if (auth()->user()->role === 'landlord')
-                    <x-sidebar.item :href="route('property.index')" :active="request()->routeIs('property.index')" title="Properties" icon="house-line" />
+                    <x-sidebar.item :href="route('property.index')" :active="request()->routeIs('property.*')" title="Properties" icon="house-line" />
                 @elseif (auth()->user()->role === 'tenant')
                 @endif
-                <x-sidebar.item :href="route('transaction.index')" :active="request()->routeIs('transaction.index')" title="Transactions" icon="money" />
+                <x-sidebar.item :href="route('transaction.index')" :active="request()->routeIs('transaction.*')" title="Transactions" icon="money" />
                 <hr />
-                <x-sidebar.item :href="route('announcement.index')" :active="request()->routeIs('announcement.index')" title="Announcements" icon="megaphone" />
-                <x-sidebar.item :href="route('request.index')" :active="request()->routeIs('request.index')" title="Maintenance Request" icon="wrench" />
+                <x-sidebar.item :href="route('announcement.index')" :active="request()->routeIs('announcement.*')" title="Announcements" icon="megaphone" />
+                <x-sidebar.item :href="route('request.index')" :active="request()->routeIs('request.*')" title="Maintenance Request" icon="wrench" />
+                <hr />
+                <x-sidebar.item :href="route('messages.index')" :active="request()->routeIs('messages.*')" title="Chats" icon="chat-circle-text" />
 
 
                 {{-- <x-sidebar.collapsible icon="package" title="Test" badge="3">

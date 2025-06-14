@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandlordProfileController;
 use App\Http\Controllers\LandlordSetupController;
 use App\Http\Controllers\MaintenanceRequestController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RoomController;
@@ -71,6 +72,12 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::put('/requests/{request}', [MaintenanceRequestController::class, 'update'])->name('request.update');
     Route::get('/requests/{request}/edit', [MaintenanceRequestController::class, 'edit'])->name('request.edit');
     Route::delete('/requests/{request}', [MaintenanceRequestController::class, 'destroy'])->name('request.destroy');
+
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{conversation}', [MessageController::class, 'show'])->name('messages.show');
+    Route::post('/messages/{conversation}', [MessageController::class, 'store'])->name('messages.store');
+    Route::post('/start-conversation', [MessageController::class, 'startConversation'])->name('messages.start');
+
     Route::view('/tests', 'table');
 });
 

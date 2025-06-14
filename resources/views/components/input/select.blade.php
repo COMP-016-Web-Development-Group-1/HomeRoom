@@ -10,10 +10,13 @@
     {{-- Empty initial option --}}
     <option value="" disabled {{ $selected === null ? 'selected' : '' }}> -- {{ $placeholder }} -- </option>
 
-    {{-- Loop through the options --}}
-    @foreach ($options as $value => $label)
-        <option value="{{ $value }}" {{ $selected == $value ? 'selected' : '' }}>
-            {{ $label }}
-        </option>
-    @endforeach
+    @if ($slot->isNotEmpty())
+        {{ $slot }}
+    @else
+        @foreach ($options as $value => $label)
+            <option value="{{ $value }}" {{ $selected == $value ? 'selected' : '' }}>
+                {{ $label }}
+            </option>
+        @endforeach
+    @endif
 </select>
