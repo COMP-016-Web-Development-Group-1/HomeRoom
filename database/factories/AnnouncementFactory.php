@@ -47,7 +47,7 @@ class AnnouncementFactory extends Factory
 
     public function systemWide(): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'type' => AnnouncementType::SYSTEM->value,
             'property_id' => null,
             'room_id' => null,
@@ -56,7 +56,7 @@ class AnnouncementFactory extends Factory
 
     public function propertyWide(?Property $property = null): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'type' => AnnouncementType::PROPERTY->value,
             'property_id' => $property?->id ?? Property::factory(),
             'room_id' => null,
@@ -65,7 +65,7 @@ class AnnouncementFactory extends Factory
 
     public function forRoom(Room $room): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'type' => AnnouncementType::ROOM->value,
             'property_id' => $room->property_id,
             'room_id' => $room->id,
@@ -74,7 +74,7 @@ class AnnouncementFactory extends Factory
 
     public function unrelatedTo(?Property $excludeProperty = null): static
     {
-        return $this->state(function () use ($excludeProperty) {
+        return $this->state(function () {
             // Create a new property that's definitely different
             $property = Property::factory()->create();
             $room = Room::factory()->for($property)->create();

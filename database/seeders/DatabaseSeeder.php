@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
             $tenant = Tenant::firstOrCreate([
                 'user_id' => $user2->id,
                 'room_id' => $room->id,
-                'move_in_date' => now()
+                'move_in_date' => now(),
             ]);
 
             // $bill = Bill::create([

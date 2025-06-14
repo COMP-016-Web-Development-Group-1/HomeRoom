@@ -15,6 +15,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Hash;
 use Illuminate\Console\Command;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\note;
@@ -29,7 +30,6 @@ use function Laravel\Prompts\warning;
  * Scenario 3: Tenant stayed 1 month, current bill will be overdue
  * Scenario 4: Tenant stayed 5 months, last month is overdue + current month overdue
  */
-
 class DemoJobCommand extends Command
 {
     /**
@@ -65,7 +65,7 @@ class DemoJobCommand extends Command
                     'status' => '📊 Show current demo status',
                     'clean' => '🧹 Clean existing demo data',
                     'add' => '➕ Add more scenarios',
-                    'exit' => '❌ Exit'
+                    'exit' => '❌ Exit',
                 ],
                 default: 'status'
             );
@@ -92,8 +92,9 @@ class DemoJobCommand extends Command
     {
         $confirmed = confirm('Are you sure you want to clean all demo data?', false);
 
-        if (!$confirmed) {
+        if (! $confirmed) {
             info('Operation cancelled.');
+
             return;
         }
 
@@ -165,7 +166,7 @@ class DemoJobCommand extends Command
             ]
         );
 
-        if (!$user->hasVerifiedEmail()) {
+        if (! $user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
 
@@ -232,8 +233,7 @@ class DemoJobCommand extends Command
         // Create tenant that moved in today (billing day is today)
         $tenant = $this->createTenant('Demo Tenant S1', 'tenant.s1@demo.com', $room, now());
 
-
-        note("✅ Scenario 1 created - Room: {$room->code}, Move-in: " . now()->format('Y-m-d'));
+        note("✅ Scenario 1 created - Room: {$room->code}, Move-in: ".now()->format('Y-m-d'));
     }
 
     /**
@@ -287,7 +287,7 @@ class DemoJobCommand extends Command
             ]);
         }
 
-        note("✅ Scenario 2 created - Room: {$room->code}, Move-in: " . $moveInDate->format('Y-m-d'));
+        note("✅ Scenario 2 created - Room: {$room->code}, Move-in: ".$moveInDate->format('Y-m-d'));
     }
 
     /**
@@ -310,8 +310,6 @@ class DemoJobCommand extends Command
         $moveInDate = now()->subMonths(1)->subDay();
         $tenant = $this->createTenant('Demo Tenant S3', 'tenant.s3@demo.com', $room, $moveInDate);
 
-
-
         $bill = Bill::create([
             'tenant_id' => $tenant->id,
             'amount_due' => $tenant->room->rent_amount,
@@ -321,7 +319,7 @@ class DemoJobCommand extends Command
             'updated_at' => $moveInDate->startOfDay(),
         ]);
 
-        note("✅ Scenario 3 created - Room: {$room->code}, Move-in: " . $moveInDate->format('Y-m-d'));
+        note("✅ Scenario 3 created - Room: {$room->code}, Move-in: ".$moveInDate->format('Y-m-d'));
     }
 
     /**
@@ -388,7 +386,7 @@ class DemoJobCommand extends Command
             }
         }
 
-        note("✅ Scenario 4 created - Room: {$room->code}, Move-in: " . $moveInDate->format('Y-m-d'));
+        note("✅ Scenario 4 created - Room: {$room->code}, Move-in: ".$moveInDate->format('Y-m-d'));
     }
 
     private function createTenant(string $name, string $email, Room $room, Carbon $moveInDate): Tenant
@@ -419,6 +417,7 @@ class DemoJobCommand extends Command
 
         if ($demoTenants->isEmpty()) {
             warning('No demo tenants found.');
+
             return;
         }
 
@@ -445,7 +444,7 @@ class DemoJobCommand extends Command
             $summaryData[] = [
                 'Tenant' => $tenant->user->name,
                 'Room' => $tenant->room->code,
-                'Rent' => '₱' . number_format($tenant->room->rent_amount, 2),
+                'Rent' => '₱'.number_format($tenant->room->rent_amount, 2),
                 'Move-in' => $tenant->move_in_date->format('M j, Y'),
                 'Total Bills' => $bills->count(),
                 'Paid' => $paid > 0 ? "✅ {$paid}" : '-',
