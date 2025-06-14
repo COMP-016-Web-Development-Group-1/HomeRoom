@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
-use App\Models\Bill;
-use Illuminate\Http\Request;
-use App\Enums\PaymentMethod;
 use App\Enums\BillStatus;
+use App\Enums\PaymentMethod;
 use App\Enums\TransactionStatus;
+use App\Models\Bill;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
@@ -20,27 +20,27 @@ class TransactionController extends Controller
 
         return match ($role) {
             'landlord' => (function () {
-                    $pendingTransactions = Transaction::with(['tenant.room.property', 'bill'])
+                $pendingTransactions = Transaction::with(['tenant.room.property', 'bill'])
                     ->where('status', TransactionStatus::PENDING->value)
                     ->orderByDesc('payment_date')
                     ->get();
 
-                    $historyTransactions = Transaction::with(['tenant.room.property', 'bill'])
+                $historyTransactions = Transaction::with(['tenant.room.property', 'bill'])
                     ->where('status', '!=', TransactionStatus::PENDING->value)
                     ->orderByDesc('payment_date')
                     ->get();
 
-                    return view('landlord.transaction.index', compact('pendingTransactions', 'historyTransactions'));
-                })(),
+                return view('landlord.transaction.index', compact('pendingTransactions', 'historyTransactions'));
+            })(),
 
             'tenant' => (function () {
-                    $user = auth()->user();
-                    $tenantId = $user->tenant->id ?? null;
+                $user = auth()->user();
+                $tenantId = $user->tenant->id ?? null;
 
-                    $data = $this->getTenantBillDetails($tenantId);
+                $data = $this->getTenantBillDetails($tenantId);
 
-                    return view('tenant.transaction.index', $data);
-                })(),
+                return view('tenant.transaction.index', $data);
+            })(),
 
             default => abort(403),
         };
@@ -78,12 +78,12 @@ class TransactionController extends Controller
             : null;
 
         $gcashQrUrl = $landlord && $landlord->gcash_qr
-            ? asset('storage/' . ltrim($landlord->gcash_qr, '/'))
+            ? asset('storage/'.ltrim($landlord->gcash_qr, '/'))
             : null;
         $data['gcashQrUrl'] = $gcashQrUrl;
 
         $mayaQrUrl = $landlord && $landlord->maya_qr
-            ? asset('storage/' . ltrim($landlord->maya_qr, '/'))
+            ? asset('storage/'.ltrim($landlord->maya_qr, '/'))
             : null;
         $data['mayaQrUrl'] = $mayaQrUrl;
 
@@ -117,7 +117,7 @@ class TransactionController extends Controller
             ->value('due_date');
 
         $paymentMethods = implode(', ', array_map(
-            fn($method) => ucfirst(str_replace('_', ' ', $method->name)),
+            fn ($method) => ucfirst(str_replace('_', ' ', $method->name)),
             PaymentMethod::cases()
         ));
 
@@ -130,9 +130,7 @@ class TransactionController extends Controller
         );
     }
 
-    public function create()
-    {
-    }
+    public function create() {}
 
     public function store(Request $request)
     {
@@ -208,12 +206,10 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function show(string $id)
-    {
-    }
-    public function edit(string $id)
-    {
-    }
+    public function show(string $id) {}
+
+    public function edit(string $id) {}
+
     public function update(Request $request, $id)
     {
         $transaction = Transaction::with('bill')->findOrFail($id);
@@ -242,7 +238,6 @@ class TransactionController extends Controller
         // Other update logic here (if any)
         abort(400, 'Invalid update action.');
     }
-    public function destroy(string $id)
-    {
-    }
+
+    public function destroy(string $id) {}
 }
