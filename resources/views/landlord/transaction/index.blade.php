@@ -8,6 +8,7 @@
         x-data="{
             showAcknowledgeModal: false,
             acknowledgeId: null,
+            activeTab: 'pending',
             openAcknowledgeModal(id) {
                 this.acknowledgeId = id;
                 this.showAcknowledgeModal = true;
@@ -20,31 +21,58 @@
                 if (this.acknowledgeId !== null) {
                     this.$refs['acknowledgeForm' + this.acknowledgeId].submit();
                 }
+            },
+            switchTab(tab) {
+                this.activeTab = tab;
             }
         }"
         class="max-w-(--breakpoint-2xl) mx-auto sm:px-6 lg:px-8 relative"
     >
         <div class="bg-white shadow-xs sm:rounded-lg main-blur-area transition-all duration-200 min-h-[760px] flex flex-col" :class="showAcknowledgeModal ? 'blur-md pointer-events-none select-none' : ''">
             <div class="p-6 text-gray-900 flex flex-col flex-1">
+                <!-- Added H1 for Transaction Tab -->
+                <h1 class="text-3xl font-bold mb-8 text-lime-800">
+                    Manage Transactions
+                </h1>
+
                 <div class="mb-4 flex space-x-8">
                     <button
                         id="pending-tab-btn"
                         type="button"
-                        class="tab-btn text-lime-600 font-semibold border-b-2 border-lime-600 focus:outline-none transition-all duration-500"
-                        onclick="showTab('pending')">
-                        <span id="pending-tab-text" class="tab-btn-text transition-all duration-500">Pending Payments</span>
+                        :class="activeTab === 'pending'
+                            ? 'tab-btn text-lime-600 font-semibold border-b-2 border-lime-600'
+                            : 'tab-btn text-lime-700 font-semibold border-b-2 border-transparent hover:text-lime-600'"
+                        @click="switchTab('pending')"
+                    >
+                        <span id="pending-tab-text"
+                              :class="activeTab === 'pending' ? 'tab-btn-text tab-btn-text-active' : 'tab-btn-text tab-btn-text-inactive'"
+                              class="transition-all duration-500"
+                        >Pending Payments</span>
                     </button>
                     <button
                         id="history-tab-btn"
                         type="button"
-                        class="tab-btn text-lime-700 font-semibold border-b-2 border-transparent hover:text-lime-600 focus:outline-none transition-all duration-500"
-                        onclick="showTab('history')">
-                        <span id="history-tab-text" class="tab-btn-text transition-all duration-500">History</span>
+                        :class="activeTab === 'history'
+                            ? 'tab-btn text-lime-600 font-semibold border-b-2 border-lime-600'
+                            : 'tab-btn text-lime-700 font-semibold border-b-2 border-transparent hover:text-lime-600'"
+                        @click="switchTab('history')"
+                    >
+                        <span id="history-tab-text"
+                              :class="activeTab === 'history' ? 'tab-btn-text tab-btn-text-active' : 'tab-btn-text tab-btn-text-inactive'"
+                              class="transition-all duration-500"
+                        >History</span>
                     </button>
                 </div>
-                <div class="relative overflow-visible flex-1">
-                    <div id="pending-content" class="tab-pane transition-transform duration-500 ease-in-out"
-                        style="display: block; transform: translateX(0%); position: absolute; width: 100%;">
+                <div class="relative flex-1">
+                    <!-- Pending Tab -->
+                    <div
+                        class="tab-pane transition-transform duration-500 ease-in-out"
+                        :class="{
+                            'block': activeTab === 'pending',
+                            'hidden': activeTab !== 'pending'
+                        }"
+                        style="transform: translateX(0%);"
+                    >
                         <x-table.container id="pending-payments-table">
                             <x-slot name="header">
                                 <th class="bg-lime-700 text-white">Property</th>
@@ -106,8 +134,15 @@
                             </x-slot>
                         </x-table.container>
                     </div>
-                    <div id="history-content" class="tab-pane transition-transform duration-500 ease-in-out"
-                        style="display: none; transform: translateX(100%); position: absolute; width: 100%;">
+                    <!-- History Tab -->
+                    <div
+                        class="tab-pane transition-transform duration-500 ease-in-out"
+                        :class="{
+                            'block': activeTab === 'history',
+                            'hidden': activeTab !== 'history'
+                        }"
+                        style="transform: translateX(0%);"
+                    >
                         <x-table.container id="history-table">
                             <x-slot name="header">
                                 <th class="bg-lime-700 text-white">Property</th>
@@ -191,79 +226,11 @@
     </div>
 
     <script>
-        let currentTab = 'pending';
-
-        function showTab(tab) {
-            if (tab === currentTab) return;
-
-            const pendingBtn = document.getElementById('pending-tab-btn');
-            const historyBtn = document.getElementById('history-tab-btn');
-            const pendingContent = document.getElementById('pending-content');
-            const historyContent = document.getElementById('history-content');
-            const pendingText = document.getElementById('pending-tab-text');
-            const historyText = document.getElementById('history-tab-text');
-
-            if (tab === 'pending') {
-                historyText.classList.remove('tab-btn-text-active');
-                historyText.classList.add('tab-btn-text-inactive');
-                pendingText.classList.remove('tab-btn-text-inactive');
-                pendingText.classList.add('tab-btn-text-active');
-            } else {
-                pendingText.classList.remove('tab-btn-text-active');
-                pendingText.classList.add('tab-btn-text-inactive');
-                historyText.classList.remove('tab-btn-text-inactive');
-                historyText.classList.add('tab-btn-text-active');
-            }
-
-            if (tab === 'pending') {
-                pendingBtn.classList.add('text-lime-600', 'border-lime-600');
-                pendingBtn.classList.remove('text-lime-700', 'border-transparent');
-                historyBtn.classList.add('text-lime-700', 'border-transparent');
-                historyBtn.classList.remove('text-lime-600', 'border-lime-600');
-            } else {
-                historyBtn.classList.add('text-lime-600', 'border-lime-600');
-                historyBtn.classList.remove('text-lime-700', 'border-transparent');
-                pendingBtn.classList.add('text-lime-700', 'border-transparent');
-                pendingBtn.classList.remove('text-lime-600', 'border-lime-600');
-            }
-
-            let outgoing, incoming, direction;
-            if (tab === 'pending') {
-                outgoing = historyContent;
-                incoming = pendingContent;
-                direction = -1;
-            } else {
-                outgoing = pendingContent;
-                incoming = historyContent;
-                direction = 1;
-            }
-
-            incoming.style.display = 'block';
-            incoming.style.transform = `translateX(${direction * 100}%)`;
-
-            setTimeout(() => {
-                outgoing.style.transform = `translateX(${-direction * 100}%)`;
-                incoming.style.transform = 'translateX(0%)';
-            }, 20);
-
-            setTimeout(() => {
-                outgoing.style.display = 'none';
-                outgoing.style.transform = `translateX(${direction * 100}%)`;
-            }, 520);
-
-            currentTab = tab;
-        }
-
         function showPhotoModal(photoUrl) {
             const img = document.getElementById('modal-photo-img');
             img.src = photoUrl || '';
             window.dispatchEvent(new CustomEvent('open-modal', { detail: 'photo-modal' }));
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('pending-tab-text').classList.add('tab-btn-text-active');
-            document.getElementById('history-tab-text').classList.add('tab-btn-text-inactive');
-        });
     </script>
     <style>
         .tab-pane {
