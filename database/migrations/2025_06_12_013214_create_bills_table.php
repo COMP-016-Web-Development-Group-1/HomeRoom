@@ -17,12 +17,13 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Tenant::class)->constrained()->onDelete('cascade');
             $table->decimal('amount_due', 10, 2);
-            $table->date('due_date');
+            $table->timestamp('due_date');
             $table->enum('status', array_column(BillStatus::cases(), 'value'))
                 ->default(BillStatus::UNPAID->value);
             $table->timestamps();
-        });
 
+            $table->unique(['tenant_id', 'created_at'], 'unique_tenant_monthly_bill');
+        });
     }
 
     /**

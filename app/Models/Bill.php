@@ -11,6 +11,8 @@ class Bill extends Model
         'amount_due',
         'due_date',
         'status',
+        'created_at',
+        'updated_at',
     ];
 
     protected function casts(): array

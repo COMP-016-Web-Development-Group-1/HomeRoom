@@ -24,7 +24,7 @@ class TesterSeeder extends Seeder
 
         // $bill = Bill::find(1);
 
-        $tenant = Tenant::find(1);
+        $tenant = Tenant::find(2);
         $this->command->info('Tenant Outstanding Balance: '.$tenant->outstandingBalance());
 
         // $transaction = Transaction::find(1);
