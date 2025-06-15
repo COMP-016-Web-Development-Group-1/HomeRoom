@@ -211,7 +211,6 @@ class TransactionController extends Controller
             $transaction->confirmed_at = now();
             $transaction->save();
 
-            // Optionally, update bill status if needed
             if ($transaction->bill && $transaction->bill->status !== BillStatus::PAID->value) {
                 $transaction->bill->status = BillStatus::PAID->value;
                 $transaction->bill->save();

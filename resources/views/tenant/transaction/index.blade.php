@@ -235,7 +235,6 @@
         .border-lime-600 {
             border-color: #65a30d !important;
         }
-        /* Add styles for disabled button */
         .opacity-50 {
             opacity: 0.5;
         }
