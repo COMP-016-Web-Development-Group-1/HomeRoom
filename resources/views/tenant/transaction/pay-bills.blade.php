@@ -23,7 +23,6 @@
             <div class="flex flex-wrap gap-4">
                 @foreach(\App\Enums\PaymentMethod::cases() as $method)
                     @php
-                        // For 'monthly' type, use $monthlyBill; for 'outstanding', find the oldest overdue bill
                         $targetBill = $displayType === 'outstanding'
                             ? (\App\Models\Bill::where('tenant_id', auth()->user()->tenant->id ?? null)
                                 ->where('status', \App\Enums\BillStatus::OVERDUE->value)
@@ -60,7 +59,7 @@
                                 <svg class="h-6 w-6 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#icon-credit-card"></use></svg>
                                 <span>{{ ucfirst(str_replace('_', ' ', $method->name)) }}</span>
                             </x-button>
-                        @elseif($method->name === 'CASH')
+                        @else
                             <input type="hidden" name="payment_method" value="cash">
                             <input type="hidden" name="bill_id" value="{{ $targetBill->id ?? '' }}">
                             <x-button
@@ -71,28 +70,6 @@
                                 :disabled="!$targetBill"
                             >
                                 <svg class="h-6 w-6 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#icon-cash"></use></svg>
-                                <span>{{ ucfirst(str_replace('_', ' ', $method->name)) }}</span>
-                            </x-button>
-                        @elseif($method->name === 'BANK_TRANSFER')
-                            <x-button
-                                variant="primary"
-                                type="button"
-                                class="w-full px-6 py-3 mb-2 flex items-center justify-center gap-2 text-base"
-                                onclick="alert('Proceed with {{ ucfirst(str_replace('_', ' ', $method->name)) }}')"
-                                :disabled="!$targetBill"
-                            >
-                                <svg class="h-6 w-6 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#icon-bank"></use></svg>
-                                <span>{{ ucfirst(str_replace('_', ' ', $method->name)) }}</span>
-                            </x-button>
-                        @else
-                            <x-button
-                                variant="primary"
-                                type="button"
-                                class="w-full px-6 py-3 mb-2 flex items-center justify-center gap-2 text-base"
-                                onclick="alert('Proceed with {{ ucfirst(str_replace('_', ' ', $method->name)) }}')"
-                                :disabled="!$targetBill"
-                            >
-                                <svg class="h-6 w-6 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#icon-currency-dollar"></use></svg>
                                 <span>{{ ucfirst(str_replace('_', ' ', $method->name)) }}</span>
                             </x-button>
                         @endif
