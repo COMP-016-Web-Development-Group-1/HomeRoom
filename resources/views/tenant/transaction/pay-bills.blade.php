@@ -143,7 +143,19 @@
                     <input type="hidden" name="bill_id" value="{{ $targetBill->id ?? '' }}">
                     <div class="mb-4">
                         <label class="block mb-1 font-semibold">Amount Sent (₱) <span class="text-red-500">*</span></label>
-                        <input type="number" name="amount_sent" step="0.01" min="1" required class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-lime-600" placeholder="Enter amount sent">
+                        <input
+                            type="number"
+                            name="amount_sent"
+                            step="0.01"
+                            min="{{ $targetBill->amount_due ?? 0 }}"
+                            max="{{ $targetBill->amount_due ?? 0 }}"
+                            value="{{ $targetBill->amount_due ?? 0 }}"
+                            required
+                            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-lime-600"
+                            placeholder="Enter amount sent"
+                            oninput="this.setCustomValidity(this.value != '{{ $targetBill->amount_due ?? 0 }}' ? 'Amount sent must match the bill amount (₱{{ number_format($targetBill->amount_due ?? 0, 2) }})' : '')"
+                            oninvalid="this.setCustomValidity('Amount sent must match the bill amount (₱{{ number_format($targetBill->amount_due ?? 0, 2) }})')"
+                        />
                     </div>
                     <div class="mb-4">
                         <label class="block mb-1 font-semibold">Reference Number <span class="text-red-500">*</span></label>
@@ -205,7 +217,19 @@
                     <input type="hidden" name="bill_id" value="{{ $targetBill->id ?? '' }}">
                     <div class="mb-4">
                         <label class="block mb-1 font-semibold">Amount Sent (₱) <span class="text-red-500">*</span></label>
-                        <input type="number" name="amount_sent" step="0.01" min="1" required class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-lime-600" placeholder="Enter amount sent">
+                        <input
+                            type="number"
+                            name="amount_sent"
+                            step="0.01"
+                            min="{{ $targetBill->amount_due ?? 0 }}"
+                            max="{{ $targetBill->amount_due ?? 0 }}"
+                            value="{{ $targetBill->amount_due ?? 0 }}"
+                            required
+                            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-lime-600"
+                            placeholder="Enter amount sent"
+                            oninput="this.setCustomValidity(this.value != '{{ $targetBill->amount_due ?? 0 }}' ? 'Amount sent must match the bill amount (₱{{ number_format($targetBill->amount_due ?? 0, 2) }})' : '')"
+                            oninvalid="this.setCustomValidity('Amount sent must match the bill amount (₱{{ number_format($targetBill->amount_due ?? 0, 2) }})')"
+                        />
                     </div>
                     <div class="mb-4">
                         <label class="block mb-1 font-semibold">Reference Number <span class="text-red-500">*</span></label>
@@ -262,7 +286,19 @@
                     <input type="hidden" name="bill_id" value="{{ $targetBill->id ?? '' }}">
                     <div class="mb-4">
                         <label class="block mb-1 font-semibold">Amount Paid (₱) <span class="text-red-500">*</span></label>
-                        <input type="number" name="amount_sent" step="0.01" min="1" required class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-lime-600" placeholder="Enter amount paid">
+                        <input
+                            type="number"
+                            name="amount_sent"
+                            step="0.01"
+                            min="{{ $targetBill->amount_due ?? 0 }}"
+                            max="{{ $targetBill->amount_due ?? 0 }}"
+                            value="{{ $targetBill->amount_due ?? 0 }}"
+                            required
+                            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-lime-600"
+                            placeholder="Enter amount paid"
+                            oninput="this.setCustomValidity(this.value != '{{ $targetBill->amount_due ?? 0 }}' ? 'Amount paid must match the bill amount (₱{{ number_format($targetBill->amount_due ?? 0, 2) }})' : '')"
+                            oninvalid="this.setCustomValidity('Amount paid must match the bill amount (₱{{ number_format($targetBill->amount_due ?? 0, 2) }})')"
+                        />
                     </div>
                     <div class="mb-4">
                         <label class="block mb-1 font-semibold w-full">
