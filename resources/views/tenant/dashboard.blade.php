@@ -49,16 +49,15 @@
                         value=""
                         wide="true"
                     >
-                        {{-- Container for centering and row layout --}}
                         <div class="flex flex-row justify-center items-center gap-3 flex-wrap">
-                            {{-- Removed w-full from each <a> tag to allow them to sit side-by-side in a row --}}
                             <a href="{{ route('transaction.index') }}"
+                                {{-- Unsure if route is correct, please change accordingly. --}}
                                class="py-4 text-xl inline-flex items-center justify-center
                                       bg-lime-600 border border-transparent text-white rounded-md
                                       font-semibold text-center uppercase tracking-widest
                                       transition ease-in-out duration-150
                                       hover:bg-lime-700 focus:bg-lime-700 focus:ring-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2
-                                      active:bg-lime-800 cursor-pointer px-8"> {{-- Added px-8 for consistent horizontal padding --}}
+                                      active:bg-lime-800 cursor-pointer px-8">
                                 Pay Bills
                             </a>
                             <a href="{{ route('request.create') }}"
@@ -67,17 +66,18 @@
                                       font-semibold text-center uppercase tracking-widest
                                       transition ease-in-out duration-150
                                       hover:bg-lime-700 focus:bg-lime-700 focus:ring-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2
-                                      active:bg-lime-800 cursor-pointer px-8"> {{-- Added px-8 for consistent horizontal padding --}}
+                                      active:bg-lime-800 cursor-pointer px-8">
                                 Create Maintenance Request
                             </a>
-                            {{-- TODO: Implement a proper route/modal for "Leave Property" with confirmation --}}
+
                             <a href="#"
+                                {{-- Unsure of the route to use here, please change accordingly. --}}
                                class="py-4 text-xl inline-flex items-center justify-center
                                       bg-red-600 border border-transparent text-white rounded-md
                                       font-semibold text-center uppercase tracking-widest
                                       transition ease-in-out duration-150
                                       hover:bg-red-500 focus:ring-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2
-                                      active:bg-red-700 cursor-pointer px-8"> {{-- Added px-8 for consistent horizontal padding --}}
+                                      active:bg-red-700 cursor-pointer px-8">
                                 Leave Property
                             </a>
                         </div>
@@ -132,7 +132,6 @@
                                                     {{ $announcement->created_at->format('M d, Y') }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    {{-- Converted to <a> tag with text button styling --}}
                                                     <a href="{{ route('announcement.show', $announcement->id) }}"
                                                        class="text-base font-medium text-lime-600 bg-transparent focus:outline-hidden
                                                               hover:underline hover:text-lime-700 focus:underline focus:text-lime-700">
@@ -197,7 +196,6 @@
                                                     {{ $request->status }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    {{-- Converted to <a> tag with text button styling --}}
                                                     <a href="{{ route('request.show', $request->id) }}"
                                                        class="text-base font-medium text-lime-600 bg-transparent focus:outline-hidden
                                                               hover:underline hover:text-lime-700 focus:underline focus:text-lime-700">

@@ -44,9 +44,7 @@
                         value=""
                         wide="true"
                     >
-                        {{-- Adjusted to flex-row and justify-center to align buttons in a centered row --}}
                         <div class="flex flex-row justify-center items-center gap-3 flex-wrap">
-                            {{-- Buttons with larger text and uniform width --}}
                             <a href="{{ route('property.create') }}"
                                class="py-4 text-xl inline-flex items-center justify-center
                                       bg-lime-600 border border-transparent text-white rounded-md
@@ -135,7 +133,6 @@
                                                     {{ $announcement->created_at->format('M d, Y') }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    {{-- Converted to <a> tag with text button styling --}}
                                                     <a href="{{ route('announcement.show', $announcement->id) }}"
                                                        class="text-base font-medium text-lime-600 bg-transparent focus:outline-hidden
                                                               hover:underline hover:text-lime-700 focus:underline focus:text-lime-700">
@@ -202,7 +199,6 @@
                                                     {{ $request->status }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    {{-- Converted to <a> tag with text button styling --}}
                                                     <a href="{{ route('request.show', $request->id) }}"
                                                        class="text-base font-medium text-lime-600 bg-transparent focus:outline-hidden
                                                               hover:underline hover:text-lime-700 focus:underline focus:text-lime-700">
