@@ -11,44 +11,38 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $role = auth()->user()->role;
 
         return match ($role) {
             'landlord' => (function () {
-                $pendingTransactions = Transaction::with(['tenant.room.property', 'bill'])
+                    $pendingTransactions = Transaction::with(['tenant.room.property', 'bill'])
                     ->where('status', TransactionStatus::PENDING->value)
                     ->orderByDesc('payment_date')
                     ->get();
 
-                $historyTransactions = Transaction::with(['tenant.room.property', 'bill'])
+                    $historyTransactions = Transaction::with(['tenant.room.property', 'bill'])
                     ->where('status', '!=', TransactionStatus::PENDING->value)
                     ->orderByDesc('payment_date')
                     ->get();
 
-                return view('landlord.transaction.index', compact('pendingTransactions', 'historyTransactions'));
-            })(),
+                    return view('landlord.transaction.index', compact('pendingTransactions', 'historyTransactions'));
+                })(),
 
             'tenant' => (function () {
-                $user = auth()->user();
-                $tenantId = $user->tenant->id ?? null;
+                    $user = auth()->user();
+                    $tenantId = $user->tenant->id ?? null;
 
-                $data = $this->getTenantBillDetails($tenantId);
+                    $data = $this->getTenantBillDetails($tenantId);
 
-                return view('tenant.transaction.index', $data);
-            })(),
+                    return view('tenant.transaction.index', $data);
+                })(),
 
             default => abort(403),
         };
     }
 
-    /**
-     * Show the pay bills page with available payment methods and outstanding info.
-     */
     public function showPayBills(Request $request)
     {
         $user = auth()->user();
@@ -57,7 +51,6 @@ class TransactionController extends Controller
 
         $data = $this->getTenantBillDetails($tenantId);
 
-        // Choose which data to display based on $type
         if ($type === 'outstanding') {
             $displayAmount = $data['totalOutstandingBill'];
             $displayDueDate = $data['nextOutstandingDueDate'];
@@ -78,21 +71,18 @@ class TransactionController extends Controller
             : null;
 
         $gcashQrUrl = $landlord && $landlord->gcash_qr
-            ? asset('storage/'.ltrim($landlord->gcash_qr, '/'))
+            ? asset('storage/' . ltrim($landlord->gcash_qr, '/'))
             : null;
         $data['gcashQrUrl'] = $gcashQrUrl;
 
         $mayaQrUrl = $landlord && $landlord->maya_qr
-            ? asset('storage/'.ltrim($landlord->maya_qr, '/'))
+            ? asset('storage/' . ltrim($landlord->maya_qr, '/'))
             : null;
         $data['mayaQrUrl'] = $mayaQrUrl;
 
         return view('tenant.transaction.pay-bills', $data);
     }
 
-    /**
-     * Helper: Get tenant bill/payment/transaction details for both dashboard and pay-bills.
-     */
     private function getTenantBillDetails($tenantId)
     {
         $historyTransactions = Transaction::with(['tenant.room.property', 'bill'])
@@ -117,7 +107,7 @@ class TransactionController extends Controller
             ->value('due_date');
 
         $paymentMethods = implode(', ', array_map(
-            fn ($method) => ucfirst(str_replace('_', ' ', $method->name)),
+            fn($method) => ucfirst(str_replace('_', ' ', $method->name)),
             PaymentMethod::cases()
         ));
 
@@ -130,7 +120,9 @@ class TransactionController extends Controller
         );
     }
 
-    public function create() {}
+    public function create()
+    {
+    }
 
     public function store(Request $request)
     {
@@ -158,13 +150,11 @@ class TransactionController extends Controller
 
         $validated = $request->validate($rules);
 
-        // Handle file upload if present
         $photoPath = null;
         if ($request->hasFile('payment_photo')) {
             $photoPath = $request->file('payment_photo')->store('proof_photos', 'public');
         }
 
-        // Prepare transaction data
         $data = [
             'tenant_id' => $tenantId,
             'bill_id' => $validated['bill_id'],
@@ -176,7 +166,6 @@ class TransactionController extends Controller
             'confirmed_at' => null,
         ];
 
-        // Payment method-specific fields
         if ($paymentMethod === 'gcash') {
             $data['reference_number'] = $validated['reference_number'];
             $data['gcash_number'] = $validated['gcash_number'];
@@ -184,31 +173,30 @@ class TransactionController extends Controller
             $data['reference_number'] = $validated['reference_number'];
             $data['maya_number'] = $validated['maya_number'];
         }
-        // For cash, no extra fields
 
-        // Create transaction
         $transaction = Transaction::create($data);
 
-        // Update Bill status to paid if amount matches or exceeds amount_due
         $bill = Bill::find($validated['bill_id']);
         if ($bill) {
             if (floatval($validated['amount_sent']) >= floatval($bill->amount_due)) {
                 $bill->status = BillStatus::PAID->value;
                 $bill->save();
             }
-            // otherwise, do not change the status (leave as overdue or unpaid)
         }
 
-        // Redirect with toast.success message
         return redirect()->route('transaction.index')->with('toast.success', [
             'title' => 'Transaction Submitted',
             'content' => 'Your transaction has been submitted and is pending confirmation.',
         ]);
     }
 
-    public function show(string $id) {}
+    public function show(string $id)
+    {
+    }
 
-    public function edit(string $id) {}
+    public function edit(string $id)
+    {
+    }
 
     public function update(Request $request, $id)
     {
@@ -235,9 +223,10 @@ class TransactionController extends Controller
             ]);
         }
 
-        // Other update logic here (if any)
         abort(400, 'Invalid update action.');
     }
 
-    public function destroy(string $id) {}
+    public function destroy(string $id)
+    {
+    }
 }

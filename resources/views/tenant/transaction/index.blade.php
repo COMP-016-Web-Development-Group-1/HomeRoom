@@ -161,9 +161,6 @@
         }
     </script>
     <style>
-        .tab-pane {
-            /* base styles, keep if needed */
-        }
         .tab-slide {
             transition:
                 opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
