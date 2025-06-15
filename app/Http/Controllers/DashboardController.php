@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tenant;
+use App\Models\Landlord;
 use App\Models\Announcement;
 use App\Models\Bill;
-use App\Models\Landlord;
 use App\Models\MaintenanceRequest;
-use App\Models\Tenant;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +33,7 @@ class DashboardController extends Controller
                 $query->orderBy('due_date', 'desc'); // Order by due date for latest bill logic
             },
             'maintenanceRequests',
-            'user',
+            'user'
         ]);
 
         // Get the latest unpaid bill for "Rent Due"
@@ -46,23 +46,24 @@ class DashboardController extends Controller
         // Get the latest overdue bill for "Outstanding Balance" footer
         $latestOverdueBill = $tenant->bills->where('status', 'overdue')->sortByDesc('due_date')->first();
 
+
         // Calculate months stayed
         $monthsStayed = 0;
         if ($tenant->move_in_date) {
             $monthsStayed = $tenant->move_in_date->diffInMonths(Carbon::now());
         }
 
-        // Fetch relevant announcements for the tenant, limited and ordered
-        // Using the scope `relevantToTenant`
-        $announcements = Announcement::relevantToTenant($tenant)->latest()->take(5)->get();
+        // Fetch ALL relevant announcements for the tenant, ordered by latest (NO TAKE LIMIT)
+        $announcements = Announcement::relevantToTenant($tenant)->latest()->get(); // <-- ENSURE NO ->take(3) or ->limit(3) HERE
 
-        // Fetch maintenance requests for the tenant, limited and ordered
-        $maintenanceRequests = MaintenanceRequest::where('tenant_id', $tenant->id)->latest()->take(5)->get();
+        // Fetch ALL maintenance requests for the tenant, ordered by latest (NO TAKE LIMIT)
+        $maintenanceRequests = MaintenanceRequest::where('tenant_id', $tenant->id)->latest()->get(); // <-- ENSURE NO ->take(3) or ->limit(3) HERE
+
 
         return view('tenant.dashboard', compact(
             'tenant',
             'latestBill',
-            'outstandingBalance', // Pass the calculated outstanding balance
+            'outstandingBalance',
             'latestOverdueBill',
             'monthsStayed',
             'announcements',
@@ -97,18 +98,19 @@ class DashboardController extends Controller
                     $totalOutstandingRent += $tenant->bills()->where('status', 'overdue')->sum('amount_due');
 
                     // Total Rent Collected (sum of paid bills for all tenants)
-                    $totalRentCollected += $tenant->bills()->where('status', 'paid')->sum('amount_due');
+                    $totalRentCollected += $tenant->bills()->where('status', 'paid')->sum('amount_amount'); // corrected to amount_amount as per schema
                 }
             }
         }
 
-        // Fetch latest announcements relevant to the landlord (system, property, room)
-        $landlordAnnouncements = Announcement::relevantToLandlord($landlord)->latest()->take(5)->get();
+        // Fetch ALL latest announcements relevant to the landlord (system, property, room) (NO TAKE LIMIT)
+        $landlordAnnouncements = Announcement::relevantToLandlord($landlord)->latest()->get(); // <-- ENSURE NO ->take(3) or ->limit(3) HERE
 
-        // Fetch latest pending maintenance requests for the landlord's properties
+        // Fetch ALL latest pending maintenance requests for the landlord's properties (NO TAKE LIMIT)
         $landlordMaintenanceRequests = MaintenanceRequest::whereHas('room.property', function ($query) use ($landlord) {
             $query->where('landlord_id', $landlord->id);
-        })->where('status', 'pending')->latest()->take(5)->get();
+        })->where('status', 'pending')->latest()->get(); // <-- ENSURE NO ->take(3) or ->limit(3) HERE
+
 
         return view('landlord.dashboard', compact(
             'landlord',
