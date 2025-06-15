@@ -56,6 +56,10 @@ Route::middleware(['auth', 'verified', 'profile-completed'])->group(function () 
     Route::delete('/properties/{property}/rooms/{room}/tenants/{tenant}', [RoomTenantController::class, 'destroy'])->name('property.rooms.tenants.destroy');
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::post('/transactions', [TransactionController::class, 'store'])->name('transaction.store');
+    Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transaction.update');
+
+    Route::get('/pay-bills', [TransactionController::class, 'showPayBills'])->name('pay-bills');
 
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcement.index');
     Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcement.store');

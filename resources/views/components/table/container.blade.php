@@ -13,7 +13,7 @@
     </table>
 </div>
 
-@pushOnce('scripts')
+@push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const table = document.getElementById("{{ $id }}");
@@ -28,4 +28,4 @@
             }
         });
     </script>
-@endPushOnce
+@endPush

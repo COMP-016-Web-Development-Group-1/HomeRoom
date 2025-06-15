@@ -21,8 +21,12 @@ return new class extends Migration
             $table->foreignIdFor(Bill::class)->unique()->constrained()->onDelete('cascade');
             $table->enum('status', array_column(TransactionStatus::cases(), 'value'))
                 ->default(TransactionStatus::PENDING->value);
-            $table->enum('payment_method', array_column(PaymentMethod::cases(), 'value'));
+            $table->enum('payment_method', array_column(PaymentMethod::cases(), 'value')); // values are lowercase!
+            $table->decimal('amount', 12, 2)->nullable(); // amount should be decimal, not string
             $table->string('proof_photo')->nullable();
+            $table->string('gcash_number', 20)->nullable();
+            $table->string('maya_number', 20)->nullable();
+            $table->string('reference_number', 64)->nullable();
             $table->date('payment_date');
             $table->timestamp('confirmed_at')->nullable();
             $table->timestamps();
