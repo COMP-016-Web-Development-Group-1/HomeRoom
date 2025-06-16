@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HomeRoom | Streamline Your Rental Experience</title>
+    <title>HomeRoom</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/logo.svg') }}">
     @vite(['resources/css/app.css', 'resources/css/welcome.css', 'resources/js/app.js'])
 </head>
