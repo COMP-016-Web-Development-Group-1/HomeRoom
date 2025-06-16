@@ -1,4 +1,4 @@
-<x-guest-layout title="Register - Step {{ $step }} of 3">
+<x-new-guest-layout title="Register - Step {{ $step }} of 3">
     <div class="text-center">
         <div class="flex items-center justify-center">
             <img src="{{ Vite::asset('resources/assets/images/logo.svg') }}" class="aspect-square size-32 -m-8" />
@@ -94,4 +94,4 @@
             </x-button>
         </div>
     </form>
-</x-guest-layout>
+</x-new-guest-layout>
