@@ -82,16 +82,16 @@
                                     <td>{{ $room->tenants->first()?->move_in_date ?? 'N/A' }}</td>
                                     <td>{{ $room->tenants->first()?->move_out_date ?? 'N/A' }}</td>
                                     <td>₱{{ number_format($room->rent_amount, 2) }}</td>
-                                    <td class="space-x-2">
+                                    <td class="flex items-center space-x-2">
                                         <a href="{{ route('property.rooms.edit', [$property->id, $room->id]) }}"
-                                            class="text-blue-600 hover:underline">Edit</a>
+                                            class="inline-block px-4 py-2 rounded-sm bg-lime-600 text-white hover:underline">Edit</a>
 
                                         <form method="POST"
                                             action="{{ route('property.rooms.destroy', [$property->id, $room->id]) }}"
                                             class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:underline ml-1"
+                                            <button type="submit" class="px-4 py-2 rounded-sm bg-red-600 text-white hover:underline ml-1"
                                                 onclick="return confirm('Are you sure you want to delete this room?')">
                                                 Delete
                                             </button>
