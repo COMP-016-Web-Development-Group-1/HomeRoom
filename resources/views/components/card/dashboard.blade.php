@@ -1,26 +1,27 @@
 @props(['caption', 'value', 'footer' => false, 'footerCaption' => '', 'footerDate' => '', 'wide' => false, 'headerActions' => null])
 
-<div {{ $attributes->merge(['class' => 'bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6 ' . ($wide ? 'w-full' : '')]) }}>
-    <div class="p-6 bg-white border-b border-gray-200">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">
+<div {{ $attributes->merge(['class' => 'bg-white shadow-lg sm:rounded-lg mb-2 ' . ($wide ? 'w-full' : '')]) }}>
+    <div class="p-4 bg-white">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="flex-1 text-base font-bold text-center text-gray-500">
                 {{ $caption }}
             </h3>
             @isset($headerActions)
-                <div class="ml-auto">
+                <div class="ml-2">
                     {{ $headerActions }}
                 </div>
             @endisset
         </div>
+        <div class="border-t border-gray-200 mb-2"></div>
         @if ($value !== '') {{-- Only display value if it's not empty --}}
-            <div class="text-3xl font-bold text-gray-900">
+            <div class="text-2xl font-extrabold text-gray-900 text-center">
                 {{ $value }}
             </div>
         @endif
-
         @if (isset($footer) && $footer)
-            <div class="mt-4 text-sm text-gray-500">
-                {{ $footerCaption ?? '' }}: <span class="font-semibold">{{ $footerDate ?? '' }}</span>
+            <div class="mt-2 text-xs text-gray-500 text-center">
+                {{ $footerCaption ?? '' }}:
+                <span class="font-semibold">{{ $footerDate ?? '' }}</span>
             </div>
         @endif
         {{ $slot }}
