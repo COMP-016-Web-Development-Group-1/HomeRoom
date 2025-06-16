@@ -26,33 +26,41 @@ class GenerateBillsJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $today = now();
+        $today = now()->startOfDay();
 
         Tenant::all()->each(function (Tenant $tenant) use ($today) {
             $billingDay = Carbon::parse($tenant->move_in_date)->day;
             $daysInMonth = $today->daysInMonth;
             $expectedBillingDay = min($billingDay, $daysInMonth);
 
-            if ($today->day !== $expectedBillingDay) {
+            // Only bill if today is on or after expected billing day
+            if ($today->day < $expectedBillingDay) {
                 return;
             }
 
-            // Check if bill already exists for this user/month
-            $exists = Bill::where('tenant_id', $tenant->id)
-                ->whereMonth('due_date', $today->month)
-                ->whereYear('due_date', $today->year)
+            // Avoid duplicates by checking if a bill exists for this month
+            $alreadyBilled = Bill::where('tenant_id', $tenant->id)
+                ->whereMonth('created_at', $today->month)
+                ->whereYear('created_at', $today->year)
                 ->exists();
 
-            if (! $exists) {
-                $bill = Bill::create([
-                    'tenant_id' => $tenant->id,
-                    'amount_due' => $tenant->room->rent_amount, // or dynamic
-                    'due_date' => $today->copy()->addMonth(), // due 1 month (if that day does not exist, it will fall back to the last valid day of the month)
-                    'status' => 'unpaid',
-                ]);
-
-                $tenant->user->notify(new BillCreated($bill));
+            if ($alreadyBilled) {
+                return;
             }
+
+            $dueDate = $today->copy()->addMonth();
+            $dueDay = min($billingDay, $dueDate->daysInMonth);
+            $dueDate->day = $dueDay;
+            $dueDate = $dueDate->endOfDay();
+
+            $bill = Bill::create([
+                'tenant_id' => $tenant->id,
+                'amount_due' => $tenant->room->rent_amount,
+                'due_date' => $dueDate,
+                'status' => 'unpaid',
+            ]);
+
+            $tenant->user->notify(new BillCreated($bill));
         });
     }
 }

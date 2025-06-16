@@ -11,5 +11,5 @@ Artisan::command('inspire', function () {
 
 Schedule::command('app:clean-temp-storage public --force')->daily();
 
-Schedule::job(new GenerateBillsJob)->daily();
-Schedule::job(new UpdateOverdueBillsJob)->daily();
+Schedule::job(new GenerateBillsJob)->everyTenSeconds();
+Schedule::job(new UpdateOverdueBillsJob)->everyTenSeconds();

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\BillStatus;
 use App\Models\Bill;
 use App\Notifications\BillOverdue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,13 +25,13 @@ class UpdateOverdueBillsJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $todayStr = now()->toString();
+        $today = now()->startOfDay();
 
         Bill::where('status', 'unpaid')
-            ->where('due_date', '<', $todayStr)
+            ->where('due_date', '<', $today)
             ->get()
             ->each(function (Bill $bill) {
-                $bill->update(['status' => 'overdue']);
+                $bill->update(['status' => BillStatus::OVERDUE->value]);
 
                 if ($bill->tenant && $bill->tenant->user) {
                     $bill->tenant->user->notify(new BillOverdue($bill));

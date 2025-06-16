@@ -3,14 +3,19 @@
 namespace Database\Seeders;
 
 use App\Enums\AnnouncementType;
+use App\Enums\BillStatus;
 use App\Enums\MaintenanceRequestStatus;
+use App\Enums\PaymentMethod;
 use App\Enums\PropertyType;
+use App\Enums\TransactionStatus;
 use App\Models\Announcement;
+use App\Models\Bill;
 use App\Models\Landlord;
 use App\Models\MaintenanceRequest;
 use App\Models\Property;
 use App\Models\Room;
 use App\Models\Tenant;
+use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
 use Hash;
@@ -26,8 +31,9 @@ class DefaultTestSeeder extends Seeder
         $properties = $this->createTestProperties($landlord);
         $rooms = $this->createTestRooms($properties);
         $tenants = $this->createTestTenants($rooms);
-        $this->createTestMaintenanceRequest($tenants);
-        $this->createTestAnnouncements($properties, $rooms);
+        $this->createTestBillsAndTransactions($tenants);
+        // $this->createTestMaintenanceRequest($tenants);
+        // $this->createTestAnnouncements($properties, $rooms);
     }
 
     /**
@@ -136,6 +142,7 @@ class DefaultTestSeeder extends Seeder
                 $tenant = Tenant::create([
                     'user_id' => $user->id,
                     'room_id' => $room->id,
+                    'move_in_date' => now()->subMonths(rand(3, 12))->day(rand(1, 28)),
                 ]);
 
                 $tenants[] = $tenant;
@@ -143,6 +150,91 @@ class DefaultTestSeeder extends Seeder
         }
 
         return $tenants;
+    }
+
+    /**
+     * @param  Tenant[]  $tenants
+     */
+    private function createTestBillsAndTransactions(array $tenants): void
+    {
+        $paymentMethods = [
+            PaymentMethod::CASH->value,
+            PaymentMethod::GCASH->value,
+            PaymentMethod::MAYA->value,
+        ];
+
+        foreach ($tenants as $tenant) {
+            $moveInDate = Carbon::parse($tenant->move_in_date);
+            $originalDay = $moveInDate->day;
+            $today = now();
+
+            // Calculate exact months stayed (minimum 1 month)
+            $monthsStayed = $moveInDate->diffInMonths($today);
+            $monthsStayed = max(1, $monthsStayed); // At least 1 month
+
+            // Generate bills for each month stayed
+            for ($i = 0; $i < $monthsStayed; $i++) {
+                // Calculate due date (same day as move_in_date each month)
+                $dueDate = $moveInDate->copy()->addMonths($i + 1)->endOfDay();
+
+                // Adjust for months with fewer days
+                $daysInMonth = $dueDate->daysInMonth;
+                $dueDay = min($originalDay, $daysInMonth);
+                $dueDate = $dueDate->day($dueDay);
+
+                // Create bill on move_in_date (for first) or previous due date
+                $createdAt = ($i === 0)
+                    ? $moveInDate->copy()
+                    : $moveInDate->copy()->addMonths($i)->startOfDay();
+
+                $bill = Bill::create([
+                    'tenant_id' => $tenant->id,
+                    'amount_due' => $tenant->room->rent_amount,
+                    'due_date' => $dueDate,
+                    'status' => BillStatus::UNPAID->value,
+                    'created_at' => $createdAt,
+                    'updated_at' => $createdAt,
+                ]);
+
+                // 90% chance of payment (except for future bills)
+                if ($dueDate->isPast() && fake()->boolean(90)) {
+                    $isOnTime = fake()->boolean(90); // 90% on-time
+
+                    if ($isOnTime) {
+                        // On-time payment between creation and due date
+                        $paymentDate = fake()->dateTimeBetween(
+                            $createdAt->format('Y-m-d'),
+                            $dueDate->format('Y-m-d')
+                        );
+                    } else {
+                        // Late payment (after due date but before now)
+                        $paymentDate = fake()->dateTimeBetween(
+                            $dueDate->addDay()->format('Y-m-d'),
+                            $today->format('Y-m-d')
+                        );
+                    }
+
+                    Transaction::create([
+                        'tenant_id' => $tenant->id,
+                        'bill_id' => $bill->id,
+                        // 'amount' => $bill->amount_due,
+                        'payment_method' => fake()->randomElement($paymentMethods),
+                        'proof_photo' => fake()->boolean(30) ? 'path/to/photo.jpg' : null,
+                        'payment_date' => $paymentDate,
+                        'status' => TransactionStatus::COMPLETED->value,
+                        'confirmed_at' => $paymentDate,
+                    ]);
+
+                    $bill->timestamps = false;
+                    $bill->status = BillStatus::PAID->value;
+                    $bill->save();
+                } elseif ($dueDate->isPast()) {
+                    $bill->timestamps = false;
+                    $bill->status = BillStatus::OVERDUE->value;
+                    $bill->save();
+                }
+            }
+        }
     }
 
     /**

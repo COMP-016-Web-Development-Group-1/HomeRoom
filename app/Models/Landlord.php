@@ -11,6 +11,7 @@ class Landlord extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'gcash_qr',
         'maya_qr',
     ];
