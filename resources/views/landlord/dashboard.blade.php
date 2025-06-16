@@ -38,12 +38,6 @@
                                     {{ number_format($totalOutstandingRent ?? 0, 2) . ' PHP' }}
                                 </span>
                             </div>
-                            <div class="bg-white p-4 flex flex-col items-center flex-1 justify-center">
-                                <span class="text-sm text-gray-500 font-medium">Total Rent Collected</span>
-                                <span class="text-2xl font-bold text-gray-800 mt-2">
-                                    {{ number_format($totalRentCollected ?? 0, 2) . ' PHP' }}
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>
