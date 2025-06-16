@@ -51,4 +51,12 @@ class Tenant extends Model
     {
         return $this->hasMany(Bill::class);
     }
+
+    /**
+     * Get the maintenance requests for the tenant.
+     */
+    public function maintenanceRequests()
+    {
+        return $this->hasMany(MaintenanceRequest::class);
+    }
 }
