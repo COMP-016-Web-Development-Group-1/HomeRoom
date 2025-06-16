@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
                 'password' => Hash::make($user_password),
                 'role' => 'landlord',
-                'profile_completed' => true,
+                'profile_completed' => false,
             ]
         );
 

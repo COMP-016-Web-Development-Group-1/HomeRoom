@@ -66,87 +66,8 @@
                 </div>
                 @endif
             </div>
-            <div class="hero-action-col">
-                <div class="hero-slider-container">
-                    <div class="hero-slider" id="heroSlider">
-                        <div class="hero-slide active">
-                            <img src="{{ Vite::asset('resources/assets/images/landlord-dashboard.png') }}" alt="Showcase 1" />
-                            <div class="slider-caption">Landlord Dashboard</div>
-                        </div>
-                        <div class="hero-slide">
-                            <img src="{{ Vite::asset('resources/assets/images/tenant-dashboard.png') }}" alt="Showcase 2" />
-                            <div class="slider-caption">Tenant Dashboard</div>
-                        </div>
-                    </div>
-                    <div class="hero-slider-controls">
-                        <button class="slider-arrow" id="sliderPrev" aria-label="Previous image" type="button">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-                            </svg>
-                        </button>
-                        <span class="slider-dot active" data-slide="0" tabindex="0" aria-label="Go to slide 1"></span>
-                        <span class="slider-dot" data-slide="1" tabindex="0" aria-label="Go to slide 2"></span>
-                        <button class="slider-arrow" id="sliderNext" aria-label="Next image" type="button">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <!-- Removed the hero-action-col containing the image slider -->
         </div>
     </section>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const slides = Array.from(document.querySelectorAll('.hero-slide'));
-        const dots = Array.from(document.querySelectorAll('.slider-dot'));
-        const prevBtn = document.getElementById('sliderPrev');
-        const nextBtn = document.getElementById('sliderNext');
-        let current = 0;
-        let sliderInterval;
-
-        function showSlide(idx) {
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === idx);
-            });
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === idx);
-            });
-            current = idx;
-        }
-
-        function nextSlide() {
-            let next = (current + 1) % slides.length;
-            showSlide(next);
-        }
-
-        function prevSlide() {
-            let prev = (current - 1 + slides.length) % slides.length;
-            showSlide(prev);
-        }
-
-        function startAutoSlide() {
-            sliderInterval = setInterval(nextSlide, 4200);
-        }
-
-        function stopAutoSlide() {
-            clearInterval(sliderInterval);
-        }
-
-        prevBtn.addEventListener('click', () => { prevSlide(); stopAutoSlide(); startAutoSlide(); });
-        nextBtn.addEventListener('click', () => { nextSlide(); stopAutoSlide(); startAutoSlide(); });
-        dots.forEach((dot, i) => {
-            dot.addEventListener('click', () => { showSlide(i); stopAutoSlide(); startAutoSlide(); });
-            dot.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    showSlide(i); stopAutoSlide(); startAutoSlide();
-                }
-            });
-        });
-
-        showSlide(0);
-        startAutoSlide();
-    });
-    </script>
 </body>
 </html>
