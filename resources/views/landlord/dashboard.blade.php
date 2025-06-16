@@ -107,10 +107,10 @@
                                             <thead>
                                                 <tr>
                                                     <th class="px-4 py-2 w-[8%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold rounded-tl-lg">No.</th>
-                                                    <th class="px-4 py-2 w-[17%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Type</th>
-                                                    <th class="px-4 py-2 w-[17%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Property/Room</th>
-                                                    <th class="px-4 py-2 w-[28%] whitespace-nowrap text-gray-600 text-left bg-lime-700 text-white font-semibold">Title</th>
-                                                    <th class="px-4 py-2 w-[20%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Date Issued</th>
+                                                    <th class="px-4 py-2 w-[18%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Property</th>
+                                                    <th class="px-4 py-2 w-[17%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Room</th>
+                                                    <th class="px-4 py-2 w-[35%] whitespace-nowrap text-gray-600 text-left bg-lime-700 text-white font-semibold">Title</th>
+                                                    <th class="px-4 py-2 w-[17%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Date Issued</th>
                                                     <th class="px-4 py-2 w-[10%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold rounded-tr-lg">Details</th>
                                                 </tr>
                                             </thead>
@@ -123,21 +123,16 @@
                                                             </span>
                                                         </td>
                                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-center align-middle text-gray-900">
-                                                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-800 rounded-md text-xs font-semibold">
-                                                                {{ ucfirst($announcement->type) }}
-                                                            </span>
-                                                        </td>
-                                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-center align-middle text-gray-900">
-                                                            @if ($announcement->room)
-                                                                <span class="inline-block px-2 py-1 bg-gray-200 text-gray-800 rounded-md text-xs font-semibold">
-                                                                    {{ $announcement->room->code }}
-                                                                </span>
-                                                                ({{ $announcement->property->name ?? 'N/A' }})
-                                                            @elseif ($announcement->property)
+                                                            @if ($announcement->property)
                                                                 {{ $announcement->property->name }}
+                                                            @elseif ($announcement->room && $announcement->room->property)
+                                                                {{ $announcement->room->property->name }}
                                                             @else
                                                                 System Wide
                                                             @endif
+                                                        </td>
+                                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-center align-middle text-gray-900">
+                                                            {{ $announcement->room->code ?? '—' }}
                                                         </td>
                                                         <td class="px-4 py-2 text-sm align-middle text-gray-900 font-bold overflow-hidden text-ellipsis whitespace-nowrap text-left">
                                                             {{ $announcement->title }}
@@ -181,11 +176,11 @@
                                             <thead>
                                                 <tr>
                                                     <th class="px-4 py-2 w-[8%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold rounded-tl-lg">No.</th>
-                                                    <th class="px-4 py-2 w-[25%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Property/Room</th>
+                                                    <th class="px-4 py-2 w-[20%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Property</th>
+                                                    <th class="px-4 py-2 w-[17%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Room</th>
                                                     <th class="px-4 py-2 w-[20%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Tenant</th>
-                                                    <th class="px-4 py-2 w-[27%] whitespace-nowrap text-gray-600 text-left bg-lime-700 text-white font-semibold">Title</th>
-                                                    <th class="px-4 py-2 w-[10%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold">Status</th>
-                                                    <th class="px-4 py-2 w-[10%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold rounded-tr-lg">Details</th>
+                                                    <th class="px-4 py-2 w-[25%] whitespace-nowrap text-gray-600 text-left bg-lime-700 text-white font-semibold">Title</th>
+                                                    <th class="px-4 py-2 w-[10%] whitespace-nowrap text-gray-600 text-center bg-lime-700 text-white font-semibold rounded-tr-lg">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -197,10 +192,10 @@
                                                             </span>
                                                         </td>
                                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-center align-middle text-gray-900">
-                                                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-800 rounded-md text-xs font-semibold">
-                                                                {{ $request->room->code ?? 'N/A' }}
-                                                            </span>
-                                                            ({{ $request->room->property->name ?? 'N/A' }})
+                                                            {{ $request->room->property->name ?? 'N/A' }}
+                                                        </td>
+                                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-center align-middle text-gray-900">
+                                                            {{ $request->room->code ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-center align-middle text-gray-900">
                                                             {{ $request->tenant->user->name ?? 'N/A' }}
@@ -233,15 +228,6 @@
                                                                 <span class="w-3 h-3 rounded-full {{ $statusClass }}"></span>
                                                                 <span class="capitalize text-sm">{{ str_replace('_', ' ', $request->status) }}</span>
                                                             </div>
-                                                        </td>
-                                                        <td class="px-4 py-2 whitespace-nowrap text-center align-middle text-sm font-medium">
-                                                            <a href="{{ route('request.show', $request->id) }}"
-                                                               class="inline-flex items-center justify-center px-4 py-2 bg-lime-600 text-white rounded-md
-                                                                      font-semibold text-xs uppercase shadow-sm
-                                                                      hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2
-                                                                      transition ease-in-out duration-150">
-                                                                Details
-                                                            </a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
