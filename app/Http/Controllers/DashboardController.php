@@ -46,12 +46,6 @@ class DashboardController extends Controller
         // Get the latest overdue bill for "Outstanding Balance" footer
         $latestOverdueBill = $tenant->bills->where('status', 'overdue')->sortByDesc('due_date')->first();
 
-        // Calculate months stayed
-        $monthsStayed = 0;
-        if ($tenant->move_in_date) {
-            $monthsStayed = $tenant->move_in_date->diffInMonths(Carbon::now());
-        }
-
         // Fetch ALL relevant announcements for the tenant, ordered by latest (NO TAKE LIMIT)
         $announcements = Announcement::relevantToTenant($tenant)->latest()->get(); // <-- ENSURE NO ->take(3) or ->limit(3) HERE
 
@@ -63,7 +57,6 @@ class DashboardController extends Controller
             'latestBill',
             'outstandingBalance',
             'latestOverdueBill',
-            'monthsStayed',
             'announcements',
             'maintenanceRequests'
         ));

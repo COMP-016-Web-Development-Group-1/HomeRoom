@@ -44,10 +44,6 @@
                                     Last Due Date: {{ optional(optional($latestOverdueBill)->due_date)->format('M d, Y') ?? 'N/A' }}
                                 </span>
                             </div>
-                            <div class="bg-white p-4 flex flex-col items-center flex-1 justify-center">
-                                <span class="text-sm text-gray-500 font-medium">Months Stayed</span>
-                                <span class="text-2xl font-bold text-gray-800 mt-2">{{ $monthsStayed ?? 0 }}</span>
-                            </div>
                         </div>
                     </div>
                 </div>
