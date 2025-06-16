@@ -1,17 +1,18 @@
 <x-guest-layout title="Setting Up - Step {{ $step }} of 3">
     <div class="text-center">
-        <p>Logo Here</p>
-        <h2 class="font-medium text-xl">
-            Setting Up Your Account
-        </h2>
-        <p class="text-sm text-gray-900">
-            Complete the steps below to finish setting up your account.
-        </p>
+        <div class="flex items-center justify-center">
+            <img src="{{ Vite::asset('resources/assets/images/logo.svg') }}" class="aspect-square size-32 -m-8" />
+        </div>
+        <h2 class="font-medium text-xl">Welcome back!</h2>
+        <p class="text-sm text-gray-900">Please enter your details to log in</p>
+    </div>
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <x-button class="w-full" variant="text">Logout</x-button>
-        </form>
+    <hr class="border-gray-200 my-4" />
+
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <x-button class="w-full" variant="text">Logout</x-button>
+    </form>
     </div>
 
     <hr class="border-gray-200 my-4" />
