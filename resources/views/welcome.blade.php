@@ -70,11 +70,11 @@
                 <div class="hero-slider-container">
                     <div class="hero-slider" id="heroSlider">
                         <div class="hero-slide active">
-                            <img src="{{ Vite::asset('resources/assets/images/welcome-page-bg1.png') }}" alt="Showcase 1" />
+                            <img src="{{ Vite::asset('resources/assets/images/landlord-dashboard.png') }}" alt="Showcase 1" />
                             <div class="slider-caption">Landlord Dashboard</div>
                         </div>
                         <div class="hero-slide">
-                            <img src="{{ Vite::asset('resources/assets/images/welcome-page-bg2.png') }}" alt="Showcase 2" />
+                            <img src="{{ Vite::asset('resources/assets/images/tenant-dashboard.png') }}" alt="Showcase 2" />
                             <div class="slider-caption">Tenant Dashboard</div>
                         </div>
                     </div>
